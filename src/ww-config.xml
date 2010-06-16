@@ -1,0 +1,19 @@
+<?xml version="1.0"?>
+
+<flex-config>
+	<target-player>10.0.0</target-player>
+	<compiler>
+        <show-actionscript-warnings>true</show-actionscript-warnings>
+        <strict>true</strict>
+        <incremental>true</incremental>
+        <verbose-stacktraces>true</verbose-stacktraces>
+	</compiler>
+	
+	<static-link-runtime-shared-libraries>true</static-link-runtime-shared-libraries>
+	  
+	<default-script-limits>
+		<max-recursion-depth>1000</max-recursion-depth>
+		<max-execution-time>60</max-execution-time>
+	</default-script-limits>
+	
+</flex-config>

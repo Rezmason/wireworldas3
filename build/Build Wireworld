@@ -1,0 +1,74 @@
+#!/bin/bash
+
+#Here's the address to mxmlc. Modify it if yours isn't here.
+mxmlc="/SDKs/flex/flex_sdk_4.0.0.14159/bin/mxmlc"
+
+#find the folder "wireworld" in this executable's parent directory
+abspath="$(cd "${0%/*}" 2>/dev/null; echo "$PWD"/"${0##*/}")"
+mydir=`dirname "$abspath"`
+
+pushd $mydir/../
+
+apparat="../../../apparat/apparat.jar"
+scala="/SDKs/scala-2.8.0.RC3/bin/scala"
+apparatSWC="../../../apparat/apparat.swc"
+flexSWC="/SDKs/flex/4.0.0.4904/frameworks/libs"
+greensockSWC="./lib/greensock.swc"
+
+function wwBuild {
+	
+	if [ $# -lt 2 ]
+	then
+	  echo "Too few arguments."
+	  exit 1
+	fi
+	
+	debug=false
+	optimize=false
+	if [ $# -ge 5 ] && $5; then
+		debug=true
+	else
+		debug=false
+		optimize=true
+	fi
+	
+	echo "$1 $2"
+	
+	defineStatement="-define+=BRAIN::"
+	defineStatements=""
+	for word in CONVOLUTION_FILTER LINKED_LIST PIXEL_BENDER STANDARD TREE TREE_TDSI TDSI VECTOR HAXE ALL
+	do
+		if test $word == $1; then
+			value=true
+		else
+			value=false
+		fi
+		defineStatements="$defineStatements ${defineStatement}${word},${value}"
+	done
+	
+	defineStatements="$defineStatements ${defineStatement}MODEL_TYPE,\"$1\""
+	
+	"$mxmlc" src/Wireworld.as $defineStatements -sp src -o bin-debug/bin/$2.swf -l $apparatSWC $flexSWC $greensockSWC -incremental=true -static-link-runtime-shared-libraries=true -optimize=$optimize -debug=$debug && 
+	
+	if [ $# -ge 3 ] && $3; then
+		"$scala" -cp "$apparat" apparat.tools.tdsi.TurboDieselSportInjection -i bin-debug/bin/$2.swf
+	fi
+	
+	if [ $# -ge 4 ] && $4; then
+		open bin-debug/bin/$2.swf -a Flash\ Player.app
+	fi
+	
+	echo
+}
+
+wwBuild STANDARD wireworld true
+wwBuild CONVOLUTION_FILTER wwcf
+wwBuild PIXEL_BENDER wwpb
+wwBuild VECTOR wwvec
+wwBuild LINKED_LIST wwll
+wwBuild TDSI wwtdsi true
+#wwBuild HAXE wwhx
+
+pushd ../ && zip -r wireworld_`date "+%m_%d_%Y"` wireworld -u && popd
+
+popd

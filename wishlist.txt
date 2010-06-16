@@ -1,0 +1,33 @@
+Example gallery
+	Controller
+		Detect an example gallery XML file
+		If the XML is loaded successfully, add the gallery button in the view
+	
+	The dialog is an accordion list of documents sorted by author and name
+	Highlighting a file name enables the Load button
+
+When you get CS5, replace the text elements with TLF
+	Then allow all UI elements to scale in the View
+
+Use SVG instead of MovieClips in the FLA?
+	What's the nicest way to represent View elements in an open source project?
+
+Make into an AIR app
+
+Try working with the tree model again
+
+
+
+
+
+
+
+
+
+
+
+Increase instance size limit (or not)
+	BAMF - stitched together BitmapData objects
+		Spits out a Shape that can represent it onscreen
+	FilterModel and PixelBenderModel still limit the size to that of a BitmapData object
+		They internally represent the data as BitmapData objects

@@ -1,0 +1,53 @@
+<languageVersion : 1.0;>
+
+kernel WireworldNaive
+<	namespace : "net.rezmason";
+	vendor : "Rezmason.net";
+	version : 2;
+	description : "Cellular automaton invented by Brian Silverman. (I am not Brian Silverman.)";
+>
+{
+	input image4 src;
+	output pixel4 dst;
+	
+	const float2 NW = float2(-1.0, -1.0);
+	const float2 N  = float2( 0.0, -1.0);
+	const float2 NE = float2( 1.0, -1.0);
+	const float2 W  = float2(-1.0,  0.0);
+	const float2 E  = float2( 1.0,  0.0);
+	const float2 SW = float2(-1.0,  1.0);
+	const float2 S  = float2( 0.0,  1.0);
+	const float2 SE = float2( 1.0,  1.0);
+	
+	const float4 WIRE = float4(1.0, 0.0, 0.0, 1.0);
+	const float4 HEAD = float4(0.0, 1.0, 0.0, 1.0);
+	const float4 TAIL = float4(0.0, 0.0, 1.0, 1.0);
+	const float4 DEAD = float4(0.0, 0.0, 0.0, 1.0);
+	
+	
+	void evaluatePixel() {
+
+		float2 pos = outCoord();
+		pixel4 col = sampleNearest(src, pos);
+		
+		if (col.r >= 0.9) {
+			float neighbors = 0.0;
+			
+			if (sampleNearest(src, pos + NW).g > 0.9) neighbors += 0.91;
+			if (sampleNearest(src, pos + N ).g > 0.9) neighbors += 0.91;
+			if (sampleNearest(src, pos + NE).g > 0.9) neighbors += 0.91;
+			if (sampleNearest(src, pos + W ).g > 0.9) neighbors += 0.91;
+			if (sampleNearest(src, pos + E ).g > 0.9) neighbors += 0.91;
+			if (sampleNearest(src, pos + SW).g > 0.9) neighbors += 0.91;
+			if (sampleNearest(src, pos + S ).g > 0.9) neighbors += 0.91;
+			if (sampleNearest(src, pos + SE).g > 0.9) neighbors += 0.91;
+			
+			col = (neighbors >= 0.9 && neighbors <= 2.1) ? HEAD : WIRE;
+		} else if (col.g >= 0.9) { col = TAIL;
+		} else if (col.b >= 0.9) { col = WIRE;
+		} else { col = DEAD;
+		}
+		
+		dst = col;
+	}
+}
