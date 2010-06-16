@@ -1,0 +1,90 @@
+<languageVersion : 1.0;>
+kernel Wireworld
+<   namespace : "Jeremy Sachs";
+vendor : "rezmason.net";
+version : 1;
+description : "Wireworld cellular automaton, with logic ripped from Daniel Rinehart's Conway implementation";
+>
+{
+    input image4 src;
+    output pixel4 dst;
+    
+    void
+    evaluatePixel()
+    {
+        pixel4 dead = pixel4(1.0, 1.0, 1.0, 1.0);
+        pixel4 alive = pixel4(0.0, 0.0, 0.0, 1.0);
+        
+        pixel4 me = sampleNearest(src, outCoord());
+        
+        // default to no change in pixel
+        dst = me;
+        
+        int aliveNeighborCount = 0;
+        float2 offset = float2(pixelSize(src).x, pixelSize(src).y);
+        
+        // Find out how many of my neighbors are alive
+        // left
+        pixel4 test = sampleNearest(src, outCoord() + (offset * float2(-1.0, 0.0)));
+        if ((alive.r == test.r) && (alive.g == test.g) && (alive.b == test.b))
+        {
+            aliveNeighborCount++;
+        }
+        // upper left
+        test = sampleNearest(src, outCoord() + (offset * float2(-1.0, -1.0)));
+        if ((alive.r == test.r) && (alive.g == test.g) && (alive.b == test.b))
+        {
+            aliveNeighborCount++;
+        }
+        // up
+        test = sampleNearest(src, outCoord() + (offset * float2(0.0, -1.0)));
+        if ((alive.r == test.r) && (alive.g == test.g) && (alive.b == test.b))
+        {
+            aliveNeighborCount++;
+        }
+        // upper right
+        test = sampleNearest(src, outCoord() + (offset * float2(1.0, -1.0)));
+        if ((alive.r == test.r) && (alive.g == test.g) && (alive.b == test.b))
+        {
+            aliveNeighborCount++;
+        }
+        // right
+        test = sampleNearest(src, outCoord() + (offset * float2(1.0, 0.0)));
+        if ((alive.r == test.r) && (alive.g == test.g) && (alive.b == test.b))
+        {
+            aliveNeighborCount++;
+        }
+        // lower right
+        test = sampleNearest(src, outCoord() + (offset * float2(1.0, 1.0)));
+        if ((alive.r == test.r) && (alive.g == test.g) && (alive.b == test.b))
+        {
+            aliveNeighborCount++;
+        }
+        // down
+        test = sampleNearest(src, outCoord() + (offset * float2(0.0, 1.0)));
+        if ((alive.r == test.r) && (alive.g == test.g) && (alive.b == test.b))
+        {
+            aliveNeighborCount++;
+        }
+        // lower left
+        test = sampleNearest(src, outCoord() + (offset * float2(-1.0, 1.0)));
+        if ((alive.r == test.r) && (alive.g == test.g) && (alive.b == test.b))
+        {
+            aliveNeighborCount++;
+        }
+        
+        // As per: http://en.wikipedia.org/wiki/Conway%27s_Game_of_Life
+        // 1. Any live cell with fewer than two live neighbours dies, as if by loneliness.
+        // 2. Any live cell with more than three live neighbours dies, as if by overcrowding.
+        // 3. Any live cell with two or three live neighbours lives, unchanged, to the next generation.
+        if (((alive.r == me.r) && (alive.g == me.g) && (alive.b == me.b)) && ((aliveNeighborCount < 2) || (aliveNeighborCount > 3)))
+        {
+            dst = dead;
+        }
+        // 4. Any dead cell with exactly three live neighbours comes to life.
+        if (((dead.r == me.r) && (dead.g == me.g) && (dead.b == me.b)) && (aliveNeighborCount == 3))
+        {
+            dst = alive;
+        }
+    }
+}

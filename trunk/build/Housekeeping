@@ -1,0 +1,19 @@
+#!/bin/bash
+
+#find the folder "wireworld" in this executable's parent directory
+abspath="$(cd "${0%/*}" 2>/dev/null; echo "$PWD"/"${0##*/}")"
+mydir=`dirname "$abspath"`
+
+pushd $mydir/../
+
+
+if [ -f ./bin-debug/Wireworld.html ]
+	then
+	mv -f -v ./bin-debug/Wireworld.html ./bin-debug/index.html
+fi;
+
+
+if [ -f ./lib/resources.swf ]
+	then
+	cp -f -v ./lib/resources.swf ./bin-debug/lib/resources.swf
+fi;

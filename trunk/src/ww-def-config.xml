@@ -1,0 +1,20 @@
+<?xml version="1.0"?>
+
+<flex-config>
+	<compiler>
+	
+		<define><name>BRAIN::CONVOLUTION_FILTER</name><value>false</value></define>
+		<define><name>BRAIN::LINKED_LIST</name><value>false</value></define>
+		<define><name>BRAIN::PIXEL_BENDER</name><value>false</value></define>
+		<define><name>BRAIN::STANDARD</name><value>false</value></define>
+		<define><name>BRAIN::TDSI</name><value>false</value></define>
+		<define><name>BRAIN::TREE</name><value>false</value></define>
+		<define><name>BRAIN::TREE_TDSI</name><value>false</value></define>
+		<define><name>BRAIN::VECTOR</name><value>false</value></define>
+		<define><name>BRAIN::HAXE</name><value>false</value></define>
+		
+		
+		<define><name>BRAIN::ALL</name><value>true</value></define>
+		
+	</compiler>
+</flex-config>

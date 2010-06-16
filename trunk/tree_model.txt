@@ -1,0 +1,37 @@
+Get Per-level unique addresses working
+
+Garbage collection
+
+	Lazy method; iterates over a queue, bit by bit, in finishCalc, if the threshold's exceeded
+		Don't reset the count to zero; subtract from it the number of nodes that've been deleted in this round
+		If the threshold is still exceeded, it's doubled
+	
+	Observation: the performance of the app depends largely on the values chosen for the threshold and bite size
+	
+	nodes should store the int of existing nodes that point to them
+		Includes all "parents" and all "previous" hops and skips
+		This number is incremented in getNextNode and getParentNode
+	
+	If the queue is empty, add the top nodes to the queue (except for the root node and first root node)
+		top nodes are not worth keeping, point to everything, and are collected immediately
+		
+	For every node on the queue:
+		If the node has no references, collect it:
+			Decrement its child, hop and skip nodes
+				Add these nodes to the queue
+			delete hash[node.lev - 1][node.key]
+			nodePool.push(node)
+		
+		pop the node off the queue
+		
+	This way, nodes only get collected if they aren't at all referenced by anyone else
+		Cyclical references don't occur, because every reference points from parent to child or from past to future
+			This baby's a DAG.
+
+
+Move from Object to a homemade hashtable
+	remember to include a resize function
+	What's a good hash function for this?
+	Look at Golly's system for tips
+
+Consider a TDSI Tree Model
