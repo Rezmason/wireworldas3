@@ -10,6 +10,7 @@
 		<define><name>BRAIN::TDSI</name><value>false</value></define>
 		<define><name>BRAIN::TREE</name><value>false</value></define>
 		<define><name>BRAIN::TREE_TDSI</name><value>false</value></define>
+		<define><name>BRAIN::STUPID</name><value>false</value></define>
 		<define><name>BRAIN::VECTOR</name><value>false</value></define>
 		<define><name>BRAIN::HAXE</name><value>false</value></define>
 		
