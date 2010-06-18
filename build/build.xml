@@ -31,7 +31,7 @@ http://www.joa-ebert.com/
 
 	<property name='dir.build' value='${basedir}/build' />
 	<property name='dir.src' value='${basedir}/src' />
-	<property name='dir.bin' value='${basedir}/bin-debug/bin' />
+	<property name='dir.bin' value='${basedir}/deploy/bin' />
 
 	<property file='${dir.build}/build.properties' />
 
