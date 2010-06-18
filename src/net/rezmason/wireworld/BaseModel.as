@@ -106,7 +106,7 @@ package net.rezmason.wireworld {
 		public function update():void {}
 		public function refreshHeat():void {}
 		public function refreshImage():void {}
-		public function refreshAll():void {}
+		public function refreshAll():void { refreshImage(); }
 		public function getState(__x:int, __y:int):uint { return 0; }
 		public function reset():void {}
 		public function eraseRect(rect:Rectangle):void {}
