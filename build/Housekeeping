@@ -6,20 +6,5 @@ mydir=`dirname "$abspath"`
 
 pushd $mydir/../
 
-if [ ! -d ./deploy ]; then
-	mkdir -v ./deploy
-fi;
-
-if [ -f ./deploy/Wireworld.html ]; then
-	mv -f -v ./deploy/Wireworld.html ./deploy/index.html
-fi;
-
-if [ ! -d ./deploy/lib ]; then
-	mkdir -v ./deploy/lib
-fi;
-
-if [ -f ./lib/resources.swf ]; then
-	cp -f -v ./lib/resources.swf ./deploy/lib/resources.swf
-fi;
-
-#cp -R -f -v ./lib/web/ ./deploy
+rsync --exclude=.svn -va ./lib/web/ ./deploy
+rsync --exclude=.svn -va ./lib/resources.swf ./deploy/lib/
