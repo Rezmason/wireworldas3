@@ -48,7 +48,7 @@ function wwBuild {
 	
 	defineStatements="$defineStatements ${defineStatement}MODEL_TYPE,\"$1\""
 	
-	"$mxmlc" src/Wireworld.as $defineStatements -sp src -o deploy/bin/$2.swf -l $apparatSWC $flexSWC $greensockSWC -incremental=true -static-link-runtime-shared-libraries=true -optimize=$optimize -debug=$debug && 
+	"$mxmlc" src/Wireworld.as $defineStatements -sp src -o deploy/bin/$2.swf -l $apparatSWC $flexSWC $greensockSWC -static-link-runtime-shared-libraries=true -optimize=$optimize -debug=$debug && 
 	
 	if [ $# -ge 3 ] && $3; then
 		"$scala" -cp "$apparat" apparat.tools.tdsi.TurboDieselSportInjection -i deploy/bin/$2.swf
