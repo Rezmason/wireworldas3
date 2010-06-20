@@ -1,3 +1,9 @@
+Add progress bar to main screen
+	Controller progresses it
+
+Use fcsh instead of mxmlc
+	fcshctl
+
 Example gallery
 	Controller
 		Detect an example gallery XML file
