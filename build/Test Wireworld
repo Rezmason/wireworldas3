@@ -35,7 +35,7 @@ function wwBuild {
 	
 	defineStatement="-define+=BRAIN::"
 	defineStatements=""
-	for word in CONVOLUTION_FILTER LINKED_LIST PIXEL_BENDER STANDARD TREE TREE_TDSI TDSI VECTOR HAXE STUPID ALL
+	for word in CONVOLUTION_FILTER LINKED_LIST PIXEL_BENDER STANDARD TREE TREE_TDSI TDSI VECTOR HAXE STUPID BYTES ALL
 	do
 		if test $word == $1; then
 			value=true
@@ -61,7 +61,7 @@ function wwBuild {
 }
 
 #wwBuild STANDARD wwdebug true false false
-wwBuild VECTOR wwdebug false false true
+wwBuild BYTES wwdebug true false true
 
 #wwBuild TREE wwdebug false false
 #wwBuild HAXE wwhx false true
