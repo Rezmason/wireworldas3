@@ -1,0 +1,49 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"> 
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"> 
+<head> 
+	<title>Wireworld Player (Flash)</title> 
+	<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" /> 
+	<link rel="shortcut icon" href="favicon.ico"> 
+	<script type="text/javascript" src="js/swfobject.js"></script> 
+	<script type="text/javascript" src="js/swfmacmousewheel2.js"></script>
+	<script type="text/javascript"> 
+ 
+	function urlParam (name) {
+		var results = (new RegExp( "[\\?&]"+name.replace(/[\[]/,"\\\[").replace(/[\]]/,"\\\]")+"=([^&#]*)" )).exec( window.location.href );
+		return (results == null) ? "" : results[1];
+	}
+ 
+	const BRAIN_URLS = { cf:'wwcf', ll:'wwll', pb:'wwpb', std:'wireworld', tree:undefined, tdsi:'wwtdsi', vec:'wwvec', duh:'wwfirst' };
+ 
+	var brainType = urlParam('brain').toLowerCase();
+	var debug = (urlParam('debug').toLowerCase() == "true");
+	var swfURL = "bin/" + (BRAIN_URLS[brainType] || BRAIN_URLS["std"]) + ".swf";
+	if (debug) swfURL = "bin/wwdebug.swf";
+	var vars = {};
+	var params = { scale:'noScale', salign:'lt', menu:'false' };
+	var attributes = { id:'wireworld', name:'wireworld' };
+	
+	swfobject.embedSWF(swfURL, "flashContent", "100%", "100%", "10.0.0", null, vars, params, attributes );
+	swfmacmousewheel.registerObject(attributes.id);
+	
+	</script> 
+	<style type="text/css" media="screen"> 
+	html, body, #flashContent {
+		height:100%;
+		text-align:center;
+		font-family:verdana;
+		font-size:10px;
+		margin:0;
+		padding:0;
+		overflow:hidden;
+	}
+	</style> 
+</head> 
+<body> 
+	<div id="flashContent"> 
+		<p>Wireworld Player, programmed by Jeremy Sachs.</p> 
+		<p><a href="http://www.quinapalus.com/wi-index.html">Wireworld computer by David Moore and Mark Owen</a></p> 
+		<p><a href="http://www.adobe.com/go/getflashplayer">This site requires Flash Player 10. Grab it here.</a></p> 
+	</div> 
+</body> 
+</html>
