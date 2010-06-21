@@ -20,7 +20,7 @@
 	var swfURL = "bin/" + (BRAIN_URLS[brainType] || BRAIN_URLS["std"]) + ".swf";
 	if (debug) swfURL = "bin/wwdebug.swf";
 	var vars = {};
-	var params = { scale:'noScale', salign:'lt', menu:'false' };
+	var params = { scale:'noScale', salign:'lt', menu:'false', base:'./bin' };
 	var attributes = { id:'wireworld', name:'wireworld' };
 	
 	swfobject.embedSWF(swfURL, "flashContent", "100%", "100%", "10.0.0", null, vars, params, attributes );

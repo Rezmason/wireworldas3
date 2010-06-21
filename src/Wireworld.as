@@ -1,6 +1,7 @@
 package {
 
 	import flash.display.Sprite;
+	import flash.events.Event;
 	
 	import net.rezmason.wireworld.Main;
 
@@ -10,7 +11,16 @@ package {
 		// Entry point.
 		
 		public function Wireworld():void {
-			stage.addChild(new Main);
+			addMainToStage();
+		}
+		
+		private function addMainToStage(event:Event = null):void {
+			if (stage) {
+				stage.addChild(new Main);
+				removeEventListener(Event.ADDED_TO_STAGE, addMainToStage);
+			} else if (!event) {
+				addEventListener(Event.ADDED_TO_STAGE, addMainToStage);
+			}
 		}
 	}
 }
