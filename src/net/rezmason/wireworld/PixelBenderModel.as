@@ -16,8 +16,6 @@ package net.rezmason.wireworld {
 	import flash.display.Shader;
 	import flash.events.Event;
 	import flash.filters.ShaderFilter;
-	import flash.geom.Point;
-	import flash.geom.Rectangle;
 	import flash.utils.ByteArray;
 	
 	// Lightweight, similar to FilterModel.

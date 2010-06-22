@@ -11,10 +11,7 @@ package net.rezmason.wireworld {
 	//---------------------------------------
 	// IMPORT STATEMENTS
 	//---------------------------------------
-	import flash.events.ErrorEvent;
-	import flash.events.Event;
 	import flash.events.EventDispatcher;
-	import flash.utils.getTimer;
 	
 	import net.rezmason.utils.GreenThread;
 	

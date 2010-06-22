@@ -3,13 +3,9 @@ package net.rezmason.wireworld {
 	//---------------------------------------
 	// IMPORT STATEMENTS
 	//---------------------------------------
-	import __AS3__.vec.Vector;
 	
 	import flash.display.BitmapData;
 	import flash.events.Event;
-	import flash.geom.ColorTransform;
-	import flash.geom.Point;
-	import flash.geom.Rectangle;
 	
 	// Not REALLY the first model ever made; just the first solution
 	// to simulating Wireworld that comes to mind. It's meant to do

@@ -14,7 +14,6 @@ package net.rezmason.wireworld {
 	import flash.display.BitmapData;
 	import flash.events.Event;
 	import flash.geom.ColorTransform;
-	import flash.geom.Point;
 	import flash.geom.Rectangle;
 	
 	import net.rezmason.utils.GreenThread;
