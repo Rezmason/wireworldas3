@@ -24,11 +24,10 @@ package net.rezmason.wireworld {
 	
 	import net.rezmason.utils.GreenThread;
 	
-	// Spun from VectorModel. Replaced the Vectors with indexed values
-	// in a TDSI ByteArray. Runs slowly without a TDSI pass. With TDSI,
-	// it's currently the fastest of the *responsive* implementations.
+	// Downgraded from TDSIModel. Uses a ByteArray, but no TDSI.
+	// It demonstrates that ByteArrays do not magically improve performance. 
 	
-	// Refer to the VectorModel comments if the ones here don't help.
+	// Refer to the TDSIModel comments if the ones here don't help.
 	
 	internal final class ByteModel extends BaseModel {
 
