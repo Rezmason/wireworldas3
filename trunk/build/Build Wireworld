@@ -70,9 +70,7 @@ wwBuild VECTOR wwvec true
 wwBuild LINKED_LIST wwll true
 wwBuild TDSI wwtdsi true
 #wwBuild HAXE wwhx true
-
-pushd ../ 
-zip -r ./archive/wireworld_`date "+%m_%d_%Y"` wireworld_project_on_google_code -u -x '*.svn*' '*.DS_Store'
-zip -r ./wireworld_deploy wireworld_project_on_google_code/deploy -u -x '*.svn*' '*.DS_Store'
-popd
+ 
+zip -r ../archive/wireworld_`date "+%m_%d_%Y"` . -u -x '*.svn*' '*.DS_Store'
+zip -r ../wireworld_deploy deploy -u -x '*.svn*' '*.DS_Store'
 popd
