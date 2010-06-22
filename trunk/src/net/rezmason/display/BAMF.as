@@ -9,7 +9,6 @@ package net.rezmason.display {
 	import flash.display.BitmapData;
 	import flash.display.Graphics;
 	import flash.display.IBitmapDrawable;
-	import flash.display.Sprite;
 	import flash.geom.ColorTransform;
 	import flash.geom.Matrix;
 	import flash.geom.Point;
