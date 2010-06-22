@@ -6,7 +6,7 @@
 *
 * Please contact jeremysachs@rezmason.net prior to distributing modified versions of this class.
 */
-package net.rezmason.wireworld {
+package net.rezmason.display {
 
 	//---------------------------------------
 	// IMPORT STATEMENTS
@@ -15,7 +15,7 @@ package net.rezmason.wireworld {
 	import flash.display.Sprite;
 	import flash.geom.Rectangle;
 	
-	internal final class Grid extends Sprite {
+	public final class Grid extends Sprite {
 		
 		//---------------------------------------
 		// PRIVATE VARIABLES
