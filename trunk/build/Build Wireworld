@@ -71,6 +71,8 @@ wwBuild LINKED_LIST wwll true
 wwBuild TDSI wwtdsi true
 #wwBuild HAXE wwhx true
 
-pushd ../archive && zip -r wireworld_`date "+%m_%d_%Y"` wireworld -u && popd
-
+pushd ../ 
+zip -r ./archive/wireworld_`date "+%m_%d_%Y"` wireworld_project_on_google_code -u -x '*.svn*' '*.DS_Store'
+zip -r ./wireworld_deploy wireworld_project_on_google_code/deploy -u -x '*.svn*' '*.DS_Store'
+popd
 popd
