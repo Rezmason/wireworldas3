@@ -1,7 +1,8 @@
-Add progress bar to main screen
-	Controller progresses it
+WireworldAndroid
+	Get it to build with AIR 2.5
+	Run the APK maker on the resulting SWF
 
-Use fcsh instead of mxmlc
+Use fcsh instead of mxmlc in build scripts
 	fcshctl
 
 Example gallery
@@ -18,7 +19,14 @@ When you get CS5, replace the text elements with TLF
 Use SVG instead of MovieClips in the FLA?
 	What's the nicest way to represent View elements in an open source project?
 
-Make into an AIR app
+Figure out AIR app architecture
+	One window
+	Menus
+		About Wireworld
+		New instance
+			Type
+	Drag and drop
+	
 
 Try working with the tree model again
 
