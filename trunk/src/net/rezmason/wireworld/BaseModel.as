@@ -138,7 +138,7 @@ package net.rezmason.wireworld {
 		// Draws the passed BitmapData into a Graphics object.
 		protected function drawData(graphicsObject:Graphics, rect:Rectangle, data:BitmapData):void {
 			graphicsObject.clear();
-			graphicsObject.beginBitmapFill(data, new Matrix(1, 0, 0, 1, rect.x, rect.y));
+			graphicsObject.beginBitmapFill(data, new Matrix(1, 0, 0, 1, rect.x, rect.y), false);
 			graphicsObject.drawRect(rect.x, rect.y, rect.width, rect.height);
 			graphicsObject.endFill();
 		}

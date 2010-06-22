@@ -76,7 +76,7 @@ package net.rezmason.wireworld {
 		
 		private function redraw():void {
 			graphics.clear();
-			graphics.beginBitmapFill(gridData);
+			graphics.beginBitmapFill(gridData, null, true);
 			graphics.drawRect(0, 0, _width, _height);
 			graphics.endFill();
 		}
