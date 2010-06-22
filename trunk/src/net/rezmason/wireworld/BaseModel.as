@@ -34,8 +34,8 @@ package net.rezmason.wireworld {
 		
 		protected static const ORIGIN:Point = new Point();
 		
-		protected static const BUSY_EVENT:WireworldEvent = new WireworldEvent(WireworldEvent.MODEL_BUSY);
-		protected static const IDLE_EVENT:WireworldEvent = new WireworldEvent(WireworldEvent.MODEL_IDLE);
+		protected static const BUSY_EVENT:WWEvent = new WWEvent(WWEvent.MODEL_BUSY);
+		protected static const IDLE_EVENT:WWEvent = new WWEvent(WWEvent.MODEL_IDLE);
 		
 		protected static const STEP:int = 6000;
 		protected static const CLEAR:uint = 0x00000000, BLACK:uint = 0xFF000000, WHITE:uint = 0xFFFFFFFF;
@@ -70,8 +70,8 @@ package net.rezmason.wireworld {
 		//---------------------------------------
 		public function BaseModel():void {
 			super();
-			importer.addEventListener(WireworldEvent.DATA_PARSED, finishParse);
-			importer.addEventListener(WireworldEvent.DATA_EXTRACTED, finishExtraction);
+			importer.addEventListener(WWEvent.DATA_PARSED, finishParse);
+			importer.addEventListener(WWEvent.DATA_EXTRACTED, finishExtraction);
 		}
 		
 		//---------------------------------------

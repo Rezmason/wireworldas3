@@ -30,8 +30,8 @@ package net.rezmason.wireworld {
 		// CLASS CONSTANTS
 		//---------------------------------------
 		private static const STEP:int = 6000;
-		private static const PARSED_EVENT:WireworldEvent = new WireworldEvent(WireworldEvent.DATA_PARSED);
-		private static const EXTRACTED_EVENT:WireworldEvent = new WireworldEvent(WireworldEvent.DATA_EXTRACTED);
+		private static const PARSED_EVENT:WWEvent = new WWEvent(WWEvent.DATA_PARSED);
+		private static const EXTRACTED_EVENT:WWEvent = new WWEvent(WWEvent.DATA_EXTRACTED);
 
 		//---------------------------------------
 		// PRIVATE VARIABLES

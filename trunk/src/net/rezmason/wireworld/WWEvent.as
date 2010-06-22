@@ -13,7 +13,7 @@ package net.rezmason.wireworld {
 	//---------------------------------------
 	import flash.events.Event;
 	
-	internal final class WireworldEvent extends Event {
+	internal final class WWEvent extends Event {
 		
 		public static const ANNOUNCER_SELECT:String = "announcerSelect";
 		public static const ANNOUNCER_REMOVE:String = "announcerRemove";
@@ -25,19 +25,34 @@ package net.rezmason.wireworld {
 		public static const MODEL_BUSY:String = "modelBusy";
 		public static const MODEL_IDLE:String = "modelidle";
 		
-		public var value:Number;
+		public static const READY:String = "ready";
+		public static const PAUSE:String = "pause";
+		public static const SAVE:String = "save";
+		public static const STEP:String = "step";
+		public static const TOGGLE_OVERDRIVE:String = "toggleOverdrive";
+		public static const TOGGLE_PLAY_PAUSE:String = "togglePlayPause";
+		public static const TOGGLE_HEAT:String = "toggleHeat";
+		public static const ADJUST_SPEED:String = "adjustSpeed";
+		public static const LOAD_FROM_DISK:String = "loadFromDisk";
+		public static const LOAD_FROM_WEB:String = "loadFromWeb";
+		public static const RESET:String = "reset";
+		
+		public var value:*;
 		
 		//---------------------------------------
 		// CONSTRUCTOR
 		//---------------------------------------
-		public function WireworldEvent( type:String, val:Number = NaN) { super(type); value = val; }
+		public function WWEvent( type:String, val:* = null ) { 
+			super(type);
+			value = val;
+		}
 		
 		
 		//---------------------------------------
 		// PUBLIC METHODS
 		//---------------------------------------
 		
-		override public function clone():Event { return new WireworldEvent(type, value); }
+		override public function clone():Event { return new WWEvent(type, value); }
 		
 	}
 	
