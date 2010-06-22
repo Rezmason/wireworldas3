@@ -60,8 +60,8 @@ function wwBuild {
 	echo
 }
 
-#wwBuild STANDARD wwdebug true false false
-wwBuild STANDARD wwdebug true false true
+wwBuild STANDARD wwdebug true false false
+#wwBuild STANDARD wwdebug true false true
 
 #wwBuild TREE wwdebug false false
 #wwBuild HAXE wwhx false true

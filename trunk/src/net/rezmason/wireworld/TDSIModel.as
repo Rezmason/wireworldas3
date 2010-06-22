@@ -90,7 +90,9 @@ package net.rezmason.wireworld {
 		private var scratch:int;
 		private var iNode:int, jNode:int;
 		private var neighbor:*;
-
+		
+		private var x_:int, y_:int;
+		
 		//---------------------------------------
 		// CONSTRUCTOR
 		//---------------------------------------
@@ -203,9 +205,11 @@ package net.rezmason.wireworld {
 			totalHeads = 0;
 			iNode = headFront;
 			while (iNode != NULL) {
-				if (rect.contains(Memory.readUnsignedShort(iNode + X__), Memory.readUnsignedShort(iNode + Y__))) {
+				x_ = Memory.readUnsignedShort(iNode + X__);
+				y_ = Memory.readUnsignedShort(iNode + Y__);
+				if (rect.contains(x_, y_)) {
 					Memory.writeByte(1, iNode + IS_WIRE__);
-					_heatData.setPixel(Memory.readUnsignedShort(iNode + X__), Memory.readUnsignedShort(iNode + Y__), 0xFF0008000);
+					_heatData.setPixel(x_, y_, 0xFF0008000);
 				} else {
 					if (newHeadFront == NULL) {
 						newHeadFront = iNode;
@@ -231,9 +235,11 @@ package net.rezmason.wireworld {
 			
 			iNode = tailFront;
 			while (iNode != NULL) {
-				if (rect.contains(Memory.readUnsignedShort(iNode + X__), Memory.readUnsignedShort(iNode + Y__))) {
+				x_ = Memory.readUnsignedShort(iNode + X__);
+				y_ = Memory.readUnsignedShort(iNode + Y__);
+				if (rect.contains(x_, y_)) {
 					Memory.writeByte(1, iNode + IS_WIRE__);
-					_heatData.setPixel(Memory.readUnsignedShort(iNode + X__), Memory.readUnsignedShort(iNode + Y__), 0xFF0008000);
+					_heatData.setPixel(x_, y_, 0xFF0008000);
 				} else {
 					if (newHeadFront == NULL) {
 						newHeadFront = iNode;
@@ -453,16 +459,18 @@ package net.rezmason.wireworld {
 			activeRect.setEmpty();
 			iNode = 0;
 			while (iNode < totalBytes) {
+				x_ = Memory.readUnsignedShort(iNode + X__);
+				y_ = Memory.readUnsignedShort(iNode + Y__);
 				if (activeRect.isEmpty()) {
-					activeRect.left = Memory.readUnsignedShort(iNode + X__);
-					activeRect.top = Memory.readUnsignedShort(iNode + Y__);
+					activeRect.left = x_;
+					activeRect.top = y_;
 					activeRect.width = 1;
 					activeRect.height = 1;
 				} else {
-					activeRect.left = IntMath.min(activeRect.left, Memory.readUnsignedShort(iNode + X__));
-					activeRect.top = IntMath.min(activeRect.top, Memory.readUnsignedShort(iNode + Y__));
-					activeRect.right = IntMath.max(activeRect.right, Memory.readUnsignedShort(iNode + X__) + 1);
-					activeRect.bottom = IntMath.max(activeRect.bottom, Memory.readUnsignedShort(iNode + Y__) + 1);
+					activeRect.left = IntMath.min(activeRect.left, x_);
+					activeRect.top = IntMath.min(activeRect.top, y_);
+					activeRect.right = IntMath.max(activeRect.right, x_ + 1);
+					activeRect.bottom = IntMath.max(activeRect.bottom, y_ + 1);
 				}
 				iNode += NODE_SIZE;
 			}
@@ -483,9 +491,11 @@ package net.rezmason.wireworld {
 			// update the positions of nodes
 			iNode = 0;
 			while (iNode < totalBytes) {
-				Memory.writeShort(Memory.readUnsignedShort(iNode + X__) - activeRect.x, iNode + X__);
-				Memory.writeShort(Memory.readUnsignedShort(iNode + Y__) - activeRect.y, iNode + Y__);
-				_wireData.setPixel32(Memory.readUnsignedShort(iNode + X__), Memory.readUnsignedShort(iNode + Y__), BLACK);
+				x_ = Memory.readUnsignedShort(iNode + X__) - activeRect.x;
+				y_ = Memory.readUnsignedShort(iNode + Y__) - activeRect.y;
+				Memory.writeShort(x_, iNode + X__);
+				Memory.writeShort(y_, iNode + Y__);
+				_wireData.setPixel32(x_, y_, BLACK);
 				iNode += NODE_SIZE;
 			}
 		}
