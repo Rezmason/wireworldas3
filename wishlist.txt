@@ -27,6 +27,8 @@ Figure out AIR app architecture
 			Type
 	Drag and drop
 	
+	How would it work on Macs? On PCs?
+	
 
 Try working with the tree model again
 
