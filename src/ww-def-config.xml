@@ -8,6 +8,7 @@
 		<define><name>BRAIN::PIXEL_BENDER</name><value>false</value></define>
 		<define><name>BRAIN::STANDARD</name><value>false</value></define>
 		<define><name>BRAIN::TDSI</name><value>false</value></define>
+		<define><name>BRAIN::AZOTH</name><value>false</value></define>
 		<define><name>BRAIN::TREE</name><value>false</value></define>
 		<define><name>BRAIN::TREE_TDSI</name><value>false</value></define>
 		<define><name>BRAIN::STUPID</name><value>false</value></define>

@@ -1,5 +1,5 @@
 /**
-* Wireworld Player by Jeremy Sachs. June 8, 2010
+* Wireworld Player by Jeremy Sachs. June 22, 2010
 *
 * Feel free to distribute the source, just try not to hand it off to some douchebag.
 * Keep this header here.
@@ -34,7 +34,7 @@ package net.rezmason.wireworld {
 		public static const TOGGLE_HEAT:String = "toggleHeat";
 		public static const ADJUST_SPEED:String = "adjustSpeed";
 		public static const LOAD_FROM_DISK:String = "loadFromDisk";
-		public static const LOAD_FROM_WEB:String = "loadFromWeb";
+		public static const LOAD_FROM_URL:String = "loadFromWeb";
 		public static const RESET:String = "reset";
 		
 		public var value:*;
