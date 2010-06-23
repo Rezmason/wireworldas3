@@ -67,7 +67,7 @@ http://www.joa-ebert.com/
 
 
 	<property name='defPrefix' value='-define+=BRAIN::' />
-	<property name='defBrains' value='CONVOLUTION_FILTER|LINKED_LIST|PIXEL_BENDER|STANDARD|TREE|TREE_TDSI|BYTES|TDSI|VECTOR|HAXE|ALL|' />
+	<property name='defBrains' value='CONVOLUTION_FILTER|LINKED_LIST|PIXEL_BENDER|STANDARD|TREE|TREE_TDSI|BYTES|TDSI|VECTOR|HAXE|AZOTH|ALL|' />
 
 	<macrodef name='wwBuild'>
 		<attribute name='brain' default='STANDARD' />

@@ -13,13 +13,15 @@
 		return (results == null) ? "" : results[1];
 	}
  
-	const BRAIN_URLS = { cf:'wwcf', ll:'wwll', pb:'wwpb', std:'wireworld', tree:undefined, tdsi:'wwtdsi', vec:'wwvec', duh:'wwfirst', bytes:'wwbytes' };
+	const BRAIN_URLS = { cf:'wwcf', ll:'wwll', pb:'wwpb', std:'wireworld', tree:undefined, tdsi:'wwtdsi', vec:'wwvec', duh:'wwfirst', bytes:'wwbytes', azoth:'wwazoth' };
  
 	var brainType = urlParam('brain').toLowerCase();
 	var debug = (urlParam('debug').toLowerCase() == "true");
 	var swfURL = "bin/" + (BRAIN_URLS[brainType] || BRAIN_URLS["std"]) + ".swf";
 	if (debug) swfURL = "bin/wwdebug.swf";
 	var vars = {};
+	var fileURL = urlParam('file');
+	if (fileURL && fileURL.length) vars.file = fileURL;
 	var params = { scale:'noScale', salign:'lt', menu:'false', base:'./bin' };
 	var attributes = { id:'wireworld', name:'wireworld' };
 	

@@ -1,3 +1,56 @@
+Let other domains access the wireworld examples hosted at rezmason.net
+
+Make public API, which rests on top of the View
+	Whether or not to initially show the about box
+	File loading
+	Playback, manipulating the View
+	dispose
+		nulls window, stage
+		removes scene from stage
+
+AIR app menu system (connects to API)
+	File
+		Open (Cmd + O)
+		Macs: Open Recent
+		Open URL (Cmd + U)
+		Save Snapshot (Cmd + Shift + S)
+		PCs: [Recent file list]
+		Macs: Quit (Cmd + Q)
+		Pcs: Exit
+	Playback
+		Toggle Overdrive ( O )
+		Slow Down ( - )
+		Speed Up ( = )
+		Hand ( H )
+		Eraser ( E )
+		Play / Pause ( Spc )
+		Reset ( Esc )
+		Step ( . )
+	Brain
+		Standard (TDSI) (Cmd + 1)
+		ByteArray (Cmd + 2)
+		Vector (Cmd + 3)
+		Linked List (Cmd + 4)
+		Pixel Bender (Cmd + 5)
+		Convolution Filter (Cmd + 6)
+		Stupid (Cmd + 7)
+	View
+		Zoom In (Cmd + =)
+		Zoom Out (Cmd + -)
+		Reset Zoom (Cmd + 0)
+		Toggle Heatmap (Cmd + T)
+	Macs: Window
+		Minimize (Cmd + M)
+		Zoom
+	App/Help
+		About Wireworld
+		What is this? (Cmd + ?)
+
+AIR app drag and drop
+	Grabs file types from API
+	
+Test AIR app on Mac and PC
+
 WireworldAndroid
 	Get it to build with AIR 2.5
 	Run the APK maker on the resulting SWF
@@ -18,17 +71,6 @@ When you get CS5, replace the text elements with TLF
 
 Use SVG instead of MovieClips in the FLA?
 	What's the nicest way to represent View elements in an open source project?
-
-Figure out AIR app architecture
-	One window
-	Menus
-		About Wireworld
-		New instance
-			Type
-	Drag and drop
-	
-	How would it work on Macs? On PCs?
-	
 
 Try working with the tree model again
 

@@ -36,7 +36,7 @@ function wwBuild {
 	
 	defineStatement="-define+=BRAIN::"
 	defineStatements=""
-	for word in CONVOLUTION_FILTER LINKED_LIST PIXEL_BENDER STANDARD TREE TREE_TDSI TDSI VECTOR HAXE STUPID BYTES ALL
+	for word in CONVOLUTION_FILTER LINKED_LIST PIXEL_BENDER STANDARD TREE TREE_TDSI TDSI VECTOR HAXE STUPID BYTES AZOTH ALL
 	do
 		if test $word == $1; then
 			value=true
@@ -69,6 +69,7 @@ wwBuild PIXEL_BENDER wwpb true
 wwBuild VECTOR wwvec true
 wwBuild LINKED_LIST wwll true
 wwBuild TDSI wwtdsi true
+wwBuild AZOTH wwazoth true
 #wwBuild HAXE wwhx true
  
 zip -r ../archive/wireworld_`date "+%m_%d_%Y"` . -u -x '*.svn*' '*.DS_Store'
