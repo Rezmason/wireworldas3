@@ -17,6 +17,8 @@ package {
 	[SWF(width='800', height='648', backgroundColor='#000000', frameRate='30')]
 	public final class Wireworld extends Sprite {
 		
+		public var api:Object;
+		
 		// Entry point.
 		
 		public function Wireworld():void {
@@ -30,7 +32,7 @@ package {
 		
 		private function connectToStage(event:Event = null):void {
 			if (stage) {
-				new Main(stage, loaderInfo.parameters);
+				api = new Main(stage, loaderInfo.parameters).api;
 				removeEventListener(Event.ADDED_TO_STAGE, connectToStage);
 			} else if (!event) {
 				addEventListener(Event.ADDED_TO_STAGE, connectToStage);
