@@ -15,29 +15,29 @@ package net.rezmason.wireworld {
 	
 	internal final class WWEvent extends Event {
 		
-		public static const ANNOUNCER_SELECT:String = "announcerSelect";
-		public static const ANNOUNCER_REMOVE:String = "announcerRemove";
-		public static const ANNOUNCER_DROP  :String = "announcerDrop";
+		internal static const ANNOUNCER_SELECT:String = "announcerSelect";
+		internal static const ANNOUNCER_REMOVE:String = "announcerRemove";
+		internal static const ANNOUNCER_DROP  :String = "announcerDrop";
 		
-		public static const DATA_PARSED:String = "dataParsed";
-		public static const DATA_EXTRACTED:String = "dataExtracted";
+		internal static const DATA_PARSED:String = "dataParsed";
+		internal static const DATA_EXTRACTED:String = "dataExtracted";
 		
-		public static const MODEL_BUSY:String = "modelBusy";
-		public static const MODEL_IDLE:String = "modelidle";
+		internal static const MODEL_BUSY:String = "modelBusy";
+		internal static const MODEL_IDLE:String = "modelidle";
 		
-		public static const READY:String = "ready";
-		public static const PAUSE:String = "pause";
-		public static const SAVE:String = "save";
-		public static const STEP:String = "step";
-		public static const TOGGLE_OVERDRIVE:String = "toggleOverdrive";
-		public static const TOGGLE_PLAY_PAUSE:String = "togglePlayPause";
-		public static const TOGGLE_HEAT:String = "toggleHeat";
-		public static const ADJUST_SPEED:String = "adjustSpeed";
-		public static const LOAD_FROM_DISK:String = "loadFromDisk";
-		public static const LOAD_FROM_URL:String = "loadFromWeb";
-		public static const RESET:String = "reset";
+		internal static const READY:String = "ready";
+		internal static const PAUSE:String = "pause";
+		internal static const SAVE:String = "save";
+		internal static const STEP:String = "step";
+		internal static const TOGGLE_OVERDRIVE:String = "toggleOverdrive";
+		internal static const TOGGLE_PLAY_PAUSE:String = "togglePlayPause";
+		internal static const TOGGLE_HEAT:String = "toggleHeat";
+		internal static const ADJUST_SPEED:String = "adjustSpeed";
+		internal static const LOAD_FROM_DISK:String = "loadFromDisk";
+		internal static const LOAD_FROM_URL:String = "loadFromWeb";
+		internal static const RESET:String = "reset";
 		
-		public var value:*;
+		internal var value:*;
 		
 		//---------------------------------------
 		// CONSTRUCTOR

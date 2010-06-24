@@ -1,20 +1,29 @@
-Let other domains access the wireworld examples hosted at rezmason.net
-
-Make public API, which rests on top of the View
-	Whether or not to initially show the about box
-	File loading
-	Playback, manipulating the View
+Fill API
+	loadFromDisk
+	loadFromURL
+	saveSnapshot
+	chooseTool
+	reset
+	pause
+	step
+	toggleOverdrive
+	togglePlayPause
+	toggleHeat
+	adjustSpeed
+	adjustZoom
+	resetView
 	dispose
-		nulls window, stage
-		removes scene from stage
+	showHelp
+	showAbout
+	hideAlert
 
 AIR app menu system (connects to API)
 	File
 		Open (Cmd + O)
-		Macs: Open Recent
 		Open URL (Cmd + U)
+		Macs: Open Recent
 		Save Snapshot (Cmd + Shift + S)
-		PCs: [Recent file list]
+		PCs: [Recent list]
 		Macs: Quit (Cmd + Q)
 		Pcs: Exit
 	Playback
