@@ -1,8 +1,10 @@
 package {
 
 	import flash.display.Sprite;
+	import flash.display.Stage;
 	import flash.events.Event;
 	
+	import net.rezmason.gui.SimpleBridge;
 	import net.rezmason.wireworld.Main;
 
 	/**
@@ -17,22 +19,24 @@ package {
 	[SWF(width='800', height='648', backgroundColor='#000000', frameRate='30')]
 	public final class Wireworld extends Sprite {
 		
-		public var api:Object;
+		public var bridge:SimpleBridge = new SimpleBridge();;
 		
 		// Entry point.
 		
 		public function Wireworld():void {
-			loaderInfo.addEventListener(Event.INIT, init);
-		}
-		
-		private function init(event:Event):void {
-			loaderInfo.removeEventListener(Event.INIT, init);
+			for (var prop:String in loaderInfo.parameters) {
+				bridge[prop] = loaderInfo.parameters[prop];	
+			}
+			
 			connectToStage();
 		}
+		public function init(_scene:Sprite):void { new Main(_scene, bridge); }
 		
 		private function connectToStage(event:Event = null):void {
 			if (stage) {
-				api = new Main(stage, loaderInfo.parameters).api;
+				var scene:Sprite = new Sprite();
+				stage.addChild(scene);
+				init(scene);
 				removeEventListener(Event.ADDED_TO_STAGE, connectToStage);
 			} else if (!event) {
 				addEventListener(Event.ADDED_TO_STAGE, connectToStage);
