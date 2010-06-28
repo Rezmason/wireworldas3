@@ -1,51 +1,3 @@
-AIR app menu system (connects to API)
-	File
-		Open File (Cmd + O)
-		Open Location (Cmd + L)
-		Open Recent
-			File name [-- first different folder name]
-			[Divider]
-			Clear Menu
-		Save Snapshot (Cmd + Shift + S)
-		Macs: Quit (Cmd + Q)
-		Pcs: Exit
-	Playback
-		Toggle Overdrive ( O ) [checkmark]
-		Slow Down ( - )
-		Speed Up ( = )
-		Tools
-			Hand ( H )  [checkmark]
-			Eraser ( E )  [checkmark]
-		Play / Pause ( Spc )
-		Reset ( Esc )
-		Step ( . )
-		Run in Background (Cmd + B) [checkmark]
-	Brain
-		Standard (TDSI) (Cmd + 1) [checkmark]
-		ByteArray (Cmd + 2) [checkmark]
-		Vector (Cmd + 3) [checkmark]
-		Linked List (Cmd + 4) [checkmark]
-		Pixel Bender (Cmd + 5) [checkmark]
-		Convolution Filter (Cmd + 6) [checkmark]
-		Stupid (Cmd + 7) [checkmark]
-	View
-		Zoom In (Cmd + =)
-		Zoom Out (Cmd + -)
-		Reset Zoom (Cmd + 0)
-		Heatmap (Cmd + T) [checkmark]
-	Macs: Window
-		Minimize (Cmd + M)
-		Zoom
-	App/Help
-		About Wireworld
-		What is this? (Cmd + ?)
-		
-Mac Dock Menu
-	Toggle Overdrive
-	Play / Pause
-	Reset
-	Run in Background
-
 Fill API
 	All the methods you might need
 		loadFromDisk
@@ -64,31 +16,20 @@ Fill API
 		resetView
 		toggleHeatmap
 		showHelp
-	All the info you might need
-			lastFileURL
-		recentFileURLs
-		guiEnabled
-		running
-		validExtensions
-	All the events you might need
-		DISABLE_GUI
-		ENABLE_GUI
-		UPDATE_GUI_STATE
+	State
+		interactive, Boolean
+		overdrive, Boolean
+		atMaxSpeed, Boolean
+		atMinSpeed, Boolean
+		overdrive, Boolean
+		tool, Boolean
+		brain, String
+	Events
+		CHANGE_STATE
 		FILE_LOADED
 		
-AIR recent files list
-	On a Mac, it has icons
-		It also lists the name of the folder containing it
+View needs to be able to discretely adjust the speed slider
 
-Get rid of embeds
-	Load the horizontal Wireworld MCL
-	Embed the font in the resource SWF
-		EmbedFrucade.as
-		Maybe Syphon should list all its fonts?
-
-AIR app drag and drop
-	Grabs file types from API
-	
 Test AIR app on Mac and PC
 
 WireworldAndroid
