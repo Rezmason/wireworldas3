@@ -1,41 +1,30 @@
-Fill API
-	All the methods you might need
-		loadFromDisk
-		loadFromOpenedFile
-		loadFromWeb
-		showAbout
-		saveSnapshot
-		dispose
-		toggleOverdrive
-		adjustSpeed
-		chooseTool
-		togglePlayPause
-		reset
-		step
-		adjustZoom
-		resetView
-		toggleHeatmap
-		showHelp
-	State
-		interactive, Boolean
-		overdrive, Boolean
-		atMaxSpeed, Boolean
-		atMinSpeed, Boolean
-		overdrive, Boolean
-		tool, Boolean
-		brain, String
-	Events
-		CHANGE_STATE
-		FILE_LOADED
-		
-View needs to be able to discretely adjust the speed slider
+View: init state stuff
+	dx
+	dy
+	zoom
+	speed
+View: reset state stuff
+	tool
+	overdrive
+	heat
+Change states
+	atMaxSpeed, Boolean
+	atMinSpeed, Boolean
+	atMinZoom, Boolean
+	atMaxZoom, Boolean
+Implement methods
+	adjustSpeed
+	adjustZoom
+	
+Make sure unloaded SWFs stop and get cleaned up
+	trace the IModel's class name in the Controller update function
 
 Test AIR app on Mac and PC
 
 WireworldAndroid
 	Get it to build with AIR 2.5
 	Run the APK maker on the resulting SWF
-
+	
 Use fcsh instead of mxmlc in build scripts
 	fcshctl
 
