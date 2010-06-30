@@ -1,24 +1,3 @@
-View: init state stuff
-	dx
-	dy
-	zoom
-	speed
-View: reset state stuff
-	tool
-	overdrive
-	heat
-Change states
-	atMaxSpeed, Boolean
-	atMinSpeed, Boolean
-	atMinZoom, Boolean
-	atMaxZoom, Boolean
-Implement methods
-	adjustSpeed
-	adjustZoom
-	
-Make sure unloaded SWFs stop and get cleaned up
-	trace the IModel's class name in the Controller update function
-
 Test AIR app on Mac and PC
 
 WireworldAndroid
@@ -43,19 +22,3 @@ Use SVG instead of MovieClips in the FLA?
 	What's the nicest way to represent View elements in an open source project?
 
 Try working with the tree model again
-
-
-
-
-
-
-
-
-
-
-
-Increase instance size limit (or not)
-	BAMF - stitched together BitmapData objects
-		Spits out a Shape that can represent it onscreen
-	FilterModel and PixelBenderModel still limit the size to that of a BitmapData object
-		They internally represent the data as BitmapData objects
