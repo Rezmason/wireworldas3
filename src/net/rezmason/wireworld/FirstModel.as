@@ -73,7 +73,7 @@ package net.rezmason.wireworld {
 			}
 		}
 		
-		override public function refreshImage():void {
+		override public function refreshImage(fully:Boolean = false):void {
 			
 			_headData.fillRect(_headData.rect, 0x0);
 			_tailData.fillRect(_tailData.rect, 0x0);

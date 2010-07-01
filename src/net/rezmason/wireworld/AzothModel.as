@@ -11,13 +11,11 @@ package net.rezmason.wireworld {
 	//---------------------------------------
 	// IMPORT STATEMENTS
 	//---------------------------------------
-	import flash.display.BitmapData;
-	import apparat.math.FastMath;
 	import apparat.math.IntMath;
-	//import apparat.memory.Memory;
 	
 	import com.buraks.utils.fastmem;
 	
+	import flash.display.BitmapData;
 	import flash.events.Event;
 	import flash.geom.ColorTransform;
 	import flash.geom.Rectangle;
@@ -263,45 +261,64 @@ package net.rezmason.wireworld {
 			refreshTails();
 		}
 		
-		override public function refreshHeat():void {
+		override public function refreshHeat(fully:Boolean = false):void {
 			iNode = 0;
-			//ike = 0;
-			//_heatData.colorTransform(_heatData.rect, DARKEN);
+			var allow:Boolean;
+			var mult:Number = 2.9 / _generation;
 			while (iNode < totalBytes) {
-				scratch = heatColorOf(FastMath.min(fastmem.fastGetI32(iNode + TIMES_LIT__) / _generation, 1) * 2.9);
-				//scratch = colorOf(ike++ / totalHeads);
-				_heatData.setPixel(fastmem.fastGetUI16(iNode + X__), fastmem.fastGetUI16(iNode + Y__), scratch);
+				x_ = fastmem.fastGetUI16(iNode + X__);
+				y_ = fastmem.fastGetUI16(iNode + Y__);
+				allow = fully || (x_ >= leftBound && x_ <= rightBound && y_ >= topBound && y_ <= bottomBound);
+				if (allow) {
+					scratch = heatColorOf(fastmem.fastGetI32(iNode + TIMES_LIT__) * mult);
+					_heatData.setPixel(x_, y_, scratch);
+				}
 				iNode += NODE_SIZE;
 			}
 		}
 
-		override public function refreshImage():void {
-			_tailData.copyPixels(_headData, _headData.rect, ORIGIN);
-			_headData.fillRect(_headData.rect, CLEAR);
+		override public function refreshImage(fully:Boolean = false):void {
+			if (fully) {
+				_tailData.copyPixels(_headData, _tailData.rect, ORIGIN);
+				_headData.fillRect(_headData.rect, CLEAR);
+			} else {
+				_tailData.copyPixels(_headData, bound, bound.topLeft);
+				_headData.fillRect(bound, CLEAR);
+			}
 			
 			iNode = headFront;
+			var allow:Boolean;
 			while (iNode != NULL) {
-				_headData.setPixel32(fastmem.fastGetUI16(iNode + X__), fastmem.fastGetUI16(iNode + Y__), BLACK);
+				x_ = fastmem.fastGetUI16(iNode + X__);
+				y_ = fastmem.fastGetUI16(iNode + Y__);
+				allow = fully || (x_ >= leftBound && x_ <= rightBound && y_ >= topBound && y_ <= bottomBound);
+				if (allow) _headData.setPixel32(x_, y_, BLACK);
 				iNode = fastmem.fastGetI32(iNode + NEXT__);
 			}
 		}
 		
-		private function refreshTails():void {
-			
-			_tailData.fillRect(_tailData.rect, CLEAR);
+		private function refreshTails(fully:Boolean = false):void {
+			if (fully) {
+				_tailData.fillRect(_tailData.rect, CLEAR);
+			} else {
+				_tailData.fillRect(bound, CLEAR);
+			}
 			
 			iNode = tailFront;
+			var allow:Boolean;
 			while (iNode != NULL) {
-				_tailData.setPixel32(fastmem.fastGetUI16(iNode + X__), fastmem.fastGetUI16(iNode + Y__), BLACK);
+				x_ = fastmem.fastGetUI16(iNode + X__);
+				y_ = fastmem.fastGetUI16(iNode + Y__);
+				allow = fully || (x_ >= leftBound && x_ <= rightBound && y_ >= topBound && y_ <= bottomBound);
+				if (allow) _tailData.setPixel32(x_, y_, BLACK);
 				iNode = fastmem.fastGetI32(iNode + NEXT__);
 			}
-			
 		}
 		
-		override public function refreshAll():void {
-			refreshImage();
-			refreshTails();
-			refreshHeat();
+		override public function refreshAll(fully:Boolean = false):void {
+			refreshImage(fully);
+			refreshTails(fully);
+			refreshHeat(fully);
 		}
 
 		override public function getState(__x:int, __y:int):uint {
@@ -471,6 +488,10 @@ package net.rezmason.wireworld {
 					activeRect.right = IntMath.max(activeRect.right, x_ + 1);
 					activeRect.bottom = IntMath.max(activeRect.bottom, y_ + 1);
 				}
+				
+				activeCorner.x = activeRect.left;
+				activeCorner.y = activeRect.top;
+				
 				iNode += NODE_SIZE;
 			}
 			

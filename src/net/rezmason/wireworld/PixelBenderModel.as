@@ -56,10 +56,6 @@ package net.rezmason.wireworld {
 		// PUBLIC METHODS
 		//---------------------------------------
 		
-		override public function init(txt:String, isMCell:Boolean = false):void {
-			importer.parse(txt, isMCell);
-		}
-		
 		// update
 		override public function update():void {
 			// Most of the dirty work is done by the filter.
@@ -67,19 +63,19 @@ package net.rezmason.wireworld {
 			_generation++;
 		}
 
-		override public function refreshHeat():void {
+		override public function refreshHeat(fully:Boolean = false):void {
 			// not implemented. Nyaahh!
 		}
 		
 		// The model IS its own view, in a sense 
-		override public function refreshImage():void {
+		override public function refreshImage(fully:Boolean = false):void {
 			_headData.copyChannel(_outputData, activeRect, ORIGIN, BitmapDataChannel.GREEN, BitmapDataChannel.ALPHA);
 			_tailData.copyChannel(_outputData, activeRect, ORIGIN, BitmapDataChannel.BLUE,  BitmapDataChannel.ALPHA);
 		}
 		
-		override public function refreshAll():void {
-			refreshImage();
-			refreshHeat();
+		override public function refreshAll(fully:Boolean = false):void {
+			refreshImage(fully);
+			refreshHeat(fully);
 		}
 
 		override public function getState(__x:int, __y:int):uint {

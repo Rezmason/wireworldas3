@@ -134,9 +134,9 @@ package net.rezmason.wireworld {
 		
 		override public function eraseRect(rect:Rectangle):void {}
 		
-		override public function refreshAll():void {}
+		override public function refreshAll(fully:Boolean = false):void {}
 		
-		override public function refreshImage():void {}
+		override public function refreshImage(fully:Boolean = false):void {}
 		
 		override public function getState(__x:int, __y:int):uint {
 			__x -= activeRect.x;
@@ -300,6 +300,10 @@ package net.rezmason.wireworld {
 			drawData(_wireGraphics, activeRect, _wireData);
 			drawData(_headGraphics, activeRect, _headData);
 			drawData(_tailGraphics, activeRect, _tailData);
+			
+			activeCorner.x = activeRect.left;
+			activeCorner.y = activeRect.top;
+			
 		}
 		
 		override protected function addNode(__x:int, __y:int, __state:int):void {

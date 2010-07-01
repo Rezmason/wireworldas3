@@ -11,12 +11,14 @@ package net.rezmason.wireworld {
 	//---------------------------------------
 	// IMPORT STATEMENTS
 	//---------------------------------------
+	
 	import flash.display.BitmapData;
 	import flash.events.Event;
 	import flash.geom.ColorTransform;
 	import flash.geom.Rectangle;
 	
 	import net.rezmason.utils.GreenThread;
+	import apparat.math.IntMath;
 	
 	// Adapted from LinkedListModel. 
 	// Originally stored WireNode instances in Vectors,
@@ -64,6 +66,8 @@ package net.rezmason.wireworld {
 		private var scratch:int;
 		private var iNode:int, jNode:int;
 		private var neighbor:*;
+		
+		private var x_:int, y_:int;
 		
 
 		//---------------------------------------
@@ -190,56 +194,66 @@ package net.rezmason.wireworld {
 			refreshTails();
 		}
 		
-		override public function refreshHeat():void {
-			//*
+		override public function refreshHeat(fully:Boolean = false):void {
 			iNode = 0;
+			var allow:Boolean;
+			var mult:Number = 2.9 / _generation;
 			while (iNode < totalNodes) {
-				_heatData.setPixel(xVec[iNode], yVec[iNode], heatColorOf(Math.min(timesLitVec[iNode] / _generation, 1) * 2.9));
+				x_ = xVec[iNode];
+				y_ = yVec[iNode];
+				allow = fully || (x_ >= leftBound && x_ <= rightBound && y_ >= topBound && y_ <= bottomBound);
+				if (allow) {
+					scratch = heatColorOf(timesLitVec[iNode] * mult);
+					_heatData.setPixel(x_, y_, scratch);
+				}
 				iNode++;
 			}
-			/**/
-			/*
-			ike = 0;
-			_heatData.colorTransform(_heatData.rect, DARKEN);
-			while (ike < totalCandidates) {
-				iNode = candidateVec[ike];
-				_heatData.setPixel(xVec[iNode], yVec[iNode], colorOf(ike / totalCandidates));
-				ike++;
-			}
-			/**/
 		}
 
-		override public function refreshImage():void {
-			
-			_tailData.copyPixels(_headData, _headData.rect, ORIGIN);
-			_headData.fillRect(_headData.rect, CLEAR);
+		override public function refreshImage(fully:Boolean = false):void {
+			if (fully) {
+				_tailData.copyPixels(_headData, _tailData.rect, ORIGIN);
+				_headData.fillRect(_headData.rect, CLEAR);
+			} else {
+				_tailData.copyPixels(_headData, bound, bound.topLeft);
+				_headData.fillRect(bound, CLEAR);
+			}
 			
 			ike = 0;
+			var allow:Boolean;
 			while (ike < totalHeads) {
 				iNode = headVec[ike];
-				_headData.setPixel32(xVec[iNode], yVec[iNode], BLACK);
-				ike++;
+				x_ = xVec[iNode];
+				y_ = yVec[iNode];
+				allow = fully || (x_ >= leftBound && x_ <= rightBound && y_ >= topBound && y_ <= bottomBound);
+				if (allow) _headData.setPixel32(x_, y_, BLACK);
+				ike++
 			}
-			
 		}
 		
-		private function refreshTails():void {
-			
-			_tailData.fillRect(_tailData.rect, CLEAR);
+		private function refreshTails(fully:Boolean = false):void {
+			if (fully) {
+				_tailData.fillRect(_tailData.rect, CLEAR);
+			} else {
+				_tailData.fillRect(bound, CLEAR);
+			}
 			
 			ike = 0;
+			var allow:Boolean;
 			while (ike < totalTails) {
 				iNode = tailVec[ike];
-				_tailData.setPixel32(xVec[iNode], yVec[iNode], BLACK);
+				x_ = xVec[iNode];
+				y_ = yVec[iNode];
+				allow = fully || (x_ >= leftBound && x_ <= rightBound && y_ >= topBound && y_ <= bottomBound);
+				if (allow) _tailData.setPixel32(x_, y_, BLACK);
 				ike++;
 			}
-			
 		}
 		
-		override public function refreshAll():void {
-			refreshImage();
-			refreshTails();
-			refreshHeat();
+		override public function refreshAll(fully:Boolean = false):void {
+			refreshImage(fully);
+			refreshTails(fully);
+			refreshHeat(fully);
 		}
 
 		override public function getState(__x:int, __y:int):uint {
@@ -381,11 +395,15 @@ package net.rezmason.wireworld {
 					activeRect.width = 1;
 					activeRect.height = 1;
 				} else {
-					activeRect.left = Math.min(activeRect.left, xVec[iNode]);
-					activeRect.top = Math.min(activeRect.top, yVec[iNode]);
-					activeRect.right = Math.max(activeRect.right, xVec[iNode] + 1);
-					activeRect.bottom = Math.max(activeRect.bottom, yVec[iNode] + 1);
+					activeRect.left = IntMath.min(activeRect.left, xVec[iNode]);
+					activeRect.top = IntMath.min(activeRect.top, yVec[iNode]);
+					activeRect.right = IntMath.max(activeRect.right, xVec[iNode] + 1);
+					activeRect.bottom = IntMath.max(activeRect.bottom, yVec[iNode] + 1);
 				}
+				
+				activeCorner.x = activeRect.left;
+				activeCorner.y = activeRect.top;
+				
 				iNode++;
 			}
 			
