@@ -1,9 +1,11 @@
-Test AIR app on Mac and PC
+We're calling refreshHeat too often
 
-WireworldAndroid
-	Get it to build with AIR 2.5
-	Run the APK maker on the resulting SWF
-	
+Cut up the paper into fragments
+	IModel.spewFragments(fWidth:Number, fHeight:Number)
+		Breaks non-dead area of BitmapData into rects and returns them
+	Fragments that are entirely off-screen should not be in the display list
+	Still a solid base
+
 Use fcsh instead of mxmlc in build scripts
 	fcshctl
 
@@ -21,4 +23,13 @@ When you get CS5, replace the text elements with TLF
 Use SVG instead of MovieClips in the FLA?
 	What's the nicest way to represent View elements in an open source project?
 
+WireworldAndroid
+	Get it to build with AIR 2.5
+	Run the APK maker on the resulting SWF
+	Figure out two-finger "scrolling" and positioning
+	Use the Android menu system instead of toolbars
+	Tap to start, stop
+	How do FileReference.browse() and FileReference.save() work on Android?
+	Redesign dialogs for vertical mobile screen
+		
 Try working with the tree model again
