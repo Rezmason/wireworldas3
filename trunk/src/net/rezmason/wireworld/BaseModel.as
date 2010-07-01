@@ -23,6 +23,8 @@ package net.rezmason.wireworld {
 	
 	import net.rezmason.utils.makeGraphics;
 	
+	import spark.primitives.Rect;
+	
 	// While models don't necessarily have to 
 	// subclass BaseModel, it's a good starting point.
 	
@@ -46,6 +48,7 @@ package net.rezmason.wireworld {
 		//---------------------------------------
 		// PRIVATE & PROTECTED VARIABLES
 		//---------------------------------------
+		protected var _initialized:Boolean = false;
 		protected var _width:int, _height:int;
 		protected var _credit:String;
 		protected var totalNodes:int = 0;
@@ -57,6 +60,9 @@ package net.rezmason.wireworld {
 		protected var _tailGraphics:Graphics = makeGraphics();
 		protected var _heatGraphics:Graphics = makeGraphics();
 		protected var importer:Importer = new Importer();
+		protected var bound:Rectangle = new Rectangle(0, 0, int.MAX_VALUE, int.MAX_VALUE);
+		protected var leftBound:int = 0, rightBound:int = int.MAX_VALUE;
+		protected var topBound:int = 0, bottomBound:int = int.MAX_VALUE;
 		protected var activeRect:Rectangle = new Rectangle(), activeCorner:Point = new Point();
 		
 		// These are useful for certain kinds of drawing. 
@@ -77,7 +83,7 @@ package net.rezmason.wireworld {
 		//---------------------------------------
 		// GETTER / SETTERS
 		//---------------------------------------
-		
+		public function get initialized():Boolean { return _initialized; }
 		public function get width():int { return _width; }
 		public function get height():int { return _height; }
 		public function get base():BitmapData { return new BitmapData(_width, _height, false, BLACK); }
@@ -102,14 +108,25 @@ package net.rezmason.wireworld {
 		//---------------------------------------
 		
 		// Most of the implemented methods of IModel are empty here.
-		public function init(txt:String, isMCell:Boolean = false):void { importer.parse(txt, isMCell); }
+		public function init(txt:String, isMCell:Boolean = false):void { _initialized = true; importer.parse(txt, isMCell); }
 		public function update():void {}
-		public function refreshHeat():void {}
-		public function refreshImage():void {}
-		public function refreshAll():void { refreshImage(); }
+		public function refreshHeat(fully:Boolean = false):void {}
+		public function refreshImage(fully:Boolean = false):void {}
+		public function refreshAll(fully:Boolean = false):void { refreshImage(fully); }
 		public function getState(__x:int, __y:int):uint { return 0; }
 		public function reset():void {}
 		public function eraseRect(rect:Rectangle):void {}
+		
+		public function setBounds(top:int, left:int, bottom:int, right:int):void {
+			topBound = top;
+			leftBound = left;
+			bottomBound = bottom;
+			rightBound = right;
+			
+			bound.x = topBound, bound.y = leftBound;
+			bound.width = rightBound - leftBound;
+			bound.height = bottomBound - topBound;
+		}
 
 		//---------------------------------------
 		// PRIVATE & PROTECTED METHODS
@@ -156,10 +173,12 @@ package net.rezmason.wireworld {
 		}
 		
 		protected final function heatColorOf(input:Number):int {
+			if (input > 1) return heatSpectrum.getPixel(heatSpectrum.width, 0);
 			return heatSpectrum.getPixel(input * heatSpectrum.width, 0);
 		}
 		
 		protected final function colorOf(input:Number):int {
+			if (input > 1) return spectrum.getPixel(spectrum.width, 0);
 			return spectrum.getPixel(input * spectrum.width, 0);
 		}
 	}

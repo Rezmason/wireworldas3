@@ -13,6 +13,8 @@ package net.rezmason.wireworld {
 	//---------------------------------------
 	import flash.events.EventDispatcher;
 	
+	import apparat.math.IntMath;
+	
 	import net.rezmason.utils.GreenThread;
 	
 	// Helps to convert TXT and MCL files.
@@ -171,10 +173,10 @@ package net.rezmason.wireworld {
 						if (char == "*") {
 							row += multiplier;
 							column = 0;
-							mclHeight = Math.max(row, mclHeight);
+							mclHeight = IntMath.max(row, mclHeight);
 						} else {
 							column += multiplier;
-							mclWidth = Math.max(mclWidth, column);
+							mclWidth = IntMath.max(mclWidth, column);
 						}
 					}
 					

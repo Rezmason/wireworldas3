@@ -35,7 +35,9 @@ package net.rezmason.wireworld {
 		internal static const ADJUST_SPEED:String = "adjustSpeed";
 		internal static const LOAD_FROM_DISK:String = "loadFromDisk";
 		internal static const LOAD_FROM_URL:String = "loadFromWeb";
+		internal static const REFRESH_ALL:String = "refreshAll";
 		internal static const RESET:String = "reset";
+		internal static const CHANGE_STATE:String = "changeState";
 		
 		internal var value:*;
 		

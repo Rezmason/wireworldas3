@@ -80,18 +80,18 @@ package net.rezmason.wireworld {
 			// not implemented. Boo!
 		}
 		
-		override public function refreshHeat():void {
+		override public function refreshHeat(fully:Boolean = false):void {
 			// not implemented. Nyaahh!
 		}
 
-		override public function refreshImage():void {
+		override public function refreshImage(fully:Boolean = false):void {
 			_headData.copyChannel(_outputData, activeRect, ORIGIN, BitmapDataChannel.GREEN, BitmapDataChannel.ALPHA);
 			_tailData.copyChannel(_outputData, activeRect, ORIGIN, BitmapDataChannel.BLUE,  BitmapDataChannel.ALPHA);
 		}
 		
-		override public function refreshAll():void {
-			refreshImage();
-			refreshHeat();
+		override public function refreshAll(fully:Boolean = false):void {
+			refreshImage(fully);
+			refreshHeat(fully);
 		}
 
 		override public function getState(__x:int, __y:int):uint {
