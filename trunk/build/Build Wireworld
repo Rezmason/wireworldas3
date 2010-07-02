@@ -9,7 +9,7 @@ mydir=`dirname "$abspath"`
 
 pushd $mydir/../
 
-apparat="../../../apparat/apparat.jar"
+apparat="../../../apparat_old/apparat.jar"
 scala="/SDKs/scala-2.8.0.RC3/bin/scala"
 apparatSWC="../../../apparat/apparat.swc"
 flexSWC="/SDKs/flex/4.0.0.4904/frameworks/libs"

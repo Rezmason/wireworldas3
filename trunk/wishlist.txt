@@ -6,6 +6,8 @@ Cut up the paper into fragments
 	Fragments that are entirely off-screen should not be in the display list
 	Still a solid base
 
+Use latest TDSI
+
 Use fcsh instead of mxmlc in build scripts
 	fcshctl
 
