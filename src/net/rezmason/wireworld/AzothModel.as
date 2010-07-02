@@ -341,7 +341,7 @@ package net.rezmason.wireworld {
 				fastmem.fastSetI32(0, iNode + TIMES_LIT__);
 				
 				switch (fastmem.fastGetByte(iNode + FIRST_STATE__)) {
-					case WireFormat.HEAD:
+					case WWFormat.HEAD:
 						fastmem.fastSetByte(0, iNode + IS_WIRE__);
 						if (headFront == NULL) {
 							headFront = iNode;
@@ -351,7 +351,7 @@ package net.rezmason.wireworld {
 						headBack = iNode;
 						fastmem.fastSetI32(fastmem.fastGetI32(iNode + TIMES_LIT__) + 1, iNode + TIMES_LIT__);
 						break;
-					case WireFormat.TAIL:
+					case WWFormat.TAIL:
 						fastmem.fastSetByte(0, iNode + IS_WIRE__);
 						if (tailFront == NULL) {
 							tailFront = iNode;
@@ -360,7 +360,7 @@ package net.rezmason.wireworld {
 						}
 						tailBack = iNode;
 						break;
-					case WireFormat.WIRE:
+					case WWFormat.WIRE:
 						fastmem.fastSetByte(1, iNode + IS_WIRE__);
 				}
 				
@@ -387,7 +387,7 @@ package net.rezmason.wireworld {
 		
 		override protected function finishParse(event:Event):void {
 			
-			if (importer.width  > WireFormat.MAX_SIZE || importer.height  > WireFormat.MAX_SIZE || importer.width * importer.height < 1) {
+			if (importer.width  > WWFormat.MAX_SIZE || importer.height  > WWFormat.MAX_SIZE || importer.width * importer.height < 1) {
 				dispatchEvent(INVALID_SIZE_ERROR_EVENT);
 			} else {
 				_width = importer.width;

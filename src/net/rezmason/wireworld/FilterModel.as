@@ -121,7 +121,7 @@ package net.rezmason.wireworld {
 		//---------------------------------------
 		
 		override protected function finishParse(event:Event):void {
-			if (importer.width  > WireFormat.MAX_SIZE || importer.height  > WireFormat.MAX_SIZE || importer.width * importer.height < 1) {
+			if (importer.width  > WWFormat.MAX_SIZE || importer.height  > WWFormat.MAX_SIZE || importer.width * importer.height < 1) {
 				dispatchEvent(INVALID_SIZE_ERROR_EVENT);
 				return;
 			} else {
@@ -174,7 +174,7 @@ package net.rezmason.wireworld {
 		
 		override protected function addNode(__x:int, __y:int, __state:int):void {
 			totalNodes++;
-			_tempData.setPixel32(__x, __y, WireFormat.COLOR_MAP[__state]);
+			_tempData.setPixel32(__x, __y, WWFormat.COLOR_MAP[__state]);
 		}
 	}
 }

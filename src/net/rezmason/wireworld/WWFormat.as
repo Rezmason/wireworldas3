@@ -10,7 +10,7 @@ package net.rezmason.wireworld {
 	
 	// A bunch of constants used in various places.
 	
-	public final class WireFormat {
+	public final class WWFormat {
 
 		internal static const WIRE:int = 0, HEAD:int = 1, TAIL:int = 2;
 		
