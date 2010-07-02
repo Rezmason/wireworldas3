@@ -305,7 +305,7 @@ package net.rezmason.wireworld {
 				bytes.position = iNode + X__;
 				x_ = bytes.readUnsignedShort();
 				y_ = bytes.readUnsignedShort();
-				allow = fully || (x_ >= leftBound && x_ <= rightBound && y_ >= topBound && y_ <= bottomBound);
+				allow = fully || (x_ >= leftBound && x_ < rightBound && y_ >= topBound && y_ < bottomBound);
 				if (allow) {
 					bytes.position = iNode + TIMES_LIT__;
 					scratch = heatColorOf(bytes.readInt() * mult);
@@ -330,7 +330,7 @@ package net.rezmason.wireworld {
 				bytes.position = iNode + X__;
 				x_ = bytes.readUnsignedShort();
 				y_ = bytes.readUnsignedShort();
-				allow = fully || (x_ >= leftBound && x_ <= rightBound && y_ >= topBound && y_ <= bottomBound);
+				allow = fully || (x_ >= leftBound && x_ < rightBound && y_ >= topBound && y_ < bottomBound);
 				if (allow) _headData.setPixel32(x_, y_, BLACK);
 				bytes.position = iNode + NEXT__;
 				iNode = bytes.readInt();
@@ -350,7 +350,7 @@ package net.rezmason.wireworld {
 				bytes.position = iNode + X__;
 				x_ = bytes.readUnsignedShort();
 				y_ = bytes.readUnsignedShort();
-				allow = fully || (x_ >= leftBound && x_ <= rightBound && y_ >= topBound && y_ <= bottomBound);
+				allow = fully || (x_ >= leftBound && x_ < rightBound && y_ >= topBound && y_ < bottomBound);
 				if (allow) _tailData.setPixel32(x_, y_, BLACK);
 				bytes.position = iNode + NEXT__;
 				iNode = bytes.readInt();

@@ -201,7 +201,7 @@ package net.rezmason.wireworld {
 			while (iNode < totalNodes) {
 				x_ = xVec[iNode];
 				y_ = yVec[iNode];
-				allow = fully || (x_ >= leftBound && x_ <= rightBound && y_ >= topBound && y_ <= bottomBound);
+				allow = fully || (x_ >= leftBound && x_ < rightBound && y_ >= topBound && y_ < bottomBound);
 				if (allow) {
 					scratch = heatColorOf(timesLitVec[iNode] * mult);
 					_heatData.setPixel(x_, y_, scratch);
@@ -225,7 +225,7 @@ package net.rezmason.wireworld {
 				iNode = headVec[ike];
 				x_ = xVec[iNode];
 				y_ = yVec[iNode];
-				allow = fully || (x_ >= leftBound && x_ <= rightBound && y_ >= topBound && y_ <= bottomBound);
+				allow = fully || (x_ >= leftBound && x_ < rightBound && y_ >= topBound && y_ < bottomBound);
 				if (allow) _headData.setPixel32(x_, y_, BLACK);
 				ike++
 			}
@@ -244,7 +244,7 @@ package net.rezmason.wireworld {
 				iNode = tailVec[ike];
 				x_ = xVec[iNode];
 				y_ = yVec[iNode];
-				allow = fully || (x_ >= leftBound && x_ <= rightBound && y_ >= topBound && y_ <= bottomBound);
+				allow = fully || (x_ >= leftBound && x_ < rightBound && y_ >= topBound && y_ < bottomBound);
 				if (allow) _tailData.setPixel32(x_, y_, BLACK);
 				ike++;
 			}

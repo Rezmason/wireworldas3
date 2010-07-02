@@ -268,7 +268,7 @@ package net.rezmason.wireworld {
 			while (iNode < totalBytes) {
 				x_ = fastmem.fastGetUI16(iNode + X__);
 				y_ = fastmem.fastGetUI16(iNode + Y__);
-				allow = fully || (x_ >= leftBound && x_ <= rightBound && y_ >= topBound && y_ <= bottomBound);
+				allow = fully || (x_ >= leftBound && x_ < rightBound && y_ >= topBound && y_ < bottomBound);
 				if (allow) {
 					scratch = heatColorOf(fastmem.fastGetI32(iNode + TIMES_LIT__) * mult);
 					_heatData.setPixel(x_, y_, scratch);
@@ -291,7 +291,7 @@ package net.rezmason.wireworld {
 			while (iNode != NULL) {
 				x_ = fastmem.fastGetUI16(iNode + X__);
 				y_ = fastmem.fastGetUI16(iNode + Y__);
-				allow = fully || (x_ >= leftBound && x_ <= rightBound && y_ >= topBound && y_ <= bottomBound);
+				allow = fully || (x_ >= leftBound && x_ < rightBound && y_ >= topBound && y_ < bottomBound);
 				if (allow) _headData.setPixel32(x_, y_, BLACK);
 				iNode = fastmem.fastGetI32(iNode + NEXT__);
 			}
@@ -309,7 +309,7 @@ package net.rezmason.wireworld {
 			while (iNode != NULL) {
 				x_ = fastmem.fastGetUI16(iNode + X__);
 				y_ = fastmem.fastGetUI16(iNode + Y__);
-				allow = fully || (x_ >= leftBound && x_ <= rightBound && y_ >= topBound && y_ <= bottomBound);
+				allow = fully || (x_ >= leftBound && x_ < rightBound && y_ >= topBound && y_ < bottomBound);
 				if (allow) _tailData.setPixel32(x_, y_, BLACK);
 				iNode = fastmem.fastGetI32(iNode + NEXT__);
 			}
