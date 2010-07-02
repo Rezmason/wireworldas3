@@ -118,12 +118,13 @@ package net.rezmason.wireworld {
 		public function eraseRect(rect:Rectangle):void {}
 		
 		public function setBounds(top:int, left:int, bottom:int, right:int):void {
-			topBound = top;
-			leftBound = left;
-			bottomBound = bottom;
-			rightBound = right;
+			topBound = top - activeCorner.x;
+			leftBound = left - activeCorner.y;
+			bottomBound = bottom - activeCorner.x;
+			rightBound = right - activeCorner.y;
 			
-			bound.x = topBound, bound.y = leftBound;
+			bound.x = leftBound;
+			bound.y = topBound;
 			bound.width = rightBound - leftBound;
 			bound.height = bottomBound - topBound;
 		}
