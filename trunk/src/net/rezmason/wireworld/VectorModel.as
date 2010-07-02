@@ -277,18 +277,18 @@ package net.rezmason.wireworld {
 				timesLitVec[iNode] = 0;
 				
 				switch (firstStateVec[iNode]) {
-					case WireFormat.HEAD:
+					case WWFormat.HEAD:
 						isWireVec[iNode] = false;
 						headVec[totalHeads] = iNode;
 						totalHeads++;
 						timesLitVec[iNode]++;
 						break;
-					case WireFormat.TAIL:
+					case WWFormat.TAIL:
 						isWireVec[iNode] = false;
 						tailVec[totalTails] = iNode;
 						totalTails++;
 						break;
-					case WireFormat.WIRE:
+					case WWFormat.WIRE:
 						isWireVec[iNode] = true;
 				}
 				
@@ -306,7 +306,7 @@ package net.rezmason.wireworld {
 		//---------------------------------------
 		
 		override protected function finishParse(event:Event):void {
-			if (importer.width  > WireFormat.MAX_SIZE || importer.height  > WireFormat.MAX_SIZE || importer.width * importer.height < 1) {
+			if (importer.width  > WWFormat.MAX_SIZE || importer.height  > WWFormat.MAX_SIZE || importer.width * importer.height < 1) {
 				dispatchEvent(INVALID_SIZE_ERROR_EVENT);
 			} else {
 				_width = importer.width;

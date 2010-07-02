@@ -44,20 +44,20 @@ package net.rezmason.wireworld {
 					if (!iNode) continue;
 					
 					switch (iNode.state) {
-						case WireFormat.WIRE:
+						case WWFormat.WIRE:
 							// count head neighbors; if it's one or two, nextState = HEAD
 							scratch = 0;
 							outerLoop: for (ken = Math.max(0, ike - 1); ken < Math.min(_height - 1, ike + 2); ken++) {
 								if (!nodeTable[ken]) continue;
 								for (leo = Math.max(0, jen - 1); leo < Math.min(_width - 1, jen + 2); leo++) {
-									if (nodeTable[ken][leo] && nodeTable[ken][leo].state == WireFormat.HEAD) scratch++;
+									if (nodeTable[ken][leo] && nodeTable[ken][leo].state == WWFormat.HEAD) scratch++;
 									if (scratch > 2) break outerLoop;
 								}
 							}
-							if (scratch == 1 || scratch == 2) iNode.nextState = WireFormat.HEAD;
+							if (scratch == 1 || scratch == 2) iNode.nextState = WWFormat.HEAD;
 						break;
-						case WireFormat.HEAD: iNode.nextState = WireFormat.TAIL; break;
-						case WireFormat.TAIL: iNode.nextState = WireFormat.WIRE; break;
+						case WWFormat.HEAD: iNode.nextState = WWFormat.TAIL; break;
+						case WWFormat.TAIL: iNode.nextState = WWFormat.WIRE; break;
 					}
 				}
 			}
@@ -83,9 +83,9 @@ package net.rezmason.wireworld {
 				for (jen = 0; jen < _width; jen++) {
 					iNode = nodeTable[ike][jen];
 					if (!iNode) continue;
-					if (iNode.state == WireFormat.HEAD) {
+					if (iNode.state == WWFormat.HEAD) {
 						_headData.setPixel32(jen, ike, BLACK);
-					} else if (iNode.state == WireFormat.TAIL) {
+					} else if (iNode.state == WWFormat.TAIL) {
 						_tailData.setPixel32(jen, ike, BLACK);
 					}
 				}
@@ -108,7 +108,7 @@ package net.rezmason.wireworld {
 		//---------------------------------------
 		
 		override protected function finishParse(event:Event):void {
-			if (importer.width  > WireFormat.MAX_SIZE || importer.height  > WireFormat.MAX_SIZE || importer.width * importer.height < 1) {
+			if (importer.width  > WWFormat.MAX_SIZE || importer.height  > WWFormat.MAX_SIZE || importer.width * importer.height < 1) {
 				dispatchEvent(INVALID_SIZE_ERROR_EVENT);
 				return;
 			} else {

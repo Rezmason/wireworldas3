@@ -13,7 +13,7 @@ package net.rezmason.wireworld {
 	//---------------------------------------
 	import flash.net.FileFilter;
 
-	internal final class WireworldFileType {
+	internal final class WWFileType {
 
 		//---------------------------------------
 		// CLASS CONSTANTS

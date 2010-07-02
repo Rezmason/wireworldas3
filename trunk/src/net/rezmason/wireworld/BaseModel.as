@@ -136,7 +136,7 @@ package net.rezmason.wireworld {
 		// More of an example than an actual implementation.
 		// Performs dimension validation.
 		protected function finishParse(event:Event):void {
-			if (importer.width  > WireFormat.MAX_SIZE || importer.height  > WireFormat.MAX_SIZE || importer.width * importer.height < 1) {
+			if (importer.width  > WWFormat.MAX_SIZE || importer.height  > WWFormat.MAX_SIZE || importer.width * importer.height < 1) {
 				dispatchEvent(INVALID_SIZE_ERROR_EVENT);
 			} else {
 				_width = importer.width;

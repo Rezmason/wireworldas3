@@ -111,7 +111,7 @@ package net.rezmason.wireworld {
 					_width = _height = 0;
 				}       
 				
-				_totalNodes = txtFile.split(WireFormat.ALIVE_REG_EXP).length;
+				_totalNodes = txtFile.split(WWFormat.ALIVE_REG_EXP).length;
 				
 				dispatchEvent(PARSED_EVENT);
 			}
@@ -163,7 +163,7 @@ package net.rezmason.wireworld {
 					
 					multiplier = parseInt(digitString, 10) || 1;
 					
-					char = WireFormat.MCL_CONVERSION_TABLE[char];
+					char = WWFormat.MCL_CONVERSION_TABLE[char];
 					if (char) {
 
 						for (jen = 0; jen < multiplier; jen += 1) {
@@ -205,7 +205,7 @@ package net.rezmason.wireworld {
 
 			txtFile = txtFile.slice(0, -2);
 			
-			_totalNodes = txtFile.split(WireFormat.ALIVE_REG_EXP).length;
+			_totalNodes = txtFile.split(WWFormat.ALIVE_REG_EXP).length;
 			
 			dispatchEvent(PARSED_EVENT);
 		}
@@ -229,8 +229,8 @@ package net.rezmason.wireworld {
 				column = ike % _width;
 				row = (ike - column) / _width;
 				char = txtFile.charAt(ike);
-				if (WireFormat.CHAR_MAP[char] != undefined) {
-					_extractFunc(column, row, WireFormat.CHAR_MAP[char]);
+				if (WWFormat.CHAR_MAP[char] != undefined) {
+					_extractFunc(column, row, WWFormat.CHAR_MAP[char]);
 				}
 			}
 			offset += STEP;
