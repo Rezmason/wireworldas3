@@ -1,4 +1,12 @@
-We're calling refreshHeat too often
+View refreshes model
+	Handles flags
+Controller tells View when to refresh
+	Passes flags
+
+if (running, dragging or scrolling),
+	Only refresh the visible rect in the visible mode
+If (overdrive or turning heat on),
+	refreshTails the way you refresh heads
 
 Cut up the paper into fragments
 	IModel.spewFragments(fWidth:Number, fHeight:Number)
