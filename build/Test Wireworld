@@ -9,7 +9,7 @@ mydir=`dirname "$abspath"`
 
 pushd $mydir/../
 
-apparat="../../../apparat/apparat.jar"
+apparat="../../../apparat_old/apparat.jar"
 scala="/SDKs/scala-2.8.0.RC3/bin/scala"
 apparatSWC="../../../apparat/apparat.swc"
 flexSWC="/SDKs/flex/4.0.0.4904/frameworks/libs"
@@ -31,6 +31,7 @@ function wwBuild {
 		debug=false
 		optimize=true
 	fi
+	
 	echo "$1 $2, debug = $debug"
 	
 	defineStatement="-define+=BRAIN::"
@@ -61,7 +62,7 @@ function wwBuild {
 }
 
 wwBuild STANDARD wwdebug true false true
-#wwBuild AZOTH wwazoth true false false
+#wwBuild STANDARD wwdebug true false false
 
 #wwBuild TREE wwdebug false false
 #wwBuild HAXE wwhx false true
