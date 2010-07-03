@@ -7,5 +7,6 @@ package net.rezmason.wireworld {
 		public static const SLIDER:String = "slider";
 		public static const CURSOR:String = "cursor";
 		public static const DIALOG:String = "dialog";
+		public static const PROMPT:String = "prompt";
 	}
 }
