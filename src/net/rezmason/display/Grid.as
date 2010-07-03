@@ -41,6 +41,7 @@ package net.rezmason.display {
 			width = __width;
 			height = __height;
 			
+			opaqueBackground = 0x333333;
 			cacheAsBitmap = true;
 		}
 		

@@ -61,8 +61,8 @@ function wwBuild {
 	echo
 }
 
-wwBuild VECTOR wwdebug true false true
-#wwBuild STANDARD wwdebug true false false
+wwBuild VECTOR wwdebug false false true
+#wwBuild STANDARD wwdebug false false false
 
 #wwBuild TREE wwdebug false false
 #wwBuild HAXE wwhx false true

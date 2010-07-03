@@ -8,7 +8,6 @@ package net.rezmason.wireworld {
 		internal static const STEP:String = "step";
 		internal static const TOGGLE_OVERDRIVE:String = "toggleOverdrive";
 		internal static const TOGGLE_PLAY_PAUSE:String = "togglePlayPause";
-		internal static const TOGGLE_HEAT:String = "toggleHeat";
 		internal static const ADJUST_SPEED:String = "adjustSpeed";
 		internal static const LOAD_FROM_DISK:String = "loadFromDisk";
 		internal static const LOAD_FROM_URL:String = "loadFromWeb";

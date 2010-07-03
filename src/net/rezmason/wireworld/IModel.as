@@ -19,12 +19,10 @@ package net.rezmason.wireworld {
 		function get initialized():Boolean;							// true if the Model has been inited at least once
 		function get width():int;
 		function get height():int;
-		function get base():BitmapData; 							// filled black, always, with dimensions width x height
 		function get wireData():BitmapData; 						// black sillhouette of non-dead pixels
 		function get headData():BitmapData; 						// black sillhouette of head pixels
 		function get tailData():BitmapData; 						// black sillhouette of tail pixels
-		function get credit():String;
-		function set credit(value:String):void;
+		function get credit():String
 		function get generation():Number;
 		function get baseGraphics():Graphics; 						// returns drawing procedure for default image
 		function get wireGraphics():Graphics; 						// returns drawing procedure for dedicated wire image
@@ -39,9 +37,7 @@ package net.rezmason.wireworld {
 		function init(txt:String, isMCell:Boolean = false):void;
 		function setBounds(t:int, l:int, b:int, r:int):void;		// changes the draw bounds
 		function update():void; 									// creates the new state of the patch, increments the gen
-		function refreshHeat(fully:Boolean = false):void; 			// only refreshes the heat
-		function refreshImage(fully:Boolean = false):void; 			// does not refresh the heat
-		function refreshAll(fully:Boolean = false):void; 			// refreshes everything that can be refreshed
+		function refresh(flags:int = 0):void;			 			// redraws various data to the proper bitmaps
 		function getState(__x:int, __y:int):uint; 					// returns the color of the patch at the specified point
 		function reset():void; 										// sets the conditions of the IModel to their initial states, including the gen
 		function eraseRect(rect:Rectangle):void;					// finds nodes in the region indicated by the Rectangle, and sets their state to WIRE

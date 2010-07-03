@@ -207,7 +207,7 @@ package net.rezmason.wireworld {
 				y_ = Memory.readUnsignedShort(iNode + Y__);
 				if (rect.contains(x_, y_)) {
 					Memory.writeByte(1, iNode + IS_WIRE__);
-					_heatData.setPixel(x_, y_, 0xFF0008000);
+					_heatData.setPixel32(x_, y_, 0xFF0008000);
 				} else {
 					if (newHeadFront == NULL) {
 						newHeadFront = iNode;
@@ -237,7 +237,7 @@ package net.rezmason.wireworld {
 				y_ = Memory.readUnsignedShort(iNode + Y__);
 				if (rect.contains(x_, y_)) {
 					Memory.writeByte(1, iNode + IS_WIRE__);
-					_heatData.setPixel(x_, y_, 0xFF0008000);
+					_heatData.setPixel32(x_, y_, 0xFF0008000);
 				} else {
 					if (newHeadFront == NULL) {
 						newHeadFront = iNode;
@@ -256,70 +256,6 @@ package net.rezmason.wireworld {
 			tailFront = newHeadFront;
 			newHeadBack = newHeadFront = NULL;
 			
-			// refresh
-			
-			refreshImage();
-			refreshTails();
-		}
-		
-		override public function refreshHeat(fully:Boolean = false):void {
-			iNode = 0;
-			var allow:Boolean;
-			var mult:Number = 2.9 / _generation;
-			while (iNode < totalBytes) {
-				x_ = Memory.readUnsignedShort(iNode + X__);
-				y_ = Memory.readUnsignedShort(iNode + Y__);
-				allow = fully || (x_ >= leftBound && x_ < rightBound && y_ >= topBound && y_ < bottomBound);
-				if (allow) {
-					scratch = heatColorOf(Memory.readInt(iNode + TIMES_LIT__) * mult);
-					_heatData.setPixel(x_, y_, scratch);
-				}
-				iNode += NODE_SIZE;
-			}
-		}
-
-		override public function refreshImage(fully:Boolean = false):void {
-			if (fully) {
-				_tailData.copyPixels(_headData, _tailData.rect, ORIGIN);
-				_headData.fillRect(_headData.rect, CLEAR);
-			} else {
-				_tailData.copyPixels(_headData, bound, bound.topLeft);
-				_headData.fillRect(bound, CLEAR);
-			}
-			
-			iNode = headFront;
-			var allow:Boolean;
-			while (iNode != NULL) {
-				x_ = Memory.readUnsignedShort(iNode + X__);
-				y_ = Memory.readUnsignedShort(iNode + Y__);
-				allow = fully || (x_ >= leftBound && x_ < rightBound && y_ >= topBound && y_ < bottomBound);
-				if (allow) _headData.setPixel32(x_, y_, BLACK);
-				iNode = Memory.readInt(iNode + NEXT__);
-			}
-		}
-		
-		private function refreshTails(fully:Boolean = false):void {
-			if (fully) {
-				_tailData.fillRect(_tailData.rect, CLEAR);
-			} else {
-				_tailData.fillRect(bound, CLEAR);
-			}
-			
-			iNode = tailFront;
-			var allow:Boolean;
-			while (iNode != NULL) {
-				x_ = Memory.readUnsignedShort(iNode + X__);
-				y_ = Memory.readUnsignedShort(iNode + Y__);
-				allow = fully || (x_ >= leftBound && x_ < rightBound && y_ >= topBound && y_ < bottomBound);
-				if (allow) _tailData.setPixel32(x_, y_, BLACK);
-				iNode = Memory.readInt(iNode + NEXT__);
-			}
-		}
-		
-		override public function refreshAll(fully:Boolean = false):void {
-			refreshImage(fully);
-			refreshTails(fully);
-			refreshHeat(fully);
 		}
 		
 		override public function getState(__x:int, __y:int):uint {
@@ -377,7 +313,7 @@ package net.rezmason.wireworld {
 			
 			// wipe the head data
 			_heatData.fillRect(_heatData.rect, CLEAR);
-			refreshAll(true);
+			refresh(WWRefreshFlag.FULL | WWRefreshFlag.TAIL);
 			
 			_generation = 1;
 		}
@@ -496,12 +432,16 @@ package net.rezmason.wireworld {
 				iNode += NODE_SIZE;
 			}
 			
+			if (_wireData) _wireData.dispose();
+			if (_headData) _wireData.dispose();
+			if (_tailData) _wireData.dispose();
+			if (_heatData) _wireData.dispose();
 			
 			// The BitmapData objects only need to be as large as the active rectangle, with a one-pixel border to prevent artifacts.
 			_wireData = new BitmapData(activeRect.width + 1, activeRect.height + 1, true, CLEAR);
 			_headData = new BitmapData(activeRect.width + 1, activeRect.height + 1, true, CLEAR);
 			_tailData = new BitmapData(activeRect.width + 1, activeRect.height + 1, true, CLEAR);
-			_heatData = new BitmapData(activeRect.width + 1, activeRect.height + 1, false, BLACK);
+			_heatData = new BitmapData(activeRect.width + 1, activeRect.height + 1, true, CLEAR);
 			
 			drawBackground(_baseGraphics, _width, _height, BLACK);
 			drawData(_wireGraphics, activeRect, _wireData);
@@ -542,6 +482,51 @@ package net.rezmason.wireworld {
 			
 			totalNodes++;
 			totalBytes += NODE_SIZE;
+		}
+		
+		override protected function refreshHeat(fully:int = 0):void {
+			iNode = 0;
+			var allow:Boolean;
+			var mult:Number = 2.9 / _generation;
+			while (iNode < totalBytes) {
+				x_ = Memory.readUnsignedShort(iNode + X__);
+				y_ = Memory.readUnsignedShort(iNode + Y__);
+				allow = fully || (x_ >= leftBound && x_ <= rightBound && y_ >= topBound && y_ <= bottomBound);
+				if (allow) _heatData.setPixel32(x_, y_, heatColorOf(Memory.readInt(iNode + TIMES_LIT__) * mult));
+				iNode += NODE_SIZE;
+			}
+		}
+
+		override protected function refreshImage(fully:int = 0, freshTails:int = 0):void {
+			var allow:Boolean;
+			
+			if (freshTails) {
+				
+				_tailData.fillRect(fully ? _tailData.rect : bound, CLEAR);
+				
+				iNode = tailFront;
+				while (iNode != NULL) {
+					x_ = Memory.readUnsignedShort(iNode + X__);
+					y_ = Memory.readUnsignedShort(iNode + Y__);
+					allow = fully || (x_ >= leftBound && x_ <= rightBound && y_ >= topBound && y_ <= bottomBound);
+					if (allow) _tailData.setPixel32(x_, y_, BLACK);
+					iNode = Memory.readInt(iNode + NEXT__);
+				}
+				
+			} else {
+				_tailData.copyPixels(_headData, fully ? _tailData.rect : bound, fully ? ORIGIN : bound.topLeft);
+			}
+			
+			_headData.fillRect(fully ? _headData.rect : bound, CLEAR);
+			
+			iNode = headFront;
+			while (iNode != NULL) {
+				x_ = Memory.readUnsignedShort(iNode + X__);
+				y_ = Memory.readUnsignedShort(iNode + Y__);
+				allow = fully || (x_ >= leftBound && x_ <= rightBound && y_ >= topBound && y_ <= bottomBound);
+				if (allow) _headData.setPixel32(x_, y_, BLACK);
+				iNode = Memory.readInt(iNode + NEXT__);
+			}
 		}
 	}
 }

@@ -6,6 +6,7 @@ package net.rezmason.wireworld {
 	
 	import flash.display.BitmapData;
 	import flash.events.Event;
+	import flash.geom.Rectangle;
 	
 	// Not REALLY the first model ever made; just the first solution
 	// to simulating Wireworld that comes to mind. It's meant to do
@@ -27,9 +28,7 @@ package net.rezmason.wireworld {
 		// CONSTRUCTOR
 		//---------------------------------------
 		public function FirstModel() {
-			
 			super();
-			
 		}
 		
 		//---------------------------------------
@@ -73,23 +72,8 @@ package net.rezmason.wireworld {
 			}
 		}
 		
-		override public function refreshImage(fully:Boolean = false):void {
-			
-			_headData.fillRect(_headData.rect, 0x0);
-			_tailData.fillRect(_tailData.rect, 0x0);
-			
-			for (ike = 0; ike < _height; ike++) {
-				if (!nodeTable[ike]) continue;
-				for (jen = 0; jen < _width; jen++) {
-					iNode = nodeTable[ike][jen];
-					if (!iNode) continue;
-					if (iNode.state == WWFormat.HEAD) {
-						_headData.setPixel32(jen, ike, BLACK);
-					} else if (iNode.state == WWFormat.TAIL) {
-						_tailData.setPixel32(jen, ike, BLACK);
-					}
-				}
-			}
+		override public function eraseRect(rect:Rectangle):void {
+			// not implemented. Boo!
 		}
 		
 		override public function reset():void {
@@ -100,7 +84,7 @@ package net.rezmason.wireworld {
 					if (iNode) iNode.state = iNode.firstState;
 				}
 			}
-			refreshAll();
+			refresh(WWRefreshFlag.FULL | WWRefreshFlag.TAIL);
 		}
 		
 		//---------------------------------------
@@ -128,6 +112,11 @@ package net.rezmason.wireworld {
 		
 		override protected function finishExtraction(event:Event):void {
 			
+			if (_wireData) _wireData.dispose();
+			if (_headData) _wireData.dispose();
+			if (_tailData) _wireData.dispose();
+			if (_heatData) _wireData.dispose();
+			
 			_wireData = new BitmapData(_width, _height, true, CLEAR);
 			_headData = _wireData.clone();
 			_tailData = _wireData.clone();
@@ -152,6 +141,29 @@ package net.rezmason.wireworld {
 		override protected function addNode(__x:int, __y:int, __state:int):void {
 			nodeTable[__y] ||= [];
 			nodeTable[__y][__x] = new FirstWireNode(__x, __y, __state);
+		}
+		
+		override protected function refreshHeat(fully:int = 0):void {
+			// not implemented. Nyaahh!
+		}
+		
+		override protected function refreshImage(fully:int = 0, freshTails:int = 0):void {
+			
+			_headData.fillRect(_headData.rect, 0x0);
+			_tailData.fillRect(_tailData.rect, 0x0);
+			
+			for (ike = 0; ike < _height; ike++) {
+				if (!nodeTable[ike]) continue;
+				for (jen = 0; jen < _width; jen++) {
+					iNode = nodeTable[ike][jen];
+					if (!iNode) continue;
+					if (iNode.state == WWFormat.HEAD) {
+						_headData.setPixel32(jen, ike, BLACK);
+					} else if (iNode.state == WWFormat.TAIL) {
+						_tailData.setPixel32(jen, ike, BLACK);
+					}
+				}
+			}
 		}
 	}
 }
