@@ -18,6 +18,9 @@ Improving render performance
 					reset
 					dragging
 
+
+CC:		http://creativecommons.org/licenses/by-nc/3.0/
+
 Rethink GUI entirely
 	GUI elements should be Sprites
 		Absorbs display list from a source
@@ -32,6 +35,7 @@ Rethink GUI entirely
 		cursor
 		dialog
 		text
+		prompt
 	Binding
 		GUI elements should bind to a property on an object
 		The View then evaluates those properties
