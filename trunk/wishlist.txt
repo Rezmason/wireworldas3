@@ -1,18 +1,26 @@
-View refreshes model
-	Handles flags
-Controller tells View when to refresh
-	Passes flags
+Improving render performance
 
-if (running, dragging or scrolling),
-	Only refresh the visible rect in the visible mode
-If (overdrive or turning heat on),
-	refreshTails the way you refresh heads
+	Idea: Would redrawing the paper to only fit in the window be any help?
+	
+	Another idea: fragments
+		Rewrite the system for bringing graphics from the model
+			IModel.makeFragment(rect:Rectangle, colorPalette)
+				Returns a Shape containing wire, tail and head graphics layers
+				Colored in correctly
+			IModel.makeHeatFragment(rect:Rectangle)
+				Returns a Shape containing heatmap graphics layer
+		Cut up the wire/head/tail /heat data into fragments
+			IModel.spewRects(fWidth:Number, fHeight:Number)
+				Breaks non-dead area of BitmapData into rects and returns them
+			Fragments that are entirely off-screen should not be in the display list
+				Paper will manage its display list after 
+					zooming
+					reset
+					dragging
 
-Cut up the paper into fragments
-	IModel.spewFragments(fWidth:Number, fHeight:Number)
-		Breaks non-dead area of BitmapData into rects and returns them
-	Fragments that are entirely off-screen should not be in the display list
-	Still a solid base
+Test on Mac and PC
+Then Rip out debug stuff
+function, var cleanup
 
 Use latest TDSI
 
@@ -27,8 +35,11 @@ Example gallery
 	The dialog is an accordion list of documents sorted by author and name
 	Highlighting a file name enables the Load button
 
-When you get CS5, replace the text elements with TLF
+Replace the text elements with FTE
 	Then allow all UI elements to scale in the View
+
+Dumb down the buttons to Sprites
+Wise up the dialogs to class instances
 
 Use SVG instead of MovieClips in the FLA?
 	What's the nicest way to represent View elements in an open source project?
@@ -41,5 +52,6 @@ WireworldAndroid
 	Tap to start, stop
 	How do FileReference.browse() and FileReference.save() work on Android?
 	Redesign dialogs for vertical mobile screen
+	GPU acceleration
 		
 Try working with the tree model again

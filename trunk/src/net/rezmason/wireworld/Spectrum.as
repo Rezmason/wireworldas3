@@ -25,7 +25,7 @@ package net.rezmason.wireworld {
 		//---------------------------------------
 		public function Spectrum():void {
 			
-			super(100, 1, false, 0x000000);
+			super(100, 1, true, 0xFF000000);
 			
 			var _matrix:Matrix = new Matrix;
 			var _shape:Shape = new Shape;

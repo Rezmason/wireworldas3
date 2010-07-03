@@ -62,22 +62,6 @@ package net.rezmason.wireworld {
 			_outputData.applyFilter(_outputData, activeRect, ORIGIN, wireworldFilter);
 			_generation++;
 		}
-
-		override public function refreshHeat(fully:Boolean = false):void {
-			// not implemented. Nyaahh!
-		}
-		
-		// The model IS its own view, in a sense 
-		override public function refreshImage(fully:Boolean = false):void {
-			_headData.copyChannel(_outputData, activeRect, ORIGIN, BitmapDataChannel.GREEN, BitmapDataChannel.ALPHA);
-			_tailData.copyChannel(_outputData, activeRect, ORIGIN, BitmapDataChannel.BLUE,  BitmapDataChannel.ALPHA);
-		}
-		
-		override public function refreshAll(fully:Boolean = false):void {
-			refreshImage(fully);
-			refreshHeat(fully);
-		}
-
 		override public function getState(__x:int, __y:int):uint {
 			__x -= activeCorner.x;
 			__y -= activeCorner.y;
@@ -93,7 +77,7 @@ package net.rezmason.wireworld {
 			
 			_heatData.fillRect(activeRect, BLACK);
 			
-			refreshAll();
+			refresh(WWRefreshFlag.FULL | WWRefreshFlag.TAIL);
 			
 			_generation = 1;
 		}
@@ -134,6 +118,14 @@ package net.rezmason.wireworld {
 			activeRect = _tempData.getColorBoundsRect(WHITE, BLACK, false);
 			activeCorner = activeRect.topLeft;
 			
+			if (_initData) _initData.dispose();
+			if (_wireMask) _wireMask.dispose();
+			if (_outputData) _outputData.dispose();
+			if (_heatData) _heatData.dispose();
+			if (_wireData) _wireData.dispose();
+			if (_headData) _headData.dispose();
+			if (_tailData) _tailData.dispose();
+			
 			_initData = new BitmapData(activeRect.width, activeRect.height, true, BLACK);
 			_initData.copyPixels(_tempData, activeRect, ORIGIN);
 			_tempData.dispose();
@@ -160,5 +152,16 @@ package net.rezmason.wireworld {
 			totalNodes++;
 			_tempData.setPixel32(__x, __y, WWFormat.COLOR_MAP[__state]);
 		}
+		
+		override protected function refreshHeat(fully:int = 0):void {
+			// not implemented. Nyaahh!
+		}
+		
+		// The model IS its own view, in a sense 
+		override protected function refreshImage(fully:int = 0, freshTails:int = 0):void {
+			_headData.copyChannel(_outputData, activeRect, ORIGIN, BitmapDataChannel.GREEN, BitmapDataChannel.ALPHA);
+			_tailData.copyChannel(_outputData, activeRect, ORIGIN, BitmapDataChannel.BLUE,  BitmapDataChannel.ALPHA);
+		}
+		
 	}
 }

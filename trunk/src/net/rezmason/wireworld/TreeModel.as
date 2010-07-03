@@ -134,10 +134,6 @@ package net.rezmason.wireworld {
 		
 		override public function eraseRect(rect:Rectangle):void {}
 		
-		override public function refreshAll(fully:Boolean = false):void {}
-		
-		override public function refreshImage(fully:Boolean = false):void {}
-		
 		override public function getState(__x:int, __y:int):uint {
 			__x -= activeRect.x;
 			__y -= activeRect.y;
@@ -324,6 +320,8 @@ package net.rezmason.wireworld {
 				activeRect.bottom = Math.max(activeRect.bottom, __y + 1);
 			}
 		}
+		
+		override protected function refreshImage(fully:int = 0, freshTails:int = 0):void {}
 		
 		private function drawPixels(node:TreeNode, currentX:int, currentY:int, currentWidth:int):void {
 			

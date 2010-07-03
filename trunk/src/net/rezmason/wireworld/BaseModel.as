@@ -68,7 +68,7 @@ package net.rezmason.wireworld {
 		// These are useful for certain kinds of drawing. 
 		// They're color gradient lookup tables.
 		private var heatSpectrum:HeatSpectrum = new HeatSpectrum;
-		private var spectrum:Spectrum = new Spectrum();
+		private var spectrum:Spectrum = new Spectrum;
 		
 		
 		//---------------------------------------
@@ -86,12 +86,10 @@ package net.rezmason.wireworld {
 		public function get initialized():Boolean { return _initialized; }
 		public function get width():int { return _width; }
 		public function get height():int { return _height; }
-		public function get base():BitmapData { return new BitmapData(_width, _height, false, BLACK); }
 		public function get wireData():BitmapData { return _wireData.clone(); }
 		public function get headData():BitmapData { return _headData.clone(); }
 		public function get tailData():BitmapData { return _tailData.clone(); }
 		public function get credit():String { return _credit; }
-		public function set credit(value:String):void { _credit = value; }
 		public function get generation():Number { return _generation; }
 		public function get baseGraphics():Graphics { return makeGraphics(_baseGraphics); }
 		public function get wireGraphics():Graphics { return makeGraphics(_wireGraphics); }
@@ -110,12 +108,17 @@ package net.rezmason.wireworld {
 		// Most of the implemented methods of IModel are empty here.
 		public function init(txt:String, isMCell:Boolean = false):void { _initialized = true; importer.parse(txt, isMCell); }
 		public function update():void {}
-		public function refreshHeat(fully:Boolean = false):void {}
-		public function refreshImage(fully:Boolean = false):void {}
-		public function refreshAll(fully:Boolean = false):void { refreshImage(fully); }
 		public function getState(__x:int, __y:int):uint { return 0; }
 		public function reset():void {}
 		public function eraseRect(rect:Rectangle):void {}
+		
+		public function refresh(flags:int = 0):void {
+			if (flags & WWRefreshFlag.HEAT) {
+				refreshHeat((flags & WWRefreshFlag.FULL));
+			} else {
+				refreshImage(flags & WWRefreshFlag.FULL, flags & WWRefreshFlag.TAIL);
+			}
+		}
 		
 		public function setBounds(top:int, left:int, bottom:int, right:int):void {
 			topBound = top - activeCorner.x;
@@ -153,6 +156,10 @@ package net.rezmason.wireworld {
 			dispatchEvent(COMPLETE_EVENT);
 		}
 		
+		protected function refreshImage(fully:int = 0, freshTails:int = 0):void {}
+		
+		protected function refreshHeat(fully:int = 0):void {}
+		
 		// Draws the passed BitmapData into a Graphics object.
 		protected function drawData(graphicsObject:Graphics, rect:Rectangle, data:BitmapData):void {
 			graphicsObject.clear();
@@ -173,14 +180,14 @@ package net.rezmason.wireworld {
 			totalNodes++;
 		}
 		
-		protected final function heatColorOf(input:Number):int {
+		protected final function heatColorOf(input:Number):uint {
 			if (input > 1) return heatSpectrum.getPixel(heatSpectrum.width, 0);
-			return heatSpectrum.getPixel(input * heatSpectrum.width, 0);
+			return heatSpectrum.getPixel32(input * heatSpectrum.width, 0);
 		}
 		
-		protected final function colorOf(input:Number):int {
+		protected final function colorOf(input:Number):uint {
 			if (input > 1) return spectrum.getPixel(spectrum.width, 0);
-			return spectrum.getPixel(input * spectrum.width, 0);
+			return spectrum.getPixel32(input * spectrum.width, 0);
 		}
 	}
 }
