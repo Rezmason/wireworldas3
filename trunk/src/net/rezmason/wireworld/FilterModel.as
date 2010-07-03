@@ -178,8 +178,12 @@ package net.rezmason.wireworld {
 		}
 		
 		override protected function refreshImage(fully:int = 0, freshTails:int = 0):void {
+			_headData.lock();
+			_tailData.lock();
 			_headData.copyChannel(_outputData, activeRect, ORIGIN, BitmapDataChannel.GREEN, BitmapDataChannel.ALPHA);
 			_tailData.copyChannel(_outputData, activeRect, ORIGIN, BitmapDataChannel.BLUE,  BitmapDataChannel.ALPHA);
+			_headData.unlock();
+			_tailData.unlock();
 		}
 	}
 }

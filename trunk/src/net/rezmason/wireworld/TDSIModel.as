@@ -485,6 +485,7 @@ package net.rezmason.wireworld {
 		}
 		
 		override protected function refreshHeat(fully:int = 0):void {
+			_heatData.lock();
 			iNode = 0;
 			var allow:Boolean;
 			var mult:Number = 2.9 / _generation;
@@ -495,11 +496,14 @@ package net.rezmason.wireworld {
 				if (allow) _heatData.setPixel32(x_, y_, heatColorOf(Memory.readInt(iNode + TIMES_LIT__) * mult));
 				iNode += NODE_SIZE;
 			}
+			_heatData.unlock();
 		}
 
 		override protected function refreshImage(fully:int = 0, freshTails:int = 0):void {
 			var allow:Boolean;
 			
+			_tailData.lock();
+			_headData.lock();
 			if (freshTails) {
 				
 				_tailData.fillRect(fully ? _tailData.rect : bound, CLEAR);
@@ -527,6 +531,8 @@ package net.rezmason.wireworld {
 				if (allow) _headData.setPixel32(x_, y_, BLACK);
 				iNode = Memory.readInt(iNode + NEXT__);
 			}
+			_tailData.unlock();
+			_headData.unlock();
 		}
 	}
 }

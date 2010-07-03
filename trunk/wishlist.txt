@@ -1,3 +1,15 @@
+Rethink GUI initialization
+	GUI elements should be Sprites
+		Absorbs display list from a source
+	They should handle themselves
+		toggling
+		button sets
+		slider
+		"picked" state
+		class should have button sets listed, and their current option
+		cursor
+	Boxes should have their own classes
+
 Improving render performance
 
 	Idea: Would redrawing the paper to only fit in the window be any help?
@@ -13,7 +25,7 @@ Improving render performance
 			IModel.spewRects(fWidth:Number, fHeight:Number)
 				Breaks non-dead area of BitmapData into rects and returns them
 			Fragments that are entirely off-screen should not be in the display list
-				Paper will manage its display list after 
+				Paper will manage its display list after
 					zooming
 					reset
 					dragging
