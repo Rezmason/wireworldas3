@@ -1,20 +1,8 @@
-Rethink GUI initialization
-	GUI elements should be Sprites
-		Absorbs display list from a source
-	They should handle themselves
-		toggling
-		button sets
-		slider
-		"picked" state
-		class should have button sets listed, and their current option
-		cursor
-	Boxes should have their own classes
-
 Improving render performance
 
 	Idea: Would redrawing the paper to only fit in the window be any help?
 	
-	Another idea: fragments
+	Another idea: fragmenting the graphics
 		Rewrite the system for bringing graphics from the model
 			IModel.makeFragment(rect:Rectangle, colorPalette)
 				Returns a Shape containing wire, tail and head graphics layers
@@ -30,6 +18,24 @@ Improving render performance
 					reset
 					dragging
 
+Rethink GUI entirely
+	GUI elements should be Sprites
+		Absorbs display list from a source
+			SVG
+			Text string
+	They should make and handle themselves
+		toggling
+		button sets
+		slider
+		"picked" state
+		class should have button sets listed, and their current option
+		cursor
+		dialog
+		text
+	Binding
+		GUI elements should bind to a property on an object
+		The View then evaluates those properties
+		
 Test on Mac and PC
 Then Rip out debug stuff
 function, var cleanup
@@ -47,14 +53,8 @@ Example gallery
 	The dialog is an accordion list of documents sorted by author and name
 	Highlighting a file name enables the Load button
 
-Replace the text elements with FTE
-	Then allow all UI elements to scale in the View
-
 Dumb down the buttons to Sprites
 Wise up the dialogs to class instances
-
-Use SVG instead of MovieClips in the FLA?
-	What's the nicest way to represent View elements in an open source project?
 
 WireworldAndroid
 	Get it to build with AIR 2.5

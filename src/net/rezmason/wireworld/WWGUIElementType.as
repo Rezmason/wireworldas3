@@ -6,5 +6,6 @@ package net.rezmason.wireworld {
 		public static const IN_A_SET:String = "inASet";
 		public static const SLIDER:String = "slider";
 		public static const CURSOR:String = "cursor";
+		public static const DIALOG:String = "dialog";
 	}
 }
