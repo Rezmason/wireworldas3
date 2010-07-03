@@ -148,6 +148,8 @@ package net.rezmason.wireworld {
 		}
 		
 		override protected function refreshImage(fully:int = 0, freshTails:int = 0):void {
+			_tailData.lock();
+			_headData.lock();
 			
 			_headData.fillRect(_headData.rect, 0x0);
 			_tailData.fillRect(_tailData.rect, 0x0);
@@ -164,6 +166,8 @@ package net.rezmason.wireworld {
 					}
 				}
 			}
+			_tailData.unlock();
+			_headData.unlock();
 		}
 	}
 }
