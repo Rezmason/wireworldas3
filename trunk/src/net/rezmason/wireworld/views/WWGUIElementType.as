@@ -1,4 +1,4 @@
-package net.rezmason.wireworld {
+package net.rezmason.wireworld.views {
 	
 	internal final class WWGUIElementType {
 		public static const NORMAL:String = "normal";

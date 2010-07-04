@@ -18,7 +18,7 @@ package net.rezmason.wireworld {
 	import flash.events.IEventDispatcher;
 	import net.rezmason.gui.SimpleBridge;
 	
-	internal interface IView extends IEventDispatcher {
+	public interface IView extends IEventDispatcher {
 		function IView(__model:IModel, __scene:Sprite, __bridge:SimpleBridge):void;
 		function set callback(func:Function):void;						// Lets the Views communicate with the Controller
 		function get initialized():Boolean;
