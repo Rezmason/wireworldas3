@@ -51,7 +51,6 @@ package net.rezmason.wireworld.brains {
 		//---------------------------------------
 		// PRIVATE & PROTECTED VARIABLES
 		//---------------------------------------
-		protected var _initialized:Boolean = false;
 		protected var _width:int, _height:int;
 		protected var _credit:String;
 		protected var totalNodes:int = 0;
@@ -86,7 +85,6 @@ package net.rezmason.wireworld.brains {
 		//---------------------------------------
 		// GETTER / SETTERS
 		//---------------------------------------
-		public function get initialized():Boolean { return _initialized; }
 		public function get width():int { return _width; }
 		public function get height():int { return _height; }
 		public function get wireData():BitmapData { return _wireData.clone(); }
@@ -109,7 +107,7 @@ package net.rezmason.wireworld.brains {
 		//---------------------------------------
 		
 		// Most of the implemented methods of IModel are empty here.
-		public function init(txt:String, isMCell:Boolean = false):void { _initialized = true; importer.parse(txt, isMCell); }
+		public function init(txt:String, isMCell:Boolean = false):void { importer.parse(txt, isMCell); }
 		public function update():void {}
 		public function getState(__x:int, __y:int):uint { return 0; }
 		public function reset():void {}

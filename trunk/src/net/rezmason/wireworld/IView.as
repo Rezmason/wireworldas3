@@ -13,28 +13,15 @@ package net.rezmason.wireworld {
 	//---------------------------------------
 
 	import flash.display.BitmapData;
-	//import flash.display.DisplayObjectContainer;
 	import flash.display.Sprite;
-	//import flash.display.Stage;
-	//import flash.display.StageAlign;
-	//import flash.display.StageScaleMode;
 	import flash.events.Event;
-	//import flash.events.EventDispatcher;
 	import flash.events.IEventDispatcher;
-	//import flash.events.MouseEvent;
-	//import flash.system.Security;
-	
 	import net.rezmason.gui.SimpleBridge;
-	//import net.rezmason.gui.Toolbar;
-	//import net.rezmason.gui.ToolbarAlign;
-	//import net.rezmason.net.Syphon;
-	
-	// This class is responsible for managing all visual assets and the display of all information.
 	
 	internal interface IView extends IEventDispatcher {
 		function IView(__model:IModel, __scene:Sprite, __bridge:SimpleBridge):void;
-		function set callback(func:Function):void;
-		function isReady():Boolean;
+		function set callback(func:Function):void;						// Lets the Views communicate with the Controller
+		function get initialized():Boolean;
 		function addGUIEventListeners():void;
 		function setFileName(__fileName:String):void;
 		function showLoading():void;
