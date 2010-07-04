@@ -6,7 +6,7 @@
 *
 * Please contact jeremysachs@rezmason.net prior to distributing modified versions of this class.
 */
-package net.rezmason.wireworld {
+package net.rezmason.wireworld.brains {
 
 	//---------------------------------------
 	// IMPORT STATEMENTS
@@ -18,6 +18,8 @@ package net.rezmason.wireworld {
 	import flash.geom.Rectangle;
 	
 	import net.rezmason.utils.GreenThread;
+	import net.rezmason.wireworld.WWFormat;
+	import net.rezmason.wireworld.WWRefreshFlag;
 	
 	// Highly experimental model that uses Bill Gosper's
 	// hashlife algorithm, similarly to its implementation
@@ -31,7 +33,7 @@ package net.rezmason.wireworld {
 	
 	// I won't comment this model until I get it working smoothly.
 	
-	internal final class TreeModel extends BaseModel {
+	public final class TreeModel extends BaseModel {
 		
 		//---------------------------------------
 		// CLASS CONSTANTS

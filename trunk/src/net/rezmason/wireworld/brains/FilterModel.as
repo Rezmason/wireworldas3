@@ -6,30 +6,31 @@
 *
 * Please contact jeremysachs@rezmason.net prior to distributing modified versions of this class.
 */
-package net.rezmason.wireworld {
+package net.rezmason.wireworld.brains {
 
 	//---------------------------------------
 	// IMPORT STATEMENTS
 	//---------------------------------------
 	import flash.display.BitmapData;
 	import flash.display.BitmapDataChannel;
-	import flash.display.Shader;
 	import flash.events.Event;
-	import flash.filters.ShaderFilter;
-	import flash.utils.ByteArray;
+	import flash.filters.ConvolutionFilter;
+	import flash.geom.Rectangle;
 	
-	// Lightweight, similar to FilterModel.
-	// This model's actually pretty slow.
+	import net.rezmason.wireworld.WWFormat;
+	import net.rezmason.wireworld.WWRefreshFlag;
 	
-	internal final class PixelBenderModel extends BaseModel {
+	// Cells in a 2D CA like Wireworld are basically pixels, or image fragments.
+	// This model tries to map the simulation to a bitmap filtering problem.
+	// Pretty slow.
+	
+	public final class FilterModel extends BaseModel {
 		
 		//---------------------------------------
 		// CLASS CONSTANTS
 		//---------------------------------------
+		private static const RED:uint = 0xFFFF0000, GREEN:uint = 0xFF00FF00, BLUE:uint = 0xFF0000FF;
 		private static const SURVEY_TEMPLATE:Vector.<int> = new <int>[0, 0, 0, 0, 0, 0, 0, 0, 0];
-		
-		[Embed(source='../../../../pixelbender/wireworldnaive.pbj', mimeType="application/octet-stream")]
-		private static const WireworldPBJ:Class;
 		
 		//---------------------------------------
 		// PRIVATE VARIABLES
@@ -39,18 +40,18 @@ package net.rezmason.wireworld {
 		private var _tempData:BitmapData;
 		private var _wireMask:BitmapData;
 		private var _outputData:BitmapData;
-		
-		private var wireworldShader:Shader;
-		private var wireworldFilter:ShaderFilter;
-		
+		private var _scratchData:BitmapData;
+		private var _scratch2Data:BitmapData;
+		private var propagate:ConvolutionFilter = new ConvolutionFilter(3, 3, [
+			1, 1, 1, 
+			1, 0, 1, 
+			1, 1, 1
+		], 8, 0, true, false, BLACK, 1);
 
 		//---------------------------------------
 		// CONSTRUCTOR
 		//---------------------------------------
-		public function PixelBenderModel():void {
-			wireworldShader = new Shader(new WireworldPBJ() as ByteArray);
-			wireworldFilter = new ShaderFilter(wireworldShader);
-		}
+		public function FilterModel():void {}
 		
 		//---------------------------------------
 		// PUBLIC METHODS
@@ -58,10 +59,28 @@ package net.rezmason.wireworld {
 		
 		// update
 		override public function update():void {
-			// Most of the dirty work is done by the filter.
-			_outputData.applyFilter(_outputData, activeRect, ORIGIN, wireworldFilter);
+			
+			// get last state
+			_scratchData.copyChannel(_outputData, activeRect, ORIGIN, BitmapDataChannel.BLUE , BitmapDataChannel.BLUE);
+			_scratchData.copyChannel(_outputData, activeRect, ORIGIN, BitmapDataChannel.GREEN, BitmapDataChannel.GREEN);
+			//_scratchData.copyPixels(_outputData, activeRect, DUMB_POINT);
+			
+			// These bitmaps a pretty fun to watch.
+			_outputData.copyChannel(_wireMask, activeRect, ORIGIN, BitmapDataChannel.RED, BitmapDataChannel.RED); // draw wires
+			_scratch2Data.applyFilter(_outputData, activeRect, ORIGIN, propagate); // neighbor data propagates one pixel
+			_scratch2Data.threshold(_wireMask, activeRect, ORIGIN, "==", 0, BLACK,	0x00000001); // dead must stay dead
+			_scratch2Data.threshold(_scratch2Data, activeRect, ORIGIN, "==", 0, GREEN,	0x00000100); // No less than 1 head neighbor
+			_outputData.threshold(_scratch2Data, activeRect, ORIGIN, "==", 0, GREEN,	0x00004000); // No more than 2 head neighbors
+			_outputData.threshold(_scratchData, activeRect, ORIGIN, "==", 1, RED, 	0x00000001); // last tails must become wire
+			_outputData.threshold(_scratchData, activeRect, ORIGIN, "!=", 0, BLUE,	0x00000100); // last heads must become tails
+			
 			_generation++;
 		}
+		
+		override public function eraseRect(rect:Rectangle):void {
+			// not implemented. Boo!
+		}
+		
 		override public function getState(__x:int, __y:int):uint {
 			__x -= activeCorner.x;
 			__y -= activeCorner.y;
@@ -69,6 +88,8 @@ package net.rezmason.wireworld {
 		}
 
 		override public function reset():void {
+			
+			// returns the bitmaps to their original states
 			_wireMask.threshold(_initData, activeRect, ORIGIN, "!=", BLACK, WHITE, WHITE);
 			_wireData.copyChannel(_wireMask, activeRect, ORIGIN, BitmapDataChannel.RED, BitmapDataChannel.ALPHA);
 			_headData.copyChannel(_outputData, activeRect, ORIGIN, BitmapDataChannel.GREEN, BitmapDataChannel.ALPHA);
@@ -86,8 +107,6 @@ package net.rezmason.wireworld {
 		// PRIVATE METHODS
 		//---------------------------------------
 		
-		// Validates the imported data dimensions 
-		// and passes addNode to the importer
 		override protected function finishParse(event:Event):void {
 			if (importer.width  > WWFormat.MAX_SIZE || importer.height  > WWFormat.MAX_SIZE || importer.width * importer.height < 1) {
 				dispatchEvent(INVALID_SIZE_ERROR_EVENT);
@@ -111,8 +130,6 @@ package net.rezmason.wireworld {
 			dispatchEvent(COMPLETE_EVENT);
 		}
 		
-		// Finds the active portion of the Wireworld instance and draws it
-		// over a solid background
 		private function initDrawData():void {
 			
 			activeRect = _tempData.getColorBoundsRect(WHITE, BLACK, false);
@@ -125,6 +142,8 @@ package net.rezmason.wireworld {
 			if (_wireData) _wireData.dispose();
 			if (_headData) _headData.dispose();
 			if (_tailData) _tailData.dispose();
+			if (_scratchData) _scratchData.dispose();
+			if (_scratch2Data) _scratch2Data.dispose();
 			
 			_initData = new BitmapData(activeRect.width, activeRect.height, true, BLACK);
 			_initData.copyPixels(_tempData, activeRect, ORIGIN);
@@ -137,6 +156,9 @@ package net.rezmason.wireworld {
 			_wireData = _initData.clone();
 			_headData = _initData.clone();
 			_tailData = _initData.clone();
+			_scratchData = _initData.clone();
+			_scratch2Data = _initData.clone();
+			
 			
 			drawBackground(_baseGraphics, _width, _height, BLACK);
 			drawData(_wireGraphics, activeRect, _wireData);
@@ -147,7 +169,6 @@ package net.rezmason.wireworld {
 			activeRect = _initData.rect;
 		}
 		
-		// Draws the node as a colored pixel to a temporary bitmap.
 		override protected function addNode(__x:int, __y:int, __state:int):void {
 			totalNodes++;
 			_tempData.setPixel32(__x, __y, WWFormat.COLOR_MAP[__state]);
@@ -157,7 +178,6 @@ package net.rezmason.wireworld {
 			// not implemented. Nyaahh!
 		}
 		
-		// The model IS its own view, in a sense 
 		override protected function refreshImage(fully:int = 0, freshTails:int = 0):void {
 			_headData.lock();
 			_tailData.lock();
@@ -166,6 +186,5 @@ package net.rezmason.wireworld {
 			_headData.unlock();
 			_tailData.unlock();
 		}
-		
 	}
 }

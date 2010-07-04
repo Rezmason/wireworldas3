@@ -6,7 +6,7 @@
 *
 * Please contact jeremysachs@rezmason.net prior to distributing modified versions of this class.
 */
-package net.rezmason.wireworld {
+package net.rezmason.wireworld.brains {
 
 	//---------------------------------------
 	// IMPORT STATEMENTS
@@ -16,6 +16,8 @@ package net.rezmason.wireworld {
 	import apparat.math.IntMath;
 	
 	import net.rezmason.utils.GreenThread;
+	import net.rezmason.wireworld.WWEvent;
+	import net.rezmason.wireworld.WWFormat;
 	
 	// Helps to convert TXT and MCL files.
 	// All the models used to do this, so the job

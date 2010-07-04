@@ -6,7 +6,7 @@
 *
 * Please contact jeremysachs@rezmason.net prior to distributing modified versions of this class.
 */
-package net.rezmason.wireworld {
+package net.rezmason.wireworld.brains {
 
 	//---------------------------------------
 	// IMPORT STATEMENTS
@@ -23,7 +23,10 @@ package net.rezmason.wireworld {
 	
 	import net.rezmason.utils.makeGraphics;
 	
-	import spark.primitives.Rect;
+	import net.rezmason.wireworld.IModel;
+	import net.rezmason.wireworld.WWEvent;
+	import net.rezmason.wireworld.WWFormat;
+	import net.rezmason.wireworld.WWRefreshFlag;
 	
 	// While models don't necessarily have to 
 	// subclass BaseModel, it's a good starting point.

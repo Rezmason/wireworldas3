@@ -13,21 +13,21 @@ package net.rezmason.wireworld {
 	//---------------------------------------
 	import flash.events.Event;
 	
-	internal final class WWEvent extends Event {
+	public final class WWEvent extends Event {
 		
-		internal static const ANNOUNCER_SELECT:String = "announcerSelect";
-		internal static const ANNOUNCER_REMOVE:String = "announcerRemove";
-		internal static const ANNOUNCER_DROP  :String = "announcerDrop";
+		public static const ANNOUNCER_SELECT:String = "announcerSelect";
+		public static const ANNOUNCER_REMOVE:String = "announcerRemove";
+		public static const ANNOUNCER_DROP  :String = "announcerDrop";
 		
-		internal static const DATA_PARSED:String = "dataParsed";
-		internal static const DATA_EXTRACTED:String = "dataExtracted";
+		public static const DATA_PARSED:String = "dataParsed";
+		public static const DATA_EXTRACTED:String = "dataExtracted";
 		
-		internal static const MODEL_BUSY:String = "modelBusy";
-		internal static const MODEL_IDLE:String = "modelidle";
+		public static const MODEL_BUSY:String = "modelBusy";
+		public static const MODEL_IDLE:String = "modelidle";
 		
-		internal static const READY:String = "ready";
+		public static const READY:String = "ready";
 		
-		internal var value:*;
+		public var value:*;
 		
 		//---------------------------------------
 		// CONSTRUCTOR
