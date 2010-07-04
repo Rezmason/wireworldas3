@@ -1,6 +1,6 @@
 package net.rezmason.wireworld.views {
 	
-	internal final class WWGUIElementType {
+	internal final class ElementType {
 		public static const NORMAL:String = "normal";
 		public static const TOGGLABLE:String = "togglable";
 		public static const IN_A_SET:String = "inASet";
