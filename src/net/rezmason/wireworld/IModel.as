@@ -16,7 +16,7 @@ package net.rezmason.wireworld {
 	// Every model implements these methods, getters and setters.
 	
 	public interface IModel extends IEventDispatcher {
-		function get initialized():Boolean;							// true if the Model has been inited at least once
+		function IModel();
 		function get width():int;
 		function get height():int;
 		function get wireData():BitmapData; 						// black sillhouette of non-dead pixels
