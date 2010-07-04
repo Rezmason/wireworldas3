@@ -6,7 +6,7 @@
 *
 * Please contact jeremysachs@rezmason.net prior to distributing modified versions of this class.
 */
-package net.rezmason.wireworld {
+package net.rezmason.wireworld.brains {
 	
 	// FirstWireNodes represent individual cells in the FirtModel.
 	

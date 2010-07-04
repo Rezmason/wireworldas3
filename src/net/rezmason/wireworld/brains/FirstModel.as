@@ -1,4 +1,4 @@
-package net.rezmason.wireworld {
+package net.rezmason.wireworld.brains {
 	
 	//---------------------------------------
 	// IMPORT STATEMENTS
@@ -7,6 +7,9 @@ package net.rezmason.wireworld {
 	import flash.display.BitmapData;
 	import flash.events.Event;
 	import flash.geom.Rectangle;
+	
+	import net.rezmason.wireworld.WWFormat;
+	import net.rezmason.wireworld.WWRefreshFlag;
 	
 	// Not REALLY the first model ever made; just the first solution
 	// to simulating Wireworld that comes to mind. It's meant to do

@@ -6,7 +6,7 @@
 *
 * Please contact jeremysachs@rezmason.net prior to distributing modified versions of this class.
 */
-package net.rezmason.wireworld {
+package net.rezmason.wireworld.brains {
 
 	//---------------------------------------
 	// IMPORT STATEMENTS
@@ -20,12 +20,15 @@ package net.rezmason.wireworld {
 	import net.rezmason.utils.GreenThread;
 	import apparat.math.IntMath;
 	
+	import net.rezmason.wireworld.WWFormat;
+	import net.rezmason.wireworld.WWRefreshFlag;
+	
 	// Adapted from LinkedListModel. 
 	// Originally stored WireNode instances in Vectors,
 	// but that's just stupid. Instead, it now has a Vector
 	// for every WireNode property.
 	
-	internal final class VectorModel extends BaseModel {
+	public final class VectorModel extends BaseModel {
 
 		//---------------------------------------
 		// CLASS CONSTANTS

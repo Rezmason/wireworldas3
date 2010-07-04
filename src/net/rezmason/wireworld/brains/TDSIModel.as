@@ -6,14 +6,13 @@
 *
 * Please contact jeremysachs@rezmason.net prior to distributing modified versions of this class.
 */
-package net.rezmason.wireworld {
+package net.rezmason.wireworld.brains {
 
 	//---------------------------------------
 	// IMPORT STATEMENTS
 	//---------------------------------------
 	import apparat.math.IntMath;
-	
-	import com.buraks.utils.fastmem;
+	import apparat.memory.Memory;
 	
 	import flash.display.BitmapData;
 	import flash.events.Event;
@@ -23,12 +22,16 @@ package net.rezmason.wireworld {
 	import flash.utils.Endian;
 	
 	import net.rezmason.utils.GreenThread;
+	import net.rezmason.wireworld.WWFormat;
+	import net.rezmason.wireworld.WWRefreshFlag;
 	
-	// Based on TDSIModel. Doing a find-and-replace. Is this really faster?
+	// Spun from VectorModel. Replaced the Vectors with indexed values
+	// in a TDSI ByteArray. Runs slowly without a TDSI pass. With TDSI,
+	// it's currently the fastest of the *responsive* implementations.
 	
 	// Refer to the VectorModel comments if the ones here don't help.
 	
-	internal final class AzothModel extends BaseModel {
+	public final class TDSIModel extends BaseModel {
 
 		//---------------------------------------
 		// CLASS CONSTANTS
@@ -93,12 +96,12 @@ package net.rezmason.wireworld {
 		//---------------------------------------
 		// CONSTRUCTOR
 		//---------------------------------------
-		public function AzothModel():void {
+		public function TDSIModel():void {
 			
 			// init the ByteArray.
 			bytes.endian = Endian.LITTLE_ENDIAN;
 			bytes.length = 1024;
-			fastmem.fastSelectMem(bytes);
+			Memory.select(bytes);
 			
 			// Set up the neighbor thread.
 			neighborThread.taskFragment = partialFindNeighbors;
@@ -118,37 +121,37 @@ package net.rezmason.wireworld {
 			//		first, list all wires that are adjacent to heads
 			iNode = headFront;
 			while (iNode != NULL) {
-				scratch = fastmem.fastGetByte(iNode + NEIGHBOR_COUNT__);
+				scratch = Memory.readUnsignedByte(iNode + NEIGHBOR_COUNT__);
 				for (ike = 0; ike < scratch; ike += 1) {
-					jNode = fastmem.fastGetI32(iNode + NEIGHBOR_LIST__ + ike * INT_SIZE);
-					if (fastmem.fastGetByte(jNode + IS_WIRE__)) {
+					jNode = Memory.readInt(iNode + NEIGHBOR_LIST__ + ike * INT_SIZE);
+					if (Memory.readUnsignedByte(jNode + IS_WIRE__)) {
 						jen = jNode + TAPS__;
-						if (!fastmem.fastGetByte(jen)) {
+						if (!Memory.readUnsignedByte(jen)) {
 							if (newHeadFront == NULL) {
 								newHeadFront = jNode;
 							} else {
-								fastmem.fastSetI32(jNode, newHeadBack + NEXT__);
+								Memory.writeInt(jNode, newHeadBack + NEXT__);
 							}
 							newHeadBack = jNode;
 						}
-						fastmem.fastSetByte(fastmem.fastGetByte(jen) + 1, jen);
+						Memory.writeByte(Memory.readUnsignedByte(jen) + 1, jen);
 					}
 				}
-				iNode = fastmem.fastGetI32(iNode + NEXT__);
+				iNode = Memory.readInt(iNode + NEXT__);
 			}
 			if (newHeadBack != NULL) {
-				fastmem.fastSetI32(NULL, newHeadBack + NEXT__);
+				Memory.writeInt(NULL, newHeadBack + NEXT__);
 			}
 			
 			//		then, remove from this list all nodes with more than two head neighbors
 			iNode = newHeadFront;
 			while (iNode != NULL) {
-				if (fastmem.fastGetByte(iNode + TAPS__) > 2) {
-					newHeadFront = fastmem.fastGetI32(iNode + NEXT__);
-					fastmem.fastSetByte(0, iNode + TAPS__);
+				if (Memory.readUnsignedByte(iNode + TAPS__) > 2) {
+					newHeadFront = Memory.readInt(iNode + NEXT__);
+					Memory.writeByte(0, iNode + TAPS__);
 					iNode = newHeadFront;
 				} else {
-					fastmem.fastSetByte(0, iNode + TAPS__);
+					Memory.writeByte(0, iNode + TAPS__);
 					break;
 				}
 			}
@@ -156,16 +159,16 @@ package net.rezmason.wireworld {
 			totalHeads = 0;
 			
 			if (iNode != NULL) {
-				jNode = fastmem.fastGetI32(iNode + NEXT__);
+				jNode = Memory.readInt(iNode + NEXT__);
 				while (jNode != NULL) {
-					if (fastmem.fastGetByte(jNode + TAPS__) > 2) {
-						fastmem.fastSetI32(fastmem.fastGetI32(jNode + NEXT__), iNode + NEXT__);
+					if (Memory.readUnsignedByte(jNode + TAPS__) > 2) {
+						Memory.writeInt(Memory.readInt(jNode + NEXT__), iNode + NEXT__);
 					} else {
 						totalHeads++;
 						iNode = jNode;
 					}
-					fastmem.fastSetByte(0, jNode + TAPS__);
-					jNode = fastmem.fastGetI32(jNode + NEXT__);
+					Memory.writeByte(0, jNode + TAPS__);
+					jNode = Memory.readInt(jNode + NEXT__);
 				}
 			}
 			
@@ -173,15 +176,15 @@ package net.rezmason.wireworld {
 			
 			iNode = tailFront;
 			while (iNode != NULL) {
-				fastmem.fastSetByte(1, iNode + IS_WIRE__);
-				iNode = fastmem.fastGetI32(iNode + NEXT__);
+				Memory.writeByte(1, iNode + IS_WIRE__);
+				iNode = Memory.readInt(iNode + NEXT__);
 			}
 			
 			iNode = newHeadFront;
 			while (iNode != NULL) {
-				fastmem.fastSetByte(0, iNode + IS_WIRE__);
-				fastmem.fastSetI32(fastmem.fastGetI32(iNode + TIMES_LIT__) + 1, iNode + TIMES_LIT__);
-				iNode = fastmem.fastGetI32(iNode + NEXT__);
+				Memory.writeByte(0, iNode + IS_WIRE__);
+				Memory.writeInt(Memory.readInt(iNode + TIMES_LIT__) + 1, iNode + TIMES_LIT__);
+				iNode = Memory.readInt(iNode + NEXT__);
 			}
 			
 			// swap the lists
@@ -202,25 +205,25 @@ package net.rezmason.wireworld {
 			totalHeads = 0;
 			iNode = headFront;
 			while (iNode != NULL) {
-				x_ = fastmem.fastGetUI16(iNode + X__);
-				y_ = fastmem.fastGetUI16(iNode + Y__);
+				x_ = Memory.readUnsignedShort(iNode + X__);
+				y_ = Memory.readUnsignedShort(iNode + Y__);
 				if (rect.contains(x_, y_)) {
-					fastmem.fastSetByte(1, iNode + IS_WIRE__);
+					Memory.writeByte(1, iNode + IS_WIRE__);
 					_heatData.setPixel32(x_, y_, 0xFF0008000);
 				} else {
 					if (newHeadFront == NULL) {
 						newHeadFront = iNode;
 					} else {
-						fastmem.fastSetI32(iNode, newHeadBack + NEXT__);
+						Memory.writeInt(iNode, newHeadBack + NEXT__);
 					}
 					newHeadBack = iNode;
 					totalHeads++;
 				}
-				iNode = fastmem.fastGetI32(iNode + NEXT__);
+				iNode = Memory.readInt(iNode + NEXT__);
 			}
 			
 			if (newHeadBack != NULL) {
-				fastmem.fastSetI32(NULL, newHeadBack + NEXT__);
+				Memory.writeInt(NULL, newHeadBack + NEXT__);
 			}
 			
 			// those heads are the "good" heads; swap lists
@@ -232,24 +235,24 @@ package net.rezmason.wireworld {
 			
 			iNode = tailFront;
 			while (iNode != NULL) {
-				x_ = fastmem.fastGetUI16(iNode + X__);
-				y_ = fastmem.fastGetUI16(iNode + Y__);
+				x_ = Memory.readUnsignedShort(iNode + X__);
+				y_ = Memory.readUnsignedShort(iNode + Y__);
 				if (rect.contains(x_, y_)) {
-					fastmem.fastSetByte(1, iNode + IS_WIRE__);
+					Memory.writeByte(1, iNode + IS_WIRE__);
 					_heatData.setPixel32(x_, y_, 0xFF0008000);
 				} else {
 					if (newHeadFront == NULL) {
 						newHeadFront = iNode;
 					} else {
-						fastmem.fastSetI32(iNode, newHeadBack + NEXT__);
+						Memory.writeInt(iNode, newHeadBack + NEXT__);
 					}
 					newHeadBack = iNode;
 				}
-				iNode = fastmem.fastGetI32(iNode + NEXT__);
+				iNode = Memory.readInt(iNode + NEXT__);
 			}
 			
 			if (newHeadBack != NULL) {
-				fastmem.fastSetI32(NULL, newHeadBack + NEXT__);
+				Memory.writeInt(NULL, newHeadBack + NEXT__);
 			}
 			
 			tailFront = newHeadFront;
@@ -274,40 +277,40 @@ package net.rezmason.wireworld {
 			// Technically this could be faster, but who really cares?
 			iNode = 0;
 			while (iNode < totalBytes) {
-				fastmem.fastSetI32(0, iNode + TIMES_LIT__);
+				Memory.writeInt(0, iNode + TIMES_LIT__);
 				
-				switch (fastmem.fastGetByte(iNode + FIRST_STATE__)) {
+				switch (Memory.readUnsignedByte(iNode + FIRST_STATE__)) {
 					case WWFormat.HEAD:
-						fastmem.fastSetByte(0, iNode + IS_WIRE__);
+						Memory.writeByte(0, iNode + IS_WIRE__);
 						if (headFront == NULL) {
 							headFront = iNode;
 						} else {
-							fastmem.fastSetI32(iNode, headBack + NEXT__);
+							Memory.writeInt(iNode, headBack + NEXT__);
 						}
 						headBack = iNode;
-						fastmem.fastSetI32(fastmem.fastGetI32(iNode + TIMES_LIT__) + 1, iNode + TIMES_LIT__);
+						Memory.writeInt(Memory.readInt(iNode + TIMES_LIT__) + 1, iNode + TIMES_LIT__);
 						break;
 					case WWFormat.TAIL:
-						fastmem.fastSetByte(0, iNode + IS_WIRE__);
+						Memory.writeByte(0, iNode + IS_WIRE__);
 						if (tailFront == NULL) {
 							tailFront = iNode;
 						} else {
-							fastmem.fastSetI32(iNode, tailBack + NEXT__);
+							Memory.writeInt(iNode, tailBack + NEXT__);
 						}
 						tailBack = iNode;
 						break;
 					case WWFormat.WIRE:
-						fastmem.fastSetByte(1, iNode + IS_WIRE__);
+						Memory.writeByte(1, iNode + IS_WIRE__);
 				}
 				
 				iNode += NODE_SIZE;
 			}
 			
 			if (headBack != NULL) {
-				fastmem.fastSetI32(NULL, headBack + NEXT__);
+				Memory.writeInt(NULL, headBack + NEXT__);
 			}
 			if (tailBack != NULL) {
-				fastmem.fastSetI32(NULL, tailBack + NEXT__);
+				Memory.writeInt(NULL, tailBack + NEXT__);
 			}
 			
 			// wipe the head data
@@ -336,7 +339,7 @@ package net.rezmason.wireworld {
 				}
 				bytes.length = IntMath.max(NODE_SIZE * importer.totalNodes, MIN_BYTEARRAY_SIZE);
 				trace("Byte array size :", bytes.length);
-				fastmem.fastSelectMem(bytes);
+				Memory.select(bytes);
 				totalNodes = 0;
 				totalBytes = 0;
 				headFront = headBack = -1;
@@ -364,8 +367,8 @@ package net.rezmason.wireworld {
 		private function partialFindNeighbors():void {
 			for (ike = 0; ike < STEP && neighborItr < totalBytes; ike += 1) {
 				iNode = neighborItr;
-				scratch = fastmem.fastGetUI16(iNode + X__) + fastmem.fastGetUI16(iNode + Y__) * _width;
-				fastmem.fastSetByte(0, iNode + NEIGHBOR_COUNT__);
+				scratch = Memory.readUnsignedShort(iNode + X__) + Memory.readUnsignedShort(iNode + Y__) * _width;
+				Memory.writeByte(0, iNode + NEIGHBOR_COUNT__);
 
 				scratch -= _width;
 				neighbor = neighborLookupTable[scratch - 1];	if (neighbor != undefined) addNeighbor(iNode, int(neighbor));
@@ -381,16 +384,16 @@ package net.rezmason.wireworld {
 				neighbor = neighborLookupTable[scratch + 0];	if (neighbor != undefined) addNeighbor(iNode, int(neighbor));
 				neighbor = neighborLookupTable[scratch + 1];	if (neighbor != undefined) addNeighbor(iNode, int(neighbor));
 
-				staticSurvey[fastmem.fastGetByte(iNode + NEIGHBOR_COUNT__)]++;
+				staticSurvey[Memory.readUnsignedByte(iNode + NEIGHBOR_COUNT__)]++;
 				
 				neighborItr += NODE_SIZE;
 			}
 		}
 		
 		private function addNeighbor(node:int, value:int):void {
-			jen = fastmem.fastGetByte(node + NEIGHBOR_COUNT__);
-			fastmem.fastSetI32(value, node + NEIGHBOR_LIST__ + jen * INT_SIZE);
-			fastmem.fastSetByte(jen + 1, node + NEIGHBOR_COUNT__);
+			jen = Memory.readUnsignedByte(node + NEIGHBOR_COUNT__);
+			Memory.writeInt(value, node + NEIGHBOR_LIST__ + jen * INT_SIZE);
+			Memory.writeByte(jen + 1, node + NEIGHBOR_COUNT__);
 		}
 		
 		private function finishFindNeighbors():void {
@@ -411,8 +414,8 @@ package net.rezmason.wireworld {
 			activeRect.setEmpty();
 			iNode = 0;
 			while (iNode < totalBytes) {
-				x_ = fastmem.fastGetUI16(iNode + X__);
-				y_ = fastmem.fastGetUI16(iNode + Y__);
+				x_ = Memory.readUnsignedShort(iNode + X__);
+				y_ = Memory.readUnsignedShort(iNode + Y__);
 				if (activeRect.isEmpty()) {
 					activeRect.left = x_;
 					activeRect.top = y_;
@@ -451,10 +454,10 @@ package net.rezmason.wireworld {
 			// update the positions of nodes
 			iNode = 0;
 			while (iNode < totalBytes) {
-				x_ = fastmem.fastGetUI16(iNode + X__) - activeRect.x;
-				y_ = fastmem.fastGetUI16(iNode + Y__) - activeRect.y;
-				fastmem.fastSetI16(x_, iNode + X__);
-				fastmem.fastSetI16(y_, iNode + Y__);
+				x_ = Memory.readUnsignedShort(iNode + X__) - activeRect.x;
+				y_ = Memory.readUnsignedShort(iNode + Y__) - activeRect.y;
+				Memory.writeShort(x_, iNode + X__);
+				Memory.writeShort(y_, iNode + Y__);
 				_wireData.setPixel32(x_, y_, BLACK);
 				iNode += NODE_SIZE;
 			}
@@ -468,14 +471,14 @@ package net.rezmason.wireworld {
 			// You see here, a node is simply a sequence of information.
 			
 			// Known values first...
-			fastmem.fastSetByte(0, 		iNode + IS_WIRE__); 		// byte
-			fastmem.fastSetI32(NULL, 		iNode + NEXT__); 			// int
-			fastmem.fastSetI32(0, 			iNode + TIMES_LIT__); 		// int
-			fastmem.fastSetByte(0, 		iNode + TAPS__); 			// byte
-			fastmem.fastSetI16(__x, 		iNode + X__); 				// short
-			fastmem.fastSetI16(__y, 		iNode + Y__); 				// short
-			fastmem.fastSetByte(__state, 	iNode + FIRST_STATE__); 	// byte
-			fastmem.fastSetByte(0, 		iNode + NEIGHBOR_COUNT__);	// byte
+			Memory.writeByte(0, 		iNode + IS_WIRE__); 		// byte
+			Memory.writeInt(NULL, 		iNode + NEXT__); 			// int
+			Memory.writeInt(0, 			iNode + TIMES_LIT__); 		// int
+			Memory.writeByte(0, 		iNode + TAPS__); 			// byte
+			Memory.writeShort(__x, 		iNode + X__); 				// short
+			Memory.writeShort(__y, 		iNode + Y__); 				// short
+			Memory.writeByte(__state, 	iNode + FIRST_STATE__); 	// byte
+			Memory.writeByte(0, 		iNode + NEIGHBOR_COUNT__);	// byte
 			
 			// ... plus room for eight neighbor ints, which will store pointers to neighbors
 			
@@ -489,10 +492,10 @@ package net.rezmason.wireworld {
 			var allow:Boolean;
 			var mult:Number = 2.9 / _generation;
 			while (iNode < totalBytes) {
-				x_ = fastmem.fastGetUI16(iNode + X__);
-				y_ = fastmem.fastGetUI16(iNode + Y__);
+				x_ = Memory.readUnsignedShort(iNode + X__);
+				y_ = Memory.readUnsignedShort(iNode + Y__);
 				allow = fully || (x_ >= leftBound && x_ <= rightBound && y_ >= topBound && y_ <= bottomBound);
-				if (allow) _heatData.setPixel32(x_, y_, heatColorOf(fastmem.fastGetI32(iNode + TIMES_LIT__) * mult));
+				if (allow) _heatData.setPixel32(x_, y_, heatColorOf(Memory.readInt(iNode + TIMES_LIT__) * mult));
 				iNode += NODE_SIZE;
 			}
 			_heatData.unlock();
@@ -504,28 +507,31 @@ package net.rezmason.wireworld {
 			_tailData.lock();
 			_headData.lock();
 			if (freshTails) {
+				
 				_tailData.fillRect(fully ? _tailData.rect : bound, CLEAR);
 				
 				iNode = tailFront;
 				while (iNode != NULL) {
-					x_ = fastmem.fastGetUI16(iNode + X__);
-					y_ = fastmem.fastGetUI16(iNode + Y__);
+					x_ = Memory.readUnsignedShort(iNode + X__);
+					y_ = Memory.readUnsignedShort(iNode + Y__);
 					allow = fully || (x_ >= leftBound && x_ <= rightBound && y_ >= topBound && y_ <= bottomBound);
 					if (allow) _tailData.setPixel32(x_, y_, BLACK);
-					iNode = fastmem.fastGetI32(iNode + NEXT__);
+					iNode = Memory.readInt(iNode + NEXT__);
 				}
+				
 			} else {
 				_tailData.copyPixels(_headData, fully ? _tailData.rect : bound, fully ? ORIGIN : bound.topLeft);
 			}
+			
 			_headData.fillRect(fully ? _headData.rect : bound, CLEAR);
 			
 			iNode = headFront;
 			while (iNode != NULL) {
-				x_ = fastmem.fastGetUI16(iNode + X__);
-				y_ = fastmem.fastGetUI16(iNode + Y__);
+				x_ = Memory.readUnsignedShort(iNode + X__);
+				y_ = Memory.readUnsignedShort(iNode + Y__);
 				allow = fully || (x_ >= leftBound && x_ <= rightBound && y_ >= topBound && y_ <= bottomBound);
 				if (allow) _headData.setPixel32(x_, y_, BLACK);
-				iNode = fastmem.fastGetI32(iNode + NEXT__);
+				iNode = Memory.readInt(iNode + NEXT__);
 			}
 			_tailData.unlock();
 			_headData.unlock();

@@ -1,9 +1,9 @@
 package net.rezmason.wireworld {
 	
-	internal final class WWRefreshFlag {
+	public final class WWRefreshFlag {
 		
-		internal static const FULL:int = 1;
-		internal static const HEAT:int = 2;
-		internal static const TAIL:int = 4;
+		public static const FULL:int = 1;
+		public static const HEAT:int = 2;
+		public static const TAIL:int = 4;
 	}
 }

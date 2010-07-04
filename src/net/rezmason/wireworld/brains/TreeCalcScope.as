@@ -1,6 +1,4 @@
-package net.rezmason.wireworld {
-	
-	import net.rezmason.wireworld.TreeNode;	
+package net.rezmason.wireworld.brains {
 	
 	internal final class TreeCalcScope {
 		internal var node:TreeNode, state:int, type:int;
