@@ -1,3 +1,48 @@
+GUI plan of attack
+	WWElement class
+		bind(target, value)
+		trigger(function)
+		click()
+	WWMarker class extends WWElement
+		Name, content, width, height
+		if content is a string,
+			write it out and use its char bounds
+		else if content is a class,
+			content is instantiated class as DisplayObject and use its bounds
+	WWButton class extends WWMarker
+		type, Name, content, width, height, setID
+		get/set down
+	WWTextField class
+		isDynamic, Name, content, width, height, stylesheet
+		default "blank" text = content
+	Slider class extends WWElement
+		Name, width, height, setID
+		get/set value
+	Cursor class
+	Dialog class
+	Prompt class
+	
+
+Rethink GUI entirely
+	CC:		http://creativecommons.org/licenses/by-nc/3.0/
+	GUI elements should be Sprites
+		Absorbs visual data from a source
+			SVG
+			Text string
+	They should make and handle themselves
+		toggling
+		button sets
+		slider
+		"picked" state
+		class should have button sets listed, and their current option
+		cursor
+		dialog
+		text
+		prompt
+	Binding
+		GUI elements should bind to a property on an object
+		The View then evaluates those properties
+
 Improving render performance
 
 	Idea: Would redrawing the paper to only fit in the window be any help?
@@ -18,28 +63,12 @@ Improving render performance
 					reset
 					dragging
 
+Add comments to code in all the right places
+	Class header
+	Class sections
+	Comments for methods
+	Comments in complex functions
 
-CC:		http://creativecommons.org/licenses/by-nc/3.0/
-
-Rethink GUI entirely
-	GUI elements should be Sprites
-		Absorbs display list from a source
-			SVG
-			Text string
-	They should make and handle themselves
-		toggling
-		button sets
-		slider
-		"picked" state
-		class should have button sets listed, and their current option
-		cursor
-		dialog
-		text
-		prompt
-	Binding
-		GUI elements should bind to a property on an object
-		The View then evaluates those properties
-		
 Test on Mac and PC
 Then Rip out debug stuff
 function, var cleanup
