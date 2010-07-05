@@ -3,17 +3,17 @@ resources.swf Movie Report
 
 Frame #    Frame Bytes    Total Bytes    Scene
 -------    -----------    -----------    ----------------
-      1          20208          20208    Scene 1 (AS 3.0 Classes Export Frame)
+      1          20151          20151    Scene 1 (AS 3.0 Classes Export Frame)
 
 Scene                        Shape Bytes    Text Bytes    ActionScript Bytes
 -------------------------    -----------    ----------    ------------------
-Scene 1                                0           199                  5631
+Scene 1                                0           396                  5617
 
 Symbol                       Shape Bytes    Text Bytes    ActionScript Bytes
 -------------------------    -----------    ----------    ------------------
 ShapeSeparator                        18             0                     0
 CreativeCommonsLink                    0             0                     0
-TDSIMention                          742             0                     0
+TDSIMention                          740             0                     0
 RatioSliderTrack                      21             0                     0
 RatioSliderThumb                      59             0                     0
 RatioSlider                          116             0                     0
@@ -21,29 +21,29 @@ AnnouncerBubble                      189             0                     0
 OpenHand                             117             0                     0
 UpBlock                               31             0                     0
 DownBlock                             31             0                     0
-ClosedHand                            85             0                     0
+ClosedHand                            84             0                     0
 HandCursor                             0             0                     0
 BlockCursor                            0             0                     0
-AlertBox                              30            62                     0
-HelpBox                               30            33                     0
-GalleryBox                            69            28                     0
-URLBox                                94           102                     0
-LoadPrompt                            44            35                     0
-ResetPrompt                           44            50                     0
+AlertBox                              30           124                     0
+HelpBox                               30            66                     0
+GalleryBox                            68            56                     0
+URLBox                                94           204                     0
+LoadPrompt                            44            70                     0
+ResetPrompt                           44           100                     0
 AboutButton                           54             0                     0
 AddAnnouncerButton                    50             0                     0
-AnnouncerLabel                        57            30                     0
-EyeButton                             84             0                     0
+AnnouncerLabel                        57            60                     0
+EyeButton                             83             0                     0
 FastButton                            70             0                     0
-EraserCursorButton                    62             0                     0
-FileNameDisplay                       59            41                     0
-HelpButton                            54             0                     0
-HeatButton                            89             0                     0
+EraserCursorButton                    61             0                     0
+FileNameDisplay                       59            82                     0
+HelpButton                            53             0                     0
+HeatButton                            88             0                     0
 LoadButton                            62             0                     0
 GalleryButton                         89             0                     0
 OverdriveButton                       35             0                     0
-PlayPauseButton                       70             0                     0
-ResetButton                           20             0                     0
+PlayPauseButton                       69             0                     0
+ResetButton                           19             0                     0
 ResetScaleButton                      45             0                     0
 Separator                             21             0                     0
 SlowButton                            56             0                     0
@@ -51,29 +51,29 @@ HandCursorButton                     105             0                     0
 StepButton                            60             0                     0
 ZoomInButton                          31             0                     0
 ZoomOutButton                         63             0                     0
-AboutBox                              30           184                     0
-CloseButton                          200             0                     0
+AboutBox                              30           368                     0
+CloseButton                          199             0                     0
 UpButton                              43             0                     0
 DownButton                            43             0                     0
 Link                                  21             0                     0
 CancelButton                         228             0                     0
 LoadWebButton                        177             0                     0
 WebButton                            136             0                     0
-DiskButton                           144             0                     0
+DiskButton                           143             0                     0
 NoButton                              94             0                     0
 YesButton                            133             0                     0
-GoogleCodeProjectLink                148             0                     0
+GoogleCodeProjectLink                147             0                     0
 
 Font Name                 Bytes        Characters    
 ----------------------    ---------    --------------
 _serif                           21    
 GillSans                         18    
-_sans                            21    
+_sans                            20    
 Monaco Bold                      17    
 
 ActionScript Bytes    Location
 ------------------    --------
-              5631    Scene 1:Frame 1
+              5617    Scene 1:Frame 1
 
 Bitmap                     Compressed    Compression
 -----------------------    ----------  --------  -----------
