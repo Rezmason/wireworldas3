@@ -3,6 +3,6 @@
 <!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
 <svg version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
 	 width="792px" height="612px" viewBox="0 0 792 612" enable-background="new 0 0 792 612" xml:space="preserve">
-<path fill="#010101" d="M19.922-15.744h-8.079V7.94h8.079V-15.744z M-11.84,7.94h-8.08v-23.684h8.08V7.94z M-3.761,15.742h-8.079
-	V7.94h8.079V15.742z M11.843,15.742H3.762V7.94h8.081V15.742z M-3.761,7.94v-8.081h7.522V7.94H-3.761z"/>
+<path d="M19.923-16.764h-8.079V6.92h8.079V-16.764z M-11.837,6.92h-8.08v-23.684h8.08V6.92z M-3.76,14.722h-8.079V6.92h8.079V14.722
+	z M11.844,14.722h-8.08V6.92h8.081L11.844,14.722L11.844,14.722z M-3.76,6.92v-8.081h7.522V6.92H-3.76z"/>
 </svg>

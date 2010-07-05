@@ -25,7 +25,6 @@ package net.rezmason.wireworld.brains {
 	
 	import net.rezmason.wireworld.IModel;
 	import net.rezmason.wireworld.WWEvent;
-	import net.rezmason.wireworld.WWFormat;
 	import net.rezmason.wireworld.WWRefreshFlag;
 	
 	// While models don't necessarily have to 

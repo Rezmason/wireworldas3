@@ -18,7 +18,6 @@ package net.rezmason.wireworld.brains {
 	import flash.geom.Rectangle;
 	
 	import net.rezmason.utils.GreenThread;
-	import net.rezmason.wireworld.WWFormat;
 	import net.rezmason.wireworld.WWRefreshFlag;
 	
 	// Highly experimental model that uses Bill Gosper's

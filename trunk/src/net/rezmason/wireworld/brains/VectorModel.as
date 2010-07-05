@@ -20,7 +20,6 @@ package net.rezmason.wireworld.brains {
 	import net.rezmason.utils.GreenThread;
 	import apparat.math.IntMath;
 	
-	import net.rezmason.wireworld.WWFormat;
 	import net.rezmason.wireworld.WWRefreshFlag;
 	
 	// Adapted from LinkedListModel. 
