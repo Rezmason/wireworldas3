@@ -17,7 +17,6 @@ package net.rezmason.wireworld.brains {
 	
 	import net.rezmason.utils.GreenThread;
 	import net.rezmason.wireworld.WWEvent;
-	import net.rezmason.wireworld.WWFormat;
 	
 	// Helps to convert TXT and MCL files.
 	// All the models used to do this, so the job

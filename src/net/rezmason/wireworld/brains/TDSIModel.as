@@ -22,7 +22,6 @@ package net.rezmason.wireworld.brains {
 	import flash.utils.Endian;
 	
 	import net.rezmason.utils.GreenThread;
-	import net.rezmason.wireworld.WWFormat;
 	import net.rezmason.wireworld.WWRefreshFlag;
 	
 	// Spun from VectorModel. Replaced the Vectors with indexed values

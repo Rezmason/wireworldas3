@@ -9,10 +9,13 @@
 package net.rezmason.wireworld.views {
 	
 	import flash.display.Sprite;
-
-	internal class Dialog extends Sprite {
+	
+	// A prompt is a dialog with content,
+	// in the shape of a speech bubble.
+	
+	internal final class Prompt extends Dialog {
 		
-		public function Dialog():void {
+		public function Prompt():void {
 			super();
 		}
 	}

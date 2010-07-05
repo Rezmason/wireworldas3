@@ -8,7 +8,6 @@ package net.rezmason.wireworld.brains {
 	import flash.events.Event;
 	import flash.geom.Rectangle;
 	
-	import net.rezmason.wireworld.WWFormat;
 	import net.rezmason.wireworld.WWRefreshFlag;
 	
 	// Not REALLY the first model ever made; just the first solution

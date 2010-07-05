@@ -19,7 +19,6 @@ package net.rezmason.wireworld.brains {
 	import flash.utils.ByteArray;
 	
 	import net.rezmason.wireworld.IModel;
-	import net.rezmason.wireworld.WWFormat;
 	import net.rezmason.wireworld.WWRefreshFlag;
 	
 	// Lightweight, similar to FilterModel.

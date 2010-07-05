@@ -1,9 +1,19 @@
+/**
+* Wireworld Player by Jeremy Sachs. June 22, 2010
+*
+* Feel free to distribute the source, just try not to hand it off to some douchebag.
+* Keep this header here.
+*
+* Please contact jeremysachs@rezmason.net prior to distributing modified versions of this class.
+*/
 package net.rezmason.wireworld {
 	
 	import flash.display.DisplayObject;
 	import flash.display.Sprite;
 	import flash.text.Font;
-
+	
+	// This class is compiled separately into the assets.swf in the lib directory.
+	
 	public final class Assets extends Sprite {
 		
 		[Embed(source='../../../../lib/symbols/announcer.svg')]

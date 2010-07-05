@@ -17,7 +17,6 @@ package net.rezmason.wireworld.brains {
 	import flash.filters.ConvolutionFilter;
 	import flash.geom.Rectangle;
 	
-	import net.rezmason.wireworld.WWFormat;
 	import net.rezmason.wireworld.WWRefreshFlag;
 	
 	// Cells in a 2D CA like Wireworld are basically pixels, or image fragments.

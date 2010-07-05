@@ -10,9 +10,9 @@ package net.rezmason.wireworld.views {
 	
 	import flash.display.Sprite;
 
-	internal class Dialog extends Sprite {
+	internal final class Cursor extends Sprite {
 		
-		public function Dialog():void {
+		public function Cursor() {
 			super();
 		}
 	}
