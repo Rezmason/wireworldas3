@@ -32,10 +32,10 @@ function wwBuild {
 		optimize=true
 	fi
 	
-	echo "$1 $2"
+	echo "$1 $2, debug = $debug"
 	
-	defineStatement="-define+=BRAIN::"
-	defineStatements=""
+	brainDef="-define+=BRAIN::"
+	brainDefs=""
 	for word in CONVOLUTION_FILTER LINKED_LIST PIXEL_BENDER STANDARD TREE TREE_TDSI TDSI VECTOR HAXE STUPID BYTES AZOTH ALL
 	do
 		if test $word == $1; then
@@ -43,12 +43,26 @@ function wwBuild {
 		else
 			value=false
 		fi
-		defineStatements="$defineStatements ${defineStatement}${word},${value}"
+		brainDefs="$brainDefs ${brainDef}${word},${value}"
 	done
 	
-	defineStatements="$defineStatements ${defineStatement}MODEL_TYPE,\"$1\""
+	brainDefs="$brainDefs ${brainDef}MODEL_TYPE,\"$1\""
 	
-	"$mxmlc" src/Wireworld.as $defineStatements -sp src -o deploy/bin/$2.swf -l $apparatSWC $flexSWC $greensockSWC -static-link-runtime-shared-libraries=true -optimize=$optimize -debug=$debug && 
+	viewDef="-define+=VIEW::"
+	viewDefs=""
+	for word in OLD NEW
+	do
+		if test $word == $3; then
+			value=true
+		else
+			value=false
+		fi
+		viewDefs="$viewDefs ${viewDef}${word},${value}"
+	done
+	
+	viewDefs="$viewDefs ${viewDef}VIEW_TYPE,\"$3\""
+	
+	"$mxmlc" src/Wireworld.as $brainDefs $viewDefs -sp src -o deploy/bin/$2.swf -l $apparatSWC $flexSWC $greensockSWC -static-link-runtime-shared-libraries=true -optimize=$optimize -debug=$debug && 
 	
 	if [ $# -ge 3 ] && $3; then
 		"$scala" -cp "$apparat" apparat.tools.tdsi.TurboDieselSportInjection -i deploy/bin/$2.swf
@@ -61,16 +75,16 @@ function wwBuild {
 	echo
 }
 
-wwBuild STANDARD wireworld true
-wwBuild STUPID wwfirst true
-wwBuild BYTES wwbytes true
-wwBuild CONVOLUTION_FILTER wwcf true
-wwBuild PIXEL_BENDER wwpb true
-wwBuild VECTOR wwvec true
-wwBuild LINKED_LIST wwll true
-wwBuild TDSI wwtdsi true
-wwBuild AZOTH wwazoth true
-#wwBuild HAXE wwhx true
+wwBuild STANDARD OLD wireworld true
+wwBuild STUPID OLD wwfirst true
+wwBuild BYTES OLD wwbytes true
+wwBuild CONVOLUTION_FILTER OLD wwcf true
+wwBuild PIXEL_BENDER OLD wwpb true
+wwBuild VECTOR OLD wwvec true
+wwBuild LINKED_LIST OLD wwll true
+wwBuild TDSI OLD wwtdsi true
+wwBuild AZOTH OLD wwazoth true
+#wwBuild HAXE OLD wwhx true
  
 zip -r ../archive/wireworld_`date "+%m_%d_%Y"` . -u -x '*.svn*' '*.DS_Store'
 zip -r ../wireworld_deploy deploy -u -x '*.svn*' '*.DS_Store'

@@ -16,8 +16,10 @@
 		<define><name>BRAIN::BYTES</name><value>false</value></define>
 		<define><name>BRAIN::HAXE</name><value>false</value></define>
 		
-		
 		<define><name>BRAIN::ALL</name><value>true</value></define>
+		
+		<define><name>VIEW::OLD</name><value>false</value></define>
+		<define><name>VIEW::NEW</name><value>false</value></define>
 		
 	</compiler>
 </flex-config>

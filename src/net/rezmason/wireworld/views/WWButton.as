@@ -11,19 +11,16 @@ package net.rezmason.wireworld.views {
 	
 	import flash.display.Sprite;
 
-	internal final class WWButton extends WWMarker {
+	internal final class WWButton extends WWElement {
 		
 		private var _type:String;
 		private var _setID:String;
 		private var _down:Boolean = false;
 		
 		public function WWButton(__name:String, __content:* = null, 
-				__height:Number = NaN, __type:String = null, __setID:String = ""):void {
+				__height:Number = NaN, __capStyle:String = null, __type:String = null, __setID:String = null):void {
 			
-			super(__name, __content, __height);
-			
-			backing.visible = true;
-			redraw();
+			super(__name, __content, 0, __height, __capStyle);
 			
 			_type = __type || ButtonType.NORMAL;
 			switch (_type) {

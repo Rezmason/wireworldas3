@@ -10,14 +10,17 @@ package net.rezmason.wireworld.views {
 	
 	import flash.display.Sprite;
 
-	internal class WWTextField extends Sprite {
+	internal class WWTextField extends WWElement {
 		
 		private var _text:String;
 		
-		public function WWTextField(__name:String, __width:Number = 100, __height:Number = 10, 
+		public function WWTextField(__name:String, __width:Number = 100, __height:Number = 10, __capStyle:String = null, 
 				__idDynamic:Boolean = false, __defaultText:String = ""):void {
-			super();
-			name = __name; 
+			
+			// the content will be a dynamic text area.		
+			var textbox:* = null;
+			
+			super(__name, textbox, __width, __height, __capStyle);
 		}
 		
 		public function get text():String { return _text; }
@@ -26,8 +29,10 @@ package net.rezmason.wireworld.views {
 			redraw();
 		}
 		
-		private function redraw():void {
+		override protected function redraw():void {
+			super.redraw();
 			
+			backing.transform.colorTransform = WWGUIPalette.BACK_MED_CT;
 		}
 	}
 }
