@@ -10,30 +10,37 @@
 package net.rezmason.wireworld.views {
 	
 	import flash.display.Sprite;
+	import flash.events.Event;
+	import flash.events.MouseEvent;
+	import flash.geom.ColorTransform;
 
 	internal final class WWButton extends WWElement {
+		
+		private static const CT_TABLE:Object = {};
 		
 		private var _type:String;
 		private var _setID:String;
 		private var _down:Boolean = false;
+		private var _backCT:ColorTransform, _frontCT:ColorTransform;
+		
+		private var tapped:Boolean = false;
 		
 		public function WWButton(__name:String, __content:* = null, 
 				__height:Number = NaN, __capStyle:String = null, __type:String = null, __setID:String = null):void {
 			
-			super(__name, __content, 0, __height, __capStyle);
+			if (!CT_TABLE[ButtonType.NORMAL]) initTable();
 			
 			_type = __type || ButtonType.NORMAL;
-			switch (_type) {
-				case ButtonType.TOGGLABLE:
-				break;
-				case ButtonType.IN_A_SET:
-				break;
-				case ButtonType.NORMAL:
-				default:
-				break;
-			}
-			
 			if (_type == ButtonType.IN_A_SET) _setID = __setID || "unnamed";
+			
+			addEventListener(MouseEvent.ROLL_OVER, updateAppearance);
+			addEventListener(MouseEvent.ROLL_OUT, updateAppearance);
+			addEventListener(MouseEvent.MOUSE_DOWN, updateAppearance);
+			addEventListener(MouseEvent.MOUSE_UP, updateAppearance);
+			
+			useHandCursor = buttonMode = true;
+			
+			super(__name, __content, 0, __height, __capStyle);
 		}
 		
 		public function get down():Boolean { return _down; }
@@ -41,11 +48,35 @@ package net.rezmason.wireworld.views {
 			
 		}
 		
+		private function updateAppearance(event:Event):void {
+			if (event.type == MouseEvent.MOUSE_DOWN) tapped = true;
+			else if (event.type == MouseEvent.MOUSE_UP) tapped = false;
+			
+			var cts:Object = CT_TABLE[event.type][_type][tapped]; 
+			_backCT = cts.back;
+			_frontCT = cts.front;
+		}
+		
 		override protected function redraw():void {
 			super.redraw();
+			updateCTs();
+		}
+		
+		private function updateCTs():void {
+			backing.transform.colorTransform = _backCT;
+			if (contentDO) contentDO.transform.colorTransform = _frontCT;
+		}
+		
+		private function initTable():void {
+			var normalCTs:Object = {};
+			CT_TABLE[ButtonType.NORMAL] = normalCTs;
 			
-			backing.transform.colorTransform = WWGUIPalette.BACK_MED_CT;
-			contentDO.transform.colorTransform = WWGUIPalette.FRONT_CT;
+			
+			var toggleableCTs:Object = {};
+			CT_TABLE[ButtonType.TOGGLABLE] = toggleableCTs;
+			
+			var inASetCTs:Object = {};
+			CT_TABLE[ButtonType.IN_A_SET] = inASetCTs;
 		}
 	}
 }

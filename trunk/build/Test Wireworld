@@ -32,7 +32,7 @@ function wwBuild {
 		optimize=true
 	fi
 	
-	echo "$1 $2, debug = $debug"
+	echo "$1 $2, $3, debug = $debug"
 	
 	brainDef="-define+=BRAIN::"
 	brainDefs=""
@@ -52,7 +52,7 @@ function wwBuild {
 	viewDefs=""
 	for word in OLD NEW
 	do
-		if test $word == $3; then
+		if test $word == $2; then
 			value=true
 		else
 			value=false
@@ -60,22 +60,22 @@ function wwBuild {
 		viewDefs="$viewDefs ${viewDef}${word},${value}"
 	done
 	
-	viewDefs="$viewDefs ${viewDef}VIEW_TYPE,\"$3\""
+	viewDefs="$viewDefs ${viewDef}VIEW_TYPE,\"$2\""
 	
-	"$mxmlc" src/Wireworld.as $brainDefs $viewDefs -sp src -o deploy/bin/$2.swf -l $apparatSWC $flexSWC $greensockSWC -static-link-runtime-shared-libraries=true -optimize=$optimize -debug=$debug && 
+	"$mxmlc" src/Wireworld.as $brainDefs $viewDefs -sp src -o deploy/bin/$3.swf -l $apparatSWC $flexSWC $greensockSWC -static-link-runtime-shared-libraries=true -optimize=$optimize -debug=$debug && 
 	
 	if [ $# -ge 4 ] && $4; then
-		"$scala" -cp "$apparat" apparat.tools.tdsi.TurboDieselSportInjection -i deploy/bin/$2.swf
+		"$scala" -cp "$apparat" apparat.tools.tdsi.TurboDieselSportInjection -i deploy/bin/$3.swf
 	fi
 	
 	if [ $# -ge 5 ] && $5; then
-		open deploy/bin/$2.swf -a Flash\ Player.app
+		open deploy/bin/$3.swf -a Flash\ Player.app
 	fi
 	
 	echo
 }
 
-wwBuild VECTOR OLD wwdebug false false true
+wwBuild VECTOR NEW wwdebug false false true
 #wwBuild STANDARD OLD wwdebug false false false
 
 #wwBuild TREE OLD wwdebug false false

@@ -12,16 +12,17 @@ package net.rezmason.wireworld.views {
 	
 	internal final class WWGUIPalette {
 		
-		internal static const BACK_DARKER_CT:ColorTransform = new ColorTransform(0, 0, 0, 1, 0x10, 0x10, 0x10);
-		
 		internal static const BACK_DARK_CT:ColorTransform 	= new ColorTransform(0, 0, 0, 1, 0x60, 0x60, 0x60);
 		internal static const BACK_MED_CT:ColorTransform 	= new ColorTransform(0, 0, 0, 1, 0x90, 0x90, 0x90);
 		internal static const BACK_LIGHT_CT:ColorTransform = new ColorTransform(0, 0, 0, 1, 0xD0, 0xD0, 0xD0);
 		internal static const FRONT_CT:ColorTransform     	= new ColorTransform(0, 0, 0, 1, 0x20, 0x20, 0x20);
-		internal static const FRONT_TEXT_CT:ColorTransform	= new ColorTransform(0, 0, 0, 1, 0xFF, 0xFF, 0xFF);
+		internal static const FRONT_TEXT_BACK_CT:ColorTransform	= new ColorTransform(0, 0, 0, 1, 0xFF, 0xFF, 0xFF);
 		
 		internal static const PLAIN_CT:ColorTransform = new ColorTransform;
 		internal static const TOGGLED_CT:ColorTransform = new ColorTransform(1, 1, 1, 1, 90, 90, 90);
 		internal static const INVERTED_CT:ColorTransform = new ColorTransform(-1, -1, -1, 1, 0xFF, 0xFF, 0xFF);
+		
+		internal static const INPUT_TEXT_BACK_CT:ColorTransform = new ColorTransform(0, 0, 0, 1, 0xFF, 0xFF, 0xFF);
+		internal static const PLAIN_TEXT_BACK_CT:ColorTransform = BACK_MED_CT;
 	}
 }
