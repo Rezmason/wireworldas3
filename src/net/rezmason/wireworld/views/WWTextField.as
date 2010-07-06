@@ -15,12 +15,17 @@ package net.rezmason.wireworld.views {
 		private var _text:String;
 		
 		public function WWTextField(__name:String, __width:Number = 100, __height:Number = 10, __capStyle:String = null, 
-				__idDynamic:Boolean = false, __defaultText:String = ""):void {
+				__acceptsInput:Boolean = false, __defaultText:String = ""):void {
 			
 			// the content will be a dynamic text area.		
 			var textbox:* = null;
 			
 			super(__name, textbox, __width, __height, __capStyle);
+			if (__acceptsInput) {
+				backing.transform.colorTransform = WWGUIPalette.INPUT_TEXT_BACK_CT;
+			} else {
+				backing.transform.colorTransform = WWGUIPalette.PLAIN_TEXT_BACK_CT;
+			}
 		}
 		
 		public function get text():String { return _text; }
@@ -31,8 +36,6 @@ package net.rezmason.wireworld.views {
 		
 		override protected function redraw():void {
 			super.redraw();
-			
-			backing.transform.colorTransform = WWGUIPalette.BACK_MED_CT;
 		}
 	}
 }

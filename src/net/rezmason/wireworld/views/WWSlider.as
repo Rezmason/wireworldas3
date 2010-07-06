@@ -15,11 +15,13 @@ package net.rezmason.wireworld.views {
 	
 	internal final class WWSlider extends WWElement {
 		
+		private static const MARGIN:Number = 2;
+		
 		private var _value:Number = 1;
 		private var _thumb:Sprite = new Sprite();
 		
 		public function WWSlider(__name:String, __width:Number = 100, __height:Number = 10):void {
-			_thumb.transform.colorTransform = WWGUIPalette.BACK_MED_CT;
+			_thumb.transform.colorTransform = WWGUIPalette.FRONT_CT;
 			super(__name, null, __width, __height, "[]");
 		}
 		
@@ -36,11 +38,14 @@ package net.rezmason.wireworld.views {
 		override protected function redraw():void {
 			super.redraw();
 			
-			backing.transform.colorTransform = WWGUIPalette.BACK_DARKER_CT;
+			backing.transform.colorTransform = WWGUIPalette.BACK_DARK_CT;
+			
+			var thumbHeight:Number = _height - MARGIN * 2;
 			
 			_thumb.graphics.beginFill(0x0);
-			_thumb.graphics.drawRoundRect(0, -_height * 0.5, _width * 0.1, _height, _height * 0.25, _height * 0.25);
+			_thumb.graphics.drawRoundRect(0, -thumbHeight * 0.5, thumbHeight, thumbHeight, thumbHeight * 0.25, thumbHeight * 0.25);
 			_thumb.graphics.endFill();
+			_thumb.x = MARGIN;
 			addChild(_thumb);
 			
 			value = value;

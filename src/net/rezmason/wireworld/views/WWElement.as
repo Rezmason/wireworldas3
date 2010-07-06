@@ -98,8 +98,6 @@ package net.rezmason.wireworld.views {
 			if (contentDO) {
 				_width = contentDO.width + _height * 0.5;
 				if (_width < _height * 1.5) _width = _height;
-				contentDO.x = (_width  - bounds.left - bounds.right ) * 0.5;
-				contentDO.y = -(bounds.top + bounds.bottom) * 0.5;
 				contentDO.transform.colorTransform = WWGUIPalette.BACK_MED_CT;
 				addChild(contentDO);
 			} else {
@@ -108,22 +106,34 @@ package net.rezmason.wireworld.views {
 			
 			if (backing.visible) {
 				backing.graphics.clear();
-				backing.graphics.beginFill(0x0);
-				backing.graphics.drawRoundRect(0, -_height * 0.5, _width, _height, _height, _height);
-				backing.graphics.endFill();
-				backing.graphics.beginFill(0x0);
-				if (!leftCap) {
-					backing.graphics.drawRect(-_height * 0.1, -_height * 0.5, _height * 0.6, _height);
-				} else if (contentDO) {
-					contentDO.x += _height * 0.0625;
+				var startX:Number = 0;
+				var endX:Number = _width;
+				if (leftCap) {
+					backing.graphics.beginFill(0x0);
+					backing.graphics.drawCircle(startX + _height * 0.5, 0, _height * 0.5);
+					backing.graphics.endFill();
+					startX += _height * 0.5;
+					if (!rightCap) endX += _height * 0.25; // making it wider
 				}
-				if (!rightCap) {
-					backing.graphics.drawRect(_width - _height * 0.5, -_height * 0.5, _height * 0.6, _height);
-				} else if (contentDO) {
-					contentDO.x -= _height * 0.0625;
+				
+				if (rightCap) {
+					if (!leftCap) endX += _height * 0.25; // making it wider
+					backing.graphics.beginFill(0x0);
+					backing.graphics.drawCircle(endX - _height * 0.5, 0, _height * 0.5);
+					backing.graphics.endFill();
+					endX -= _height * 0.5;
 				}
+				
+				backing.graphics.beginFill(0x0);
+				backing.graphics.drawRect(startX, -_height * 0.5, endX - startX, _height);
 				backing.graphics.endFill();
-				_width = backing.width;
+				
+				if (contentDO) {
+					contentDO.x = (startX + endX  - bounds.left - bounds.right ) * 0.5;
+					if (leftCap && !rightCap) contentDO.x -= _height * 0.25;
+					else if (rightCap && !leftCap) contentDO.x += _height * 0.25;
+					contentDO.y = -(bounds.top + bounds.bottom) * 0.5;
+				}
 			} else {
 				_width = contentDO ? contentDO.width : _specifiedWidth;
 			}

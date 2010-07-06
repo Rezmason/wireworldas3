@@ -17,7 +17,7 @@ greensockSWC="./lib/greensock.swc"
 
 function wwBuild {
 	
-	if [ $# -lt 2 ]
+	if [ $# -lt 3 ]
 	then
 	  echo "Too few arguments."
 	  exit 1
@@ -25,14 +25,14 @@ function wwBuild {
 	
 	debug=false
 	optimize=false
-	if [ $# -ge 5 ] && $5; then
+	if [ $# -ge 6 ] && $6; then
 		debug=true
 	else
 		debug=false
 		optimize=true
 	fi
 	
-	echo "$1 $2, debug = $debug"
+	echo "$1 $2, $3, debug = $debug"
 	
 	brainDef="-define+=BRAIN::"
 	brainDefs=""
@@ -52,7 +52,7 @@ function wwBuild {
 	viewDefs=""
 	for word in OLD NEW
 	do
-		if test $word == $3; then
+		if test $word == $2; then
 			value=true
 		else
 			value=false
@@ -60,16 +60,16 @@ function wwBuild {
 		viewDefs="$viewDefs ${viewDef}${word},${value}"
 	done
 	
-	viewDefs="$viewDefs ${viewDef}VIEW_TYPE,\"$3\""
+	viewDefs="$viewDefs ${viewDef}VIEW_TYPE,\"$2\""
 	
-	"$mxmlc" src/Wireworld.as $brainDefs $viewDefs -sp src -o deploy/bin/$2.swf -l $apparatSWC $flexSWC $greensockSWC -static-link-runtime-shared-libraries=true -optimize=$optimize -debug=$debug && 
-	
-	if [ $# -ge 3 ] && $3; then
-		"$scala" -cp "$apparat" apparat.tools.tdsi.TurboDieselSportInjection -i deploy/bin/$2.swf
-	fi
+	"$mxmlc" src/Wireworld.as $brainDefs $viewDefs -sp src -o deploy/bin/$3.swf -l $apparatSWC $flexSWC $greensockSWC -static-link-runtime-shared-libraries=true -optimize=$optimize -debug=$debug && 
 	
 	if [ $# -ge 4 ] && $4; then
-		open deploy/bin/$2.swf -a Flash\ Player.app
+		"$scala" -cp "$apparat" apparat.tools.tdsi.TurboDieselSportInjection -i deploy/bin/$3.swf
+	fi
+	
+	if [ $# -ge 5 ] && $5; then
+		open deploy/bin/$3.swf -a Flash\ Player.app
 	fi
 	
 	echo
@@ -88,4 +88,5 @@ wwBuild AZOTH OLD wwazoth true
  
 zip -r ../archive/wireworld_`date "+%m_%d_%Y"` . -u -x '*.svn*' '*.DS_Store'
 zip -r ../wireworld_deploy deploy -u -x '*.svn*' '*.DS_Store'
+
 popd
