@@ -14,6 +14,7 @@ package net.rezmason.wireworld.views {
 	import flash.display.DisplayObject;
 	import flash.display.Shape;
 	import flash.display.Sprite;
+	import flash.events.Event;
 	import flash.events.MouseEvent;
 	import flash.geom.ColorTransform;
 	import flash.geom.Matrix;
@@ -22,16 +23,24 @@ package net.rezmason.wireworld.views {
 
 	internal class WWElement extends Sprite {
 		
-		protected var _target:Object, _bindValue:*, _trigger:Function;
+		protected static const MARGIN:Number = 2;
+		
+		protected var _trigger:Function, _params:Array, _addParams:Boolean;
 		
 		protected var _width:Number, _specifiedWidth:Number, _height:Number;
 		protected var leftCap:Boolean, rightCap:Boolean;
 		protected var _content:*;
 		
 		protected var backing:Shape = new Shape();
-		protected var contentDO:DisplayObject;
 		
-		public function WWElement(__name:String, __content:* = null, __width:Number = NaN, __height:Number = NaN, __capStyle:String = null):void {
+		private static const RELEASE_EVENT:MouseEvent = new MouseEvent(MouseEvent.MOUSE_UP, false);
+		
+		private var subscribed:Boolean = false;
+		private static const INSTANCES:Array = [];
+		
+		protected var startX:Number, endX:Number;
+		
+		public function WWElement(__name:String, __content:DisplayObject = null, __width:Number = NaN, __height:Number = NaN, __capStyle:String = null):void {
 			super();
 			if (__name) name = __name;
 			
@@ -41,8 +50,12 @@ package net.rezmason.wireworld.views {
 			__capStyle ||= "()";
 			leftCap = __capStyle.charAt(0) == "(";
 			rightCap = __capStyle.charAt(1) == ")";
-			if (__capStyle == "--") backing.visible = false;
+			if (__capStyle.indexOf("-") != -1) backing.visible = false;
 			redraw();
+			
+			addEventListener(MouseEvent.MOUSE_DOWN, subscribe);
+			addEventListener(MouseEvent.MOUSE_UP, unsubscribe);
+			addEventListener(Event.REMOVED, unsubscribe);
 		}
 		
 		override public function set width(value:Number):void {
@@ -55,23 +68,14 @@ package net.rezmason.wireworld.views {
 			redraw();
 		}
 		
-		public function get content():* { return _content; }
-		public function set content(value:*):void {
-			_content = value || null;
-			contentDO = null;
-			redraw();
-		}
-		
-		public function bind(target:Object, bindValue:String):void {
-			_target = target, _bindValue = bindValue;
-		}
-		
-		public function trigger(func:Function):void {
+		public function bind(func:Function = null, addParams:Boolean = false, ...params):void {
 			_trigger = func;
+			_params = params;
+			_addParams = addParams;
 		}
 		
-		public function click():void {
-			
+		public static function releaseInstances(event:Event = null):void {
+			while (INSTANCES.length) INSTANCES.pop().release();
 		}
 		
 		protected function redraw():void {
@@ -79,66 +83,69 @@ package net.rezmason.wireworld.views {
 			
 			var bounds:Rectangle;
 			
-			// I'm using hard coded values, I know. Bite me. 
-			// This class isn't general purpose and you're not my boss.
-			
-			if (!contentDO) {
-				if (_content is String) {
-					var textField:WWTextField = new WWTextField("text", -1);
-					textField.text = _content;
-					contentDO = textField;
-				} else if (_content is DisplayObject) {
-					contentDO = _content;
-					contentDO.transform.matrix = new Matrix();
-					contentDO.scaleX = contentDO.scaleY = 0.35;
-					bounds = contentDO.getBounds(contentDO);
-				}
-			}
-			
-			if (contentDO) {
-				_width = contentDO.width + _height * 0.5;
+			if (_content) {
+				_content.transform.matrix = new Matrix();
+				//_content.scaleX = _content.scaleY = 0.35;
+				bounds = _content.getBounds(_content);
+				_width = _content.width + _height * 0.5;
 				if (_width < _height * 1.5) _width = _height;
-				contentDO.transform.colorTransform = WWGUIPalette.BACK_MED_CT;
-				addChild(contentDO);
+				_content.transform.colorTransform = WWGUIPalette.BACK_MED_CT;
+				addChild(_content);
 			} else {
 				_width = _specifiedWidth;
 			}
 			
-			if (backing.visible) {
-				backing.graphics.clear();
-				var startX:Number = 0;
-				var endX:Number = _width;
-				if (leftCap) {
-					backing.graphics.beginFill(0x0);
-					backing.graphics.drawCircle(startX + _height * 0.5, 0, _height * 0.5);
-					backing.graphics.endFill();
-					startX += _height * 0.5;
-					if (!rightCap) endX += _height * 0.25; // making it wider
-				}
-				
-				if (rightCap) {
-					if (!leftCap) endX += _height * 0.25; // making it wider
-					backing.graphics.beginFill(0x0);
-					backing.graphics.drawCircle(endX - _height * 0.5, 0, _height * 0.5);
-					backing.graphics.endFill();
-					endX -= _height * 0.5;
-				}
-				
+			backing.graphics.clear();
+			startX = 0;
+			endX = _width;
+			
+			if (leftCap) {
 				backing.graphics.beginFill(0x0);
-				backing.graphics.drawRect(startX, -_height * 0.5, endX - startX, _height);
+				backing.graphics.drawCircle(startX + _height * 0.5, 0, _height * 0.5);
 				backing.graphics.endFill();
-				
-				if (contentDO) {
-					contentDO.x = (startX + endX  - bounds.left - bounds.right ) * 0.5;
-					if (leftCap && !rightCap) contentDO.x -= _height * 0.25;
-					else if (rightCap && !leftCap) contentDO.x += _height * 0.25;
-					contentDO.y = -(bounds.top + bounds.bottom) * 0.5;
-				}
-			} else {
-				_width = contentDO ? contentDO.width : _specifiedWidth;
+				startX += _height * 0.5;
+				if (!rightCap) endX += _height * 0.25; // making it wider
+			}
+			
+			if (rightCap) {
+				if (!leftCap) endX += _height * 0.25; // making it wider
+				backing.graphics.beginFill(0x0);
+				backing.graphics.drawCircle(endX - _height * 0.5, 0, _height * 0.5);
+				backing.graphics.endFill();
+				endX -= _height * 0.5;
+			}
+			
+			backing.graphics.beginFill(0x0);
+			backing.graphics.drawRect(startX, -_height * 0.5, endX - startX, _height);
+			backing.graphics.endFill();
+			
+			if (_content) {
+				_content.x = (startX + endX  - bounds.left - bounds.right ) * 0.5;
+				if (leftCap && !rightCap) _content.x -= _height * 0.25;
+				else if (rightCap && !leftCap) _content.x += _height * 0.25;
+				_content.y = -(bounds.top + bounds.bottom) * 0.5;
 			}
 			
 			addChildAt(backing, 0);
+		}
+		
+		private function subscribe(event:Event):void {
+			if (!subscribed) {
+				subscribed = true;
+				INSTANCES.push(this);
+			}
+		}
+		
+		private function unsubscribe(event:Event):void {
+			if (subscribed) {
+				subscribed = false;
+				INSTANCES.splice(INSTANCES.indexOf(this), 1);
+			}
+		}
+		
+		private function release():void {
+			subscribed = false;
+			dispatchEvent(RELEASE_EVENT);
 		}
 	}
 }

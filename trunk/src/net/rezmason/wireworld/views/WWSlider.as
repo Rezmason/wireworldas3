@@ -12,20 +12,38 @@ package net.rezmason.wireworld.views {
 	import apparat.math.FastMath;
 	
 	import flash.display.Sprite;
+	import flash.events.Event;
+	import flash.events.MouseEvent;
+	import flash.events.TimerEvent;
+	import flash.utils.Timer;
 	
 	internal final class WWSlider extends WWElement {
 		
-		private static const MARGIN:Number = 2;
+		public static const ZIP_STEP:Number = 5;
 		
+		private var dragging:Boolean = false, zipping:Boolean = false;
 		private var _value:Number = 1;
-		private var _thumb:Sprite = new Sprite();
+		private var _thumb:Sprite, grip:Number;
+		private var minX:Number, maxX:Number, thumbHeight:Number;
+		private var zipTimer:Timer = new Timer(10);
+		private var zipAmount:Number;
 		
 		public function WWSlider(__name:String, __width:Number = 100, __height:Number = 10):void {
+			_thumb = new Sprite();
 			_thumb.transform.colorTransform = WWGUIPalette.FRONT_CT;
+			_thumb.useHandCursor = _thumb.buttonMode = true;
+			thumbHeight = __height - MARGIN * 2;
+			minX = MARGIN;
+			maxX = __width - MARGIN - thumbHeight;
+			
 			super(__name, null, __width, __height, "[]");
+			_thumb.addEventListener(MouseEvent.MOUSE_DOWN, beginDrag);
+			addEventListener(MouseEvent.MOUSE_UP, endDrag);
+			
+			addEventListener(MouseEvent.MOUSE_DOWN, beginZip);
+			addEventListener(MouseEvent.MOUSE_UP, endZip);
+			zipTimer.addEventListener(TimerEvent.TIMER, updateZip);
 		}
-		
-		override public function set content(value:*):void {}
 		
 		public function get value():Number { return _value; }
 		public function set value(val:Number):void {
@@ -40,8 +58,6 @@ package net.rezmason.wireworld.views {
 			
 			backing.transform.colorTransform = WWGUIPalette.BACK_DARK_CT;
 			
-			var thumbHeight:Number = _height - MARGIN * 2;
-			
 			_thumb.graphics.beginFill(0x0);
 			_thumb.graphics.drawRoundRect(0, -thumbHeight * 0.5, thumbHeight, thumbHeight, thumbHeight * 0.25, thumbHeight * 0.25);
 			_thumb.graphics.endFill();
@@ -49,6 +65,61 @@ package net.rezmason.wireworld.views {
 			addChild(_thumb);
 			
 			value = value;
+		}
+		
+		public function startZip(amount:Number):void {
+			if (!isNaN(amount)) {
+				zipAmount = amount;
+				beginZip();
+			}
+		}
+		
+		public function stopZip():void {
+			endZip();
+		}
+		
+		private function beginDrag(event:MouseEvent):void {
+			stage.addEventListener(MouseEvent.MOUSE_MOVE, updateDrag, false, 0, true);
+			dragging = true;
+			grip = _thumb.x - mouseX;
+		}
+		
+		private function updateDrag(event:MouseEvent = null):void {
+			if (!dragging) return;
+			_thumb.x = FastMath.min(maxX, FastMath.max(minX, mouseX + grip));
+		}
+		
+		private function endDrag(event:Event):void {
+			stage.removeEventListener(MouseEvent.MOUSE_MOVE, updateDrag);
+			updateDrag();
+			dragging = false;
+		}
+		
+		private function beginZip(event:Event = null):void {
+			if (event && event.target == _thumb) return;
+			zipping = true;
+			zipTimer.start();
+		}
+		
+		private function updateZip(event:Event = null):void {
+			if (!zipping) return;
+			if (zipAmount) {
+				_thumb.x += zipAmount;
+			} else {
+				if (FastMath.abs(mouseX - (_thumb.x + thumbHeight * 0.5)) < ZIP_STEP) {
+					_thumb.x = mouseX - thumbHeight * 0.5;
+				} else {
+					_thumb.x += (mouseX < _thumb.x + thumbHeight * 0.5) ? -ZIP_STEP : ZIP_STEP;
+				}
+			}
+			_thumb.x = FastMath.min(maxX, FastMath.max(minX, _thumb.x));
+		}
+		
+		private function endZip(event:Event = null):void {
+			zipTimer.stop();
+			updateZip();
+			zipping = false;
+			zipAmount = 0;
 		}
 	}
 }
