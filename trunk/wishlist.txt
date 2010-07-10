@@ -1,14 +1,26 @@
-Rethink GUI entirely
-	CC:		http://creativecommons.org/licenses/by-nc/3.0/
-	toggling
-	button sets
-	slider
-	"picked" state
-	class should have button sets listed, and their current option
-	cursor
-	dialog
-	text
-	prompt
+Reconnect hand and eraser tool actions
+
+WWDialog
+	width
+	height
+	title
+	subtitle
+		If there is none, leave it out
+	content
+	bar
+	type
+		NORMAL
+		SPEECH_BUBBLE
+	speechPoint
+Make the dialogs
+	About box links
+		BRIAN: http://www.playfulinvention.com/emergence/
+		COMP: http://www.quinapalus.com/wi-index.html
+		MAIL: mailto:Jeremy Sachs <jeremysachs@rezmason.net>
+		TDSI: http://apparat.googlecode.com/
+		CC: http://creativecommons.org/licenses/by-nc/3.0/
+		WWAS3: http://code.google.com/p/wireworldas3
+Wire up everything
 
 Improving render performance
 
