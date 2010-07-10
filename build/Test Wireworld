@@ -9,11 +9,12 @@ mydir=`dirname "$abspath"`
 
 pushd $mydir/../
 
-apparat="../../../apparat_old/apparat.jar"
-scala="/SDKs/scala-2.8.0.RC3/bin/scala"
-apparatSWC="../../../apparat/apparat.swc"
-flexSWC="/SDKs/flex/4.0.0.4904/frameworks/libs"
+apparat="../../../apparat/apparat-core-1.0.RC3.jar"
+scala="/SDKs/scala-2.8.0.RC7/bin/scala"
+apparatSWC="../../../apparat/apparat-ersatz-1.0.RC3.swc"
+flexSWC="/SDKs/flex/flex_sdk_4.1.0.16248/frameworks/libs"
 greensockSWC="./lib/greensock.swc"
+tlfSWC="../../../tlfRuntime.swc"
 
 function wwBuild {
 	
@@ -62,7 +63,7 @@ function wwBuild {
 	
 	viewDefs="$viewDefs ${viewDef}VIEW_TYPE,\"$2\""
 	
-	"$mxmlc" src/Wireworld.as $brainDefs $viewDefs -sp src -o deploy/bin/$3.swf -l $apparatSWC $flexSWC $greensockSWC -static-link-runtime-shared-libraries=true -optimize=$optimize -debug=$debug && 
+	"$mxmlc" src/Wireworld.as $brainDefs $viewDefs -sp src -o deploy/bin/$3.swf -l $apparatSWC $flexSWC $greensockSWC $tlfSWC -static-link-runtime-shared-libraries=true -optimize=$optimize -debug=$debug && 
 	
 	if [ $# -ge 4 ] && $4; then
 		"$scala" -cp "$apparat" apparat.tools.tdsi.TurboDieselSportInjection -i deploy/bin/$3.swf
@@ -75,8 +76,8 @@ function wwBuild {
 	echo
 }
 
-wwBuild VECTOR NEW wwdebug false false true
-#wwBuild STANDARD OLD wwdebug false false false
+wwBuild STANDARD NEW wwdebug false false true
+#wwBuild STANDARD OLD wwdebug true false false
 
 #wwBuild TREE OLD wwdebug false false
 #wwBuild HAXE OLD wwhx false true
