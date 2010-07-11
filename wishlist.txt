@@ -1,5 +1,3 @@
-Reconnect hand and eraser tool actions
-
 WWDialog
 	width
 	height
@@ -7,7 +5,8 @@ WWDialog
 	subtitle
 		If there is none, leave it out
 	content
-	bar
+	toolbar
+	progressBar
 	type
 		NORMAL
 		SPEECH_BUBBLE
@@ -20,7 +19,11 @@ Make the dialogs
 		TDSI: http://apparat.googlecode.com/
 		CC: http://creativecommons.org/licenses/by-nc/3.0/
 		WWAS3: http://code.google.com/p/wireworldas3
+Announcers
+Hint system
 Wire up everything
+Populate GUI with default values
+Build API
 
 Improving render performance
 

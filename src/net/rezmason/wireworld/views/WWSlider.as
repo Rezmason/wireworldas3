@@ -22,7 +22,7 @@ package net.rezmason.wireworld.views {
 		public static const ZIP_STEP:Number = 5;
 		
 		private var dragging:Boolean = false, zipping:Boolean = false;
-		private var _value:Number = 1;
+		private var _value:Number = 0;
 		private var _thumb:Sprite, grip:Number;
 		private var minX:Number, maxX:Number, thumbHeight:Number;
 		private var zipTimer:Timer = new Timer(10);
