@@ -50,7 +50,8 @@ package net.rezmason.wireworld.views {
 			if (!isNaN(val)) {
 				_value = FastMath.min(FastMath.max(0, val), 1);
 			}
-			// position the slider
+			_thumb.x = minX + (maxX - minX) * _value;
+			if (_trigger != null) _trigger.apply(null, _addParams ? _params.concat([_value]) : _params);
 		}
 		
 		override protected function redraw():void {
@@ -61,7 +62,7 @@ package net.rezmason.wireworld.views {
 			_thumb.graphics.beginFill(0x0);
 			_thumb.graphics.drawRoundRect(0, -thumbHeight * 0.5, thumbHeight, thumbHeight, thumbHeight * 0.25, thumbHeight * 0.25);
 			_thumb.graphics.endFill();
-			_thumb.x = MARGIN;
+			value = value;
 			addChild(_thumb);
 			
 			value = value;
@@ -87,6 +88,8 @@ package net.rezmason.wireworld.views {
 		private function updateDrag(event:MouseEvent = null):void {
 			if (!dragging) return;
 			_thumb.x = FastMath.min(maxX, FastMath.max(minX, mouseX + grip));
+			_value = (_thumb.x - minX) / (maxX - minX);
+			if (_trigger != null) _trigger.apply(null, _addParams ? _params.concat([_value]) : _params);
 		}
 		
 		private function endDrag(event:Event):void {
@@ -113,6 +116,8 @@ package net.rezmason.wireworld.views {
 				}
 			}
 			_thumb.x = FastMath.min(maxX, FastMath.max(minX, _thumb.x));
+			_value = (_thumb.x - minX) / (maxX - minX);
+			if (_trigger != null) _trigger.apply(null, _addParams ? _params.concat([_value]) : _params);
 		}
 		
 		private function endZip(event:Event = null):void {

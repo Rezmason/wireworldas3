@@ -31,9 +31,8 @@ package net.rezmason.wireworld {
 		function placeAnnouncer(event:Event = null):void;
 		function updateAnnouncers():void;
 		function showAbout(event:Event = null):void;
-		function hideAbout(event:Event = null):void;
 		function giveAlert(titleText:String, messageText:String, allowClose:Boolean = true):void;
-		function hideAlert(event:Event = null):void;
+		function hideDialog(event:Event = null):void;
 		function resize(event:Event = null):void;
 		function updatePaper(flags:int = 0):void;
 		function updateGeneration(gen:uint):void;
