@@ -51,7 +51,7 @@ function wwBuild {
 	
 	viewDef="-define+=VIEW::"
 	viewDefs=""
-	for word in OLD NEW
+	for word in DESKTOP MOBILE
 	do
 		if test $word == $2; then
 			value=true
@@ -76,11 +76,11 @@ function wwBuild {
 	echo
 }
 
-wwBuild STANDARD NEW wwdebug false false true
-#wwBuild STANDARD OLD wwdebug true false false
+wwBuild VECTOR DESKTOP wwdebug false false true
+#wwBuild STANDARD DESKTOP wwdebug true false true
 
-#wwBuild TREE OLD wwdebug false false
-#wwBuild HAXE OLD wwhx false true
+#wwBuild TREE DESKTOP wwdebug false false
+#wwBuild HAXE DESKTOP wwhx false true
 
 
 

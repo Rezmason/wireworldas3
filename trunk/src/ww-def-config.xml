@@ -18,8 +18,8 @@
 		
 		<define><name>BRAIN::ALL</name><value>true</value></define>
 		
-		<define><name>VIEW::OLD</name><value>false</value></define>
-		<define><name>VIEW::NEW</name><value>false</value></define>
+		<define><name>VIEW::DESKTOP</name><value>false</value></define>
+		<define><name>VIEW::MOBILE</name><value>false</value></define>
 		
 	</compiler>
 </flex-config>
