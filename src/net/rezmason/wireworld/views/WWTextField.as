@@ -30,7 +30,7 @@ package net.rezmason.wireworld.views {
 		private var field:TLFTextField, format:TextFormat;
 		private var editing:Boolean = false;
 		
-		public function WWTextField(__name:String, __width:Number = 100, __height:Number = 10, __capStyle:String = null, 
+		public function WWTextField(__name:String, __width:Number = 100, __height:Number = 10, __maxChars:int = -1, __capStyle:String = null, 
 				__acceptsInput:Boolean = false, __labelText:String = ""):void {
 			
 			field = new TLFTextField();
@@ -38,7 +38,9 @@ package net.rezmason.wireworld.views {
 			
 			super(__name, null, __width, __height, __capStyle);
 			
+			if (__maxChars != -1) field.maxChars = __maxChars;
 			_labelText = __labelText;
+			if (_labelText.length > field.maxChars) _labelText = _labelText.substr(0, field.maxChars - 3) + "...";
 			field.text = _labelText;
 			
 			if (leftCap) {
@@ -81,6 +83,7 @@ package net.rezmason.wireworld.views {
 		public function set text(value:String):void {
 			_text = value;
 			if (_text.length) {
+				if (_text.length > field.maxChars) _text = _text.substr(0, field.maxChars - 3) + "...";
 				field.text = _text;
 				if (field.type == TextFieldType.INPUT) format.color = 0x0;
 			} else {
