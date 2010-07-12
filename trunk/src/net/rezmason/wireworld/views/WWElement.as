@@ -23,6 +23,8 @@ package net.rezmason.wireworld.views {
 
 	internal class WWElement extends Sprite {
 		
+		protected var _label:String;
+		
 		protected static const MARGIN:Number = 2;
 		
 		protected var _trigger:Function, _params:Array, _addParams:Boolean;
@@ -40,9 +42,9 @@ package net.rezmason.wireworld.views {
 		
 		protected var startX:Number, endX:Number;
 		
-		public function WWElement(__name:String, __content:DisplayObject = null, __width:Number = NaN, __height:Number = NaN, __capStyle:String = null):void {
+		public function WWElement(__label:String, __content:DisplayObject = null, __width:Number = NaN, __height:Number = NaN, __capStyle:String = null):void {
 			super();
-			if (__name) name = __name;
+			if (__label) _label = __label;
 			
 			_content = __content;
 			_height = __height;
@@ -56,6 +58,10 @@ package net.rezmason.wireworld.views {
 			addEventListener(MouseEvent.MOUSE_DOWN, subscribe);
 			addEventListener(MouseEvent.MOUSE_UP, unsubscribe);
 			addEventListener(Event.REMOVED, unsubscribe);
+		}
+		
+		public function get label():String {
+			return _label;
 		}
 		
 		override public function set width(value:Number):void {
