@@ -21,9 +21,9 @@ package net.rezmason.wireworld.brains {
 		//---------------------------------------
 		private var nodeTable:Array = [];
 		
-		private var ike:int, jen:int, ken:int, leo:int;
-		private var scratch:int;
-		private var iNode:FirstWireNode, jNode:FirstWireNode;
+		//private var ike:int, jen:int, ken:int, leo:int;
+		//private var scratch:int;
+		//private var iNode:FirstWireNode, jNode:FirstWireNode;
 		
 
 		//---------------------------------------

@@ -84,10 +84,7 @@ package net.rezmason.wireworld.brains {
 		private var tailFront:int = NULL, tailBack:int = NULL; // linked list of nodes that are currently electron tails
 		private var newHeadFront:int = NULL, newHeadBack:int = NULL; // linked list of nodes that are becoming electron heads
 		private var bytes:ByteArray = new ByteArray();
-		private var ike:int, jen:int;
 		private var neighborItr:int;
-		private var scratch:int;
-		private var iNode:int, jNode:int;
 		private var neighbor:*;
 		
 		private var x_:int, y_:int;
@@ -115,6 +112,13 @@ package net.rezmason.wireworld.brains {
 		
 		// update
 		override public function update():void {
+			var ike:int;
+			var jen:int;
+			var iNode:int;
+			var jNode:int;
+			
+			var scratch:int;
+			
 			// find new heads in current head neighbors (and list them)
 			
 			//		first, list all wires that are adjacent to heads
@@ -195,7 +199,7 @@ package net.rezmason.wireworld.brains {
 		}
 		
 		override public function eraseRect(rect:Rectangle):void {
-			
+			var iNode:int;
 			// correct the offset
 			rect.x -= activeRect.x + 0.5;
 			rect.y -= activeRect.y + 0.5;
@@ -266,6 +270,7 @@ package net.rezmason.wireworld.brains {
 		}
 
 		override public function reset():void {
+			var iNode:int;
 			// repopulate the lists - no need to empty any lists here 
 			headBack = headFront = NULL;
 			tailBack = tailFront = NULL;
@@ -364,6 +369,10 @@ package net.rezmason.wireworld.brains {
 		}
 		
 		private function partialFindNeighbors():void {
+			var ike:int;
+			var iNode:int;
+			var scratch:int;
+			
 			for (ike = 0; ike < STEP && neighborItr < totalBytes; ike += 1) {
 				iNode = neighborItr;
 				scratch = Memory.readUnsignedShort(iNode + X__) + Memory.readUnsignedShort(iNode + Y__) * _width;
@@ -390,6 +399,7 @@ package net.rezmason.wireworld.brains {
 		}
 		
 		private function addNeighbor(node:int, value:int):void {
+			var jen:int;
 			jen = Memory.readUnsignedByte(node + NEIGHBOR_COUNT__);
 			Memory.writeInt(value, node + NEIGHBOR_LIST__ + jen * INT_SIZE);
 			Memory.writeByte(jen + 1, node + NEIGHBOR_COUNT__);
@@ -410,6 +420,7 @@ package net.rezmason.wireworld.brains {
 		}
 		
 		private function initDrawData():void {
+			var iNode:int;
 			activeRect.setEmpty();
 			iNode = 0;
 			while (iNode < totalBytes) {
@@ -463,7 +474,7 @@ package net.rezmason.wireworld.brains {
 		}
 
 		override protected function addNode(__x:int, __y:int, __state:int):void {
-			
+			var iNode:int;
 			iNode = totalBytes;
 			neighborLookupTable[__x + _width * __y] = iNode;
 			
@@ -486,6 +497,7 @@ package net.rezmason.wireworld.brains {
 		}
 		
 		override protected function refreshHeat(fully:int = 0):void {
+			var iNode:int;
 			_heatData.lock();
 			iNode = 0;
 			var allow:Boolean;
@@ -501,6 +513,7 @@ package net.rezmason.wireworld.brains {
 		}
 
 		override protected function refreshImage(fully:int = 0, freshTails:int = 0):void {
+			var iNode:int;
 			var allow:Boolean;
 			
 			_tailData.lock();
