@@ -60,6 +60,7 @@ package net.rezmason.wireworld.views {
 					BUTTON_SETS[_setID].push(this);
 				} else {
 					BUTTON_SETS[_setID] = [this];
+					updateAppearance(null, MouseEvent.ROLL_OVER);
 					click();
 				}
 			}
@@ -86,14 +87,15 @@ package net.rezmason.wireworld.views {
 				arr = [_down];
 				break;
 				case ButtonType.IN_A_SET:
+				if (_down) return;
 				var bSet:Array = BUTTON_SETS[_setID];
 				for (var ike:int = 0; ike < bSet.length; ike++) {
 					bSet[ike].transform.colorTransform = WWGUIPalette.PLAIN_CT;
-					bSet[ike].mouseEnabled = true;
+					bSet[ike].useHandCursor = true;
 					bSet[ike]._down = false;
 				}
 				transform.colorTransform = WWGUIPalette.INVERTED_CT;
-				mouseEnabled = false;
+				useHandCursor = false;
 				_down = true;
 				arr = [_setID, _option];
 				break;
@@ -121,8 +123,11 @@ package net.rezmason.wireworld.views {
 		}
 		
 		private function updateAppearance(event:Event = null, eventType:String = null):void {
+			
+			if (_type == ButtonType.IN_A_SET && _down) return;
+			
 			eventType ||= event.type || MouseEvent.MOUSE_UP; 
-			switch (event.type) {
+			switch (eventType) {
 				case MouseEvent.MOUSE_DOWN:
 				tapped = 1;
 				_backCT = WWGUIPalette.BACK_DARK_CT;

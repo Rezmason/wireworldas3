@@ -21,7 +21,6 @@ Make the dialogs
 		WWAS3: http://code.google.com/p/wireworldas3
 Announcers
 	WWAnnouncer
-Hint system
 Wire up everything
 Populate GUI with default values
 Build API

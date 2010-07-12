@@ -25,5 +25,12 @@ package net.rezmason.wireworld.views {
 		
 		internal static const INPUT_TEXT_BACK_CT:ColorTransform = new ColorTransform(0, 0, 0, 1, 0xFF, 0xFF, 0xFF);
 		internal static const PLAIN_TEXT_BACK_CT:ColorTransform = BACK_MED_CT;
+		
+		internal static const NAKED_TEXT:int = 0x202020;
+		internal static const PLAIN_TEXT:int = 0x909090;
+		internal static const EDITING_TEXT:int = 0x0;
+		internal static const DEFAULT_TEXT:int = 0x606060;
+		
+		internal static const HINT_BACK:int = 0xFFFFAA;
 	}
 }

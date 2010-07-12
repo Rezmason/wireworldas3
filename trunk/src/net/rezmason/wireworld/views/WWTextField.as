@@ -54,7 +54,7 @@ package net.rezmason.wireworld.views {
 				field.type = TextFieldType.INPUT;
 				field.textFlow.interactionManager = new EditManager();
 				field.textFlow.interactionManager.focusedSelectionFormat = SEL_FORMAT;
-				format.color = 0x606060;
+				format.color = WWGUIPalette.EDITING_TEXT;
 				addEventListener(MouseEvent.CLICK, beginEdit);
 				addEventListener(TextEvent.TEXT_INPUT, enterResponder);
 			} else {
@@ -62,11 +62,11 @@ package net.rezmason.wireworld.views {
 				field.type = TextFieldType.DYNAMIC;
 				field.selectable = false;
 				field.mouseChildren = field.mouseEnabled = false;
+				format.bold = true;
 				if (backing.visible) {
-					format.bold = true;
-					format.color = 0x202020;
+					format.color = WWGUIPalette.NAKED_TEXT;
 				} else {
-					format.color = 0x909090;
+					format.color = WWGUIPalette.PLAIN_TEXT;
 				}
 				
 			}
@@ -85,10 +85,10 @@ package net.rezmason.wireworld.views {
 			if (_text.length) {
 				if (_text.length > field.maxChars) _text = _text.substr(0, field.maxChars - 3) + "...";
 				field.text = _text;
-				if (field.type == TextFieldType.INPUT) format.color = 0x0;
+				if (field.type == TextFieldType.INPUT) format.color = WWGUIPalette.EDITING_TEXT;
 			} else {
 				field.text = _labelText;
-				if (field.type == TextFieldType.INPUT) format.color = 0x606060;
+				if (field.type == TextFieldType.INPUT) format.color = WWGUIPalette.DEFAULT_TEXT;
 			}
 			
 			field.defaultTextFormat = format;
@@ -110,7 +110,7 @@ package net.rezmason.wireworld.views {
 			editing = true;
 			stage.addEventListener(MouseEvent.MOUSE_DOWN, endEdit, false, 0, true);
 			field.text = _text;
-			format.color = 0x0;
+			format.color = WWGUIPalette.EDITING_TEXT;
 			field.defaultTextFormat = format;
 			field.setTextFormat(format, 0, field.text.length);
 			field.setSelection(field.text.length, field.text.length);
@@ -122,7 +122,7 @@ package net.rezmason.wireworld.views {
 			stage.removeEventListener(MouseEvent.MOUSE_DOWN, endEdit);
 			text = field.text.replace(/[\r\n]/g, "");
 			field.setSelection(-1, -1);
-			format.color = 0x606060;
+			format.color = WWGUIPalette.DEFAULT_TEXT;
 			field.defaultTextFormat = format;
 			field.setTextFormat(format, 0, field.text.length);
 			
