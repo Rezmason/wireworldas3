@@ -10,7 +10,7 @@ package net.rezmason.wireworld.views {
 	
 	internal final class WWTextButton extends WWButton {
 		
-		public function WWTextButton(__label:String, __label:String, __height:Number = NaN, __type:String = null):void {
+		public function WWTextButton(__label:String, __text:String, __height:Number = 10, __type:String = null):void {
 			
 			var format:TextFormat = new TextFormat();
 			format.align = TextFormatAlign.CENTER;
@@ -20,7 +20,7 @@ package net.rezmason.wireworld.views {
 			
 			var field:TLFTextField = new TLFTextField();
 			field.autoSize = TextFieldAutoSize.CENTER;
-			field.text = __label;
+			field.text = __text;
 			
 			field.autoSize = TextFieldAutoSize.NONE;
 			field.width = field.textWidth + 2 * MARGIN;
