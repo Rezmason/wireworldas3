@@ -28,7 +28,7 @@ package net.rezmason.wireworld.views {
 		private var zipTimer:Timer = new Timer(10);
 		private var zipAmount:Number;
 		
-		public function WWSlider(__name:String, __width:Number = 100, __height:Number = 10):void {
+		public function WWSlider(__label:String, __width:Number = 100, __height:Number = 10):void {
 			_thumb = new Sprite();
 			_thumb.transform.colorTransform = WWGUIPalette.FRONT_CT;
 			_thumb.useHandCursor = _thumb.buttonMode = true;
@@ -36,7 +36,7 @@ package net.rezmason.wireworld.views {
 			minX = MARGIN;
 			maxX = __width - MARGIN - thumbHeight;
 			
-			super(__name, null, __width, __height, "[]");
+			super(__label, null, __width, __height, "[]");
 			_thumb.addEventListener(MouseEvent.MOUSE_DOWN, beginDrag);
 			addEventListener(MouseEvent.MOUSE_UP, endDrag);
 			

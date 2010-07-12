@@ -30,13 +30,13 @@ package net.rezmason.wireworld.views {
 		private var field:TLFTextField, format:TextFormat;
 		private var editing:Boolean = false;
 		
-		public function WWTextField(__name:String, __width:Number = 100, __height:Number = 10, __maxChars:int = -1, __capStyle:String = null, 
+		public function WWTextField(__label:String, __width:Number = 100, __height:Number = 10, __maxChars:int = -1, __capStyle:String = null, 
 				__acceptsInput:Boolean = false, __labelText:String = ""):void {
 			
 			field = new TLFTextField();
 			format = field.defaultTextFormat;
 			
-			super(__name, null, __width, __height, __capStyle);
+			super(__label, null, __width, __height, __capStyle);
 			
 			if (__maxChars != -1) field.maxChars = __maxChars;
 			_labelText = __labelText;

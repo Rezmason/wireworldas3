@@ -26,7 +26,7 @@ package net.rezmason.wireworld.views {
 		
 		private var tapped:int = 0, hovering:Boolean = false;
 		
-		public function WWButton(__name:String, __content:* = null, 
+		public function WWButton(__label:String, __content:* = null, 
 				__height:Number = NaN, __capStyle:String = null, __type:String = null, __setID:String = null, __option:* = null):void {
 			
 			addEventListener(MouseEvent.CLICK, click);
@@ -47,7 +47,7 @@ package net.rezmason.wireworld.views {
 				_frontCT = WWGUIPalette.FRONT_LIGHTEST_CT;
 			}
 			
-			super(__name, __content, 0, __height, __capStyle);
+			super(__label, __content, 0, __height, __capStyle);
 			
 			if (_type == ButtonType.CONTINUOUS) {
 				addEventListener(MouseEvent.MOUSE_DOWN, pressContinuous);

@@ -10,7 +10,7 @@ package net.rezmason.wireworld.views {
 	
 	internal final class WWTextButton extends WWButton {
 		
-		public function WWTextButton(__name:String, __label:String, __height:Number = NaN, __type:String = null):void {
+		public function WWTextButton(__label:String, __label:String, __height:Number = NaN, __type:String = null):void {
 			
 			var format:TextFormat = new TextFormat();
 			format.align = TextFormatAlign.CENTER;
@@ -32,7 +32,7 @@ package net.rezmason.wireworld.views {
 			fieldContainer.addChild(field);
 			field.y = -field.height;
 			
-			super(__name, fieldContainer, __height, "()", __type);
+			super(__label, fieldContainer, __height, "()", __type);
 		}
 		
 	}
