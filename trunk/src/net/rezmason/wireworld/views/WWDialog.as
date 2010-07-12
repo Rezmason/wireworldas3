@@ -17,9 +17,7 @@ package net.rezmason.wireworld.views {
 	internal class WWDialog extends Sprite {
 		
 		private var _width:Number;
-		private var toolbar:Toolbar
-		
-		public var elements:Object = {}; // Perhaps this looks stingy, but it's mighty convenient.
+		private var toolbar:Toolbar;
 		
 		public function WWDialog(__width:Number = 320, __title:String = null, __subtitle:String = null, 
 				__speechX:Number = NaN, __speechY:Number = NaN):void {

@@ -13,6 +13,7 @@ package net.rezmason.wireworld.views {
 	import flash.display.BlendMode;
 	import flash.display.Sprite;
 	import flash.events.Event;
+	import flash.events.FocusEvent;
 	import flash.events.MouseEvent;
 	import flash.events.TextEvent;
 	import flash.text.TextFieldType;
@@ -54,7 +55,7 @@ package net.rezmason.wireworld.views {
 				field.type = TextFieldType.INPUT;
 				field.textFlow.interactionManager = new EditManager();
 				field.textFlow.interactionManager.focusedSelectionFormat = SEL_FORMAT;
-				format.color = WWGUIPalette.EDITING_TEXT;
+				format.color = WWGUIPalette.DEFAULT_TEXT;
 				addEventListener(MouseEvent.CLICK, beginEdit);
 				addEventListener(TextEvent.TEXT_INPUT, enterResponder);
 			} else {
@@ -77,6 +78,10 @@ package net.rezmason.wireworld.views {
 			field.verticalAlign = VerticalAlign.MIDDLE;
 			field.defaultTextFormat = format;
 			field.setTextFormat(format, 0, field.text.length);
+			
+			
+			field.addEventListener(FocusEvent.FOCUS_IN, function(e:Event):void{trace(e.type, e.target, stage.focus);});
+			field.addEventListener(MouseEvent.MOUSE_DOWN, function(e:Event):void{trace(e.type, e.target);});
 		}
 		
 		public function get text():String { return _text; }
@@ -93,6 +98,16 @@ package net.rezmason.wireworld.views {
 			
 			field.defaultTextFormat = format;
 			field.setTextFormat(format, 0, field.text.length);
+		}
+		
+		public function grabFocus():void {
+			var sprite:* = (field.getChildAt(1) as Sprite);
+			var button:* = sprite.getChildAt(1);
+			var line:* = sprite.getChildAt(1);
+			
+			stage.focus = line;
+			button.dispatchEvent(new MouseEvent(MouseEvent.MOUSE_DOWN));
+			sprite.dispatchEvent(new FocusEvent(FocusEvent.FOCUS_IN));
 		}
 		
 		override protected function redraw():void {
