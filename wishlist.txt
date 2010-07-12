@@ -1,12 +1,13 @@
 WWDialog
 	width
 	height
-	title
-	subtitle
+	get, set title
 		If there is none, leave it out
-	content
+	get, set subtitle
+		If there is none, leave it out
+	content sprite
 	toolbar
-	progressBar
+	get, set progressBar
 	type
 		NORMAL
 		SPEECH_BUBBLE
@@ -19,10 +20,21 @@ Make the dialogs
 		TDSI: http://apparat.googlecode.com/
 		CC: http://creativecommons.org/licenses/by-nc/3.0/
 		WWAS3: http://code.google.com/p/wireworldas3
-Announcers
-	WWAnnouncer
-Wire up everything
+Announcer system
+	Announcers are blank speech bubble prompts
+		On change,
+			Announcer system takes screenshot
+				Clears last screenshot
+			Records generation
+			Grow, flash with inverse CT
+		On shrink,
+			icon becomes eye button
+				Hint is "Save announcer's picture"
+				Clicking it opens a save box that uses label's name + generation of snapshot
+		Announcer hint shows label, cropped thumb if there is one
+		
 Populate GUI with default values
+Put Add Announcer in AIR app
 Build API
 
 Improving render performance
