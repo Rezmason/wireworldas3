@@ -11,6 +11,6 @@ pushd $mydir/../
 
 flexSWC="/SDKs/flex/4.0.0.4904/frameworks/libs"
 
-"$mxmlc" src/net/rezmason/wireworld/Assets.as -sp src -o deploy/lib/assets.swf -l $flexSWC -static-link-runtime-shared-libraries=true -optimize=true
+"$mxmlc" src/net/rezmason/wireworld/Assets.as -sp src -o lib/assets.swf -l $flexSWC -static-link-runtime-shared-libraries=true -optimize=true
 
 popd

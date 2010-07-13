@@ -1,26 +1,26 @@
 WWDialog
-	width
-	height
+	type
+		NORMAL
+		SPEECH_BUBBLE
+	speechPoint
+		Only works with speech bubbles
+		Offsets the center
+	width & height
+		Centered
 	get, set title
 		If there is none, leave it out
 	get, set subtitle
 		If there is none, leave it out
 	content sprite
 	toolbar
-	get, set progressBar
-	type
-		NORMAL
-		SPEECH_BUBBLE
-	speechPoint
+	get, set barberPole
 Make the dialogs
-	About box links
-		BRIAN: http://www.playfulinvention.com/emergence/
-		COMP: http://www.quinapalus.com/wi-index.html
-		MAIL: mailto:Jeremy Sachs <jeremysachs@rezmason.net>
-		TDSI: http://apparat.googlecode.com/
-		CC: http://creativecommons.org/licenses/by-nc/3.0/
-		WWAS3: http://code.google.com/p/wireworldas3
-Announcer system
+Some bug fixes
+	Input text box events are a pain to get right
+	Implement reset state
+	Init GUI with state values
+New announcer system
+	Rename
 	Announcers are blank speech bubble prompts
 		On change,
 			Announcer system takes screenshot
@@ -32,10 +32,18 @@ Announcer system
 				Hint is "Save announcer's picture"
 				Clicking it opens a save box that uses label's name + generation of snapshot
 		Announcer hint shows label, cropped thumb if there is one
-		
-Populate GUI with default values
+		State should contain list of announcers
+			List is erased when a new document is loaded
+			List is not saved to shared object in AIR
 Put Add Announcer in AIR app
 Build API
+
+
+Add comments to code in all the right places
+	Class header
+	Class sections
+	Comments for methods
+	Comments in complex functions
 
 Improving render performance
 
@@ -57,17 +65,9 @@ Improving render performance
 					reset
 					dragging
 
-Add comments to code in all the right places
-	Class header
-	Class sections
-	Comments for methods
-	Comments in complex functions
-
 Test on Mac and PC
 Then Rip out debug stuff
-function, var cleanup
-
-Use latest TDSI
+Reorder the functions and vars
 
 Use fcsh instead of mxmlc in build scripts
 	fcshctl
