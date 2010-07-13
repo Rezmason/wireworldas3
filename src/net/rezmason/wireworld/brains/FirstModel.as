@@ -21,11 +21,6 @@ package net.rezmason.wireworld.brains {
 		//---------------------------------------
 		private var nodeTable:Array = [];
 		
-		//private var ike:int, jen:int, ken:int, leo:int;
-		//private var scratch:int;
-		//private var iNode:FirstWireNode, jNode:FirstWireNode;
-		
-
 		//---------------------------------------
 		// CONSTRUCTOR
 		//---------------------------------------
@@ -38,6 +33,13 @@ package net.rezmason.wireworld.brains {
 		//---------------------------------------
 		
 		override public function update():void {
+			var ike:int;
+			var jen:int;
+			var ken:int;
+			var leo:int;
+			var scratch:int;
+			var iNode:FirstWireNode;
+			
 			for (ike = 0; ike < _height; ike++) {
 				if (!nodeTable[ike]) continue;
 				for (jen = 0; jen < _width; jen++) {
@@ -72,6 +74,8 @@ package net.rezmason.wireworld.brains {
 					}
 				}
 			}
+			
+			_generation++;
 		}
 		
 		override public function eraseRect(rect:Rectangle):void {
@@ -79,6 +83,9 @@ package net.rezmason.wireworld.brains {
 		}
 		
 		override public function reset():void {
+			var ike:int;
+			var jen:int;
+			var iNode:FirstWireNode;
 			for (ike = 0; ike < _height; ike++) {
 				for (jen = 0; jen < _width; jen++) {
 					if (!nodeTable[ike]) continue;
@@ -87,6 +94,8 @@ package net.rezmason.wireworld.brains {
 				}
 			}
 			refresh(WWRefreshFlag.FULL | WWRefreshFlag.TAIL);
+			
+			_generation = 1;
 		}
 		
 		//---------------------------------------
@@ -94,6 +103,7 @@ package net.rezmason.wireworld.brains {
 		//---------------------------------------
 		
 		override protected function finishParse(event:Event):void {
+			var ike:int;
 			if (importer.width  > WWFormat.MAX_SIZE || importer.height  > WWFormat.MAX_SIZE || importer.width * importer.height < 1) {
 				dispatchEvent(INVALID_SIZE_ERROR_EVENT);
 				return;
@@ -113,6 +123,8 @@ package net.rezmason.wireworld.brains {
 		}
 		
 		override protected function finishExtraction(event:Event):void {
+			var ike:int;
+			var jen:int;
 			
 			if (_wireData) _wireData.dispose();
 			if (_headData) _wireData.dispose();
@@ -150,6 +162,10 @@ package net.rezmason.wireworld.brains {
 		}
 		
 		override protected function refreshImage(fully:int = 0, freshTails:int = 0):void {
+			var ike:int;
+			var jen:int;
+			var iNode:FirstWireNode;
+			
 			_tailData.lock();
 			_headData.lock();
 			
