@@ -23,7 +23,7 @@ package net.rezmason.wireworld.views {
 			
 			stripe = new BitmapData(2, 1, true, 0x0);
 			stripe.setPixel32(0, 0, 0xFF000000);
-			mat = new Matrix(30, 0, -20, 20);
+			mat = new Matrix(30, 0, 20, 20);
 			
 			_width = isNaN(__width) ? 200 : __width;
 			_height = isNaN(__height) ? 25 : __height;
