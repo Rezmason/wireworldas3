@@ -24,7 +24,7 @@ package net.rezmason.wireworld.views {
 		
 		private static const BUTTON_SETS:Object = {};
 		
-		private var tapped:int = 0, hovering:Boolean = false;
+		private var tapped:Boolean = false, hovering:Boolean = false;
 		
 		public function WWButton(__label:String, __content:* = null, 
 				__height:Number = NaN, __capStyle:String = null, __type:String = null, __setID:String = null, __option:* = null):void {
@@ -60,7 +60,6 @@ package net.rezmason.wireworld.views {
 					BUTTON_SETS[_setID].push(this);
 				} else {
 					BUTTON_SETS[_setID] = [this];
-					updateAppearance(null, MouseEvent.ROLL_OVER);
 					click();
 				}
 			}
@@ -96,6 +95,8 @@ package net.rezmason.wireworld.views {
 				}
 				transform.colorTransform = WWGUIPalette.INVERTED_CT;
 				useHandCursor = false;
+				tapped = false;
+				updateAppearance(null, MouseEvent.ROLL_OUT);
 				_down = true;
 				arr = [_setID, _option];
 				break;
@@ -129,11 +130,11 @@ package net.rezmason.wireworld.views {
 			eventType ||= event.type || MouseEvent.MOUSE_UP; 
 			switch (eventType) {
 				case MouseEvent.MOUSE_DOWN:
-				tapped = 1;
+				tapped = true;
 				_backCT = WWGUIPalette.BACK_DARK_CT;
 				break;
 				case MouseEvent.MOUSE_UP:
-				tapped = 0;
+				tapped = false;
 				_backCT = hovering ? WWGUIPalette.BACK_LIGHT_CT : WWGUIPalette.BACK_MED_CT;
 				break;
 				case MouseEvent.ROLL_OVER:
