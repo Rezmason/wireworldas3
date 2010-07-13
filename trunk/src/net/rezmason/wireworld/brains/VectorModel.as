@@ -12,14 +12,14 @@ package net.rezmason.wireworld.brains {
 	// IMPORT STATEMENTS
 	//---------------------------------------
 	
+	import apparat.math.IntMath;
+	
 	import flash.display.BitmapData;
 	import flash.events.Event;
 	import flash.geom.ColorTransform;
 	import flash.geom.Rectangle;
 	
 	import net.rezmason.utils.GreenThread;
-	import apparat.math.IntMath;
-	
 	import net.rezmason.wireworld.WWRefreshFlag;
 	
 	// Adapted from LinkedListModel. 
@@ -64,12 +64,7 @@ package net.rezmason.wireworld.brains {
 		private var timesLitVec:Vector.<int> = new <int>[];
 		private var tapsVec:Vector.<int> = new <int>[];
 		
-		private var ike:int, jen:int, ken:int;
-		private var scratch:int;
-		private var iNode:int, jNode:int;
-		private var neighbor:*;
-		
-		private var x_:int, y_:int;
+		private var pItr:int;
 		
 
 		//---------------------------------------
@@ -88,6 +83,13 @@ package net.rezmason.wireworld.brains {
 		
 		// update
 		override public function update():void {
+			var ike:int;
+			var jen:int;
+			var iNode:int;
+			var jNode:int;
+			
+			var scratch:int;
+			
 			// find new heads in current head neighbors (and list them)
 			totalCandidates = 0;
 			totalNewHeads = 0;
@@ -148,6 +150,9 @@ package net.rezmason.wireworld.brains {
 		}
 		
 		override public function eraseRect(rect:Rectangle):void {
+			var ike:int;
+			var iNode:int;
+			
 			// correct the offset
 			rect.x -= activeRect.x + 0.5;
 			rect.y -= activeRect.y + 0.5;
@@ -200,6 +205,8 @@ package net.rezmason.wireworld.brains {
 		}
 
 		override public function reset():void {
+			var iNode:int;
+			
 			// empty lists
 			headVec.splice(0, headVec.length);
 			tailVec.splice(0, tailVec.length);
@@ -273,17 +280,20 @@ package net.rezmason.wireworld.brains {
 		
 		private function beginFindNeighbors():void {
 			staticSurvey = SURVEY_TEMPLATE.slice();
-			iNode = 0;
+			pItr = 0;
 		}
 		
 		private function checkFindNeighbors():Boolean {
-			return (iNode < totalNodes);
+			return (pItr < totalNodes);
 		}
 		
 		private function partialFindNeighbors():void {
-			for (ike = 0; ike < STEP && iNode < totalNodes; ike += 1) {
-				tempVec = neighborsVec[iNode];
-				scratch = xVec[iNode] + yVec[iNode] * _width;
+			var ike:int;
+			var scratch:int;
+			var neighbor:*;
+			for (ike = 0; ike < STEP && pItr < totalNodes; ike += 1) {
+				tempVec = neighborsVec[pItr];
+				scratch = xVec[pItr] + yVec[pItr] * _width;
 				neighborCount = 0;
 				
 				scratch -= _width;
@@ -302,9 +312,9 @@ package net.rezmason.wireworld.brains {
 				
 				tempVec.length = neighborCount;
 				tempVec.fixed = true;
-				neighborCountVec[iNode] = neighborCount;
+				neighborCountVec[pItr] = neighborCount;
 				staticSurvey[neighborCount]++;
-				iNode++;
+				pItr++;
 			}
 		}
 		
@@ -323,6 +333,7 @@ package net.rezmason.wireworld.brains {
 		}
 		
 		private function initDrawData():void {
+			var iNode:int;
 			activeRect.setEmpty();
 			iNode = 0;
 			while (iNode < totalNodes) {
@@ -388,10 +399,13 @@ package net.rezmason.wireworld.brains {
 		}
 		
 		override protected function refreshHeat(fully:int = 0):void {
+			var iNode:int;
+			var allow:Boolean;
+			var x_:int;
+			var y_:int;
+			var mult:Number = 2.9 / _generation;
 			_heatData.lock();
 			iNode = 0;
-			var allow:Boolean;
-			var mult:Number = 2.9 / _generation;
 			while (iNode < totalNodes) {
 				x_ = xVec[iNode];
 				y_ = yVec[iNode];
@@ -403,7 +417,11 @@ package net.rezmason.wireworld.brains {
 		}
 
 		override protected function refreshImage(fully:int = 0, freshTails:int = 0):void {
+			var ike:int;
+			var iNode:int;
 			var allow:Boolean;
+			var x_:int;
+			var y_:int;
 			
 			_tailData.lock();
 			_headData.lock();

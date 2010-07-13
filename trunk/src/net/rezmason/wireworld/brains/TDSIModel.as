@@ -85,9 +85,6 @@ package net.rezmason.wireworld.brains {
 		private var newHeadFront:int = NULL, newHeadBack:int = NULL; // linked list of nodes that are becoming electron heads
 		private var bytes:ByteArray = new ByteArray();
 		private var neighborItr:int;
-		private var neighbor:*;
-		
-		private var x_:int, y_:int;
 		
 		//---------------------------------------
 		// CONSTRUCTOR
@@ -200,6 +197,8 @@ package net.rezmason.wireworld.brains {
 		
 		override public function eraseRect(rect:Rectangle):void {
 			var iNode:int;
+			var x_:int;
+			var y_:int;
 			// correct the offset
 			rect.x -= activeRect.x + 0.5;
 			rect.y -= activeRect.y + 0.5;
@@ -372,6 +371,7 @@ package net.rezmason.wireworld.brains {
 			var ike:int;
 			var iNode:int;
 			var scratch:int;
+			var neighbor:*;
 			
 			for (ike = 0; ike < STEP && neighborItr < totalBytes; ike += 1) {
 				iNode = neighborItr;
@@ -421,6 +421,8 @@ package net.rezmason.wireworld.brains {
 		
 		private function initDrawData():void {
 			var iNode:int;
+			var x_:int;
+			var y_:int;
 			activeRect.setEmpty();
 			iNode = 0;
 			while (iNode < totalBytes) {
@@ -498,10 +500,12 @@ package net.rezmason.wireworld.brains {
 		
 		override protected function refreshHeat(fully:int = 0):void {
 			var iNode:int;
+			var allow:Boolean;
+			var x_:int;
+			var y_:int;
+			var mult:Number = 2.9 / _generation;
 			_heatData.lock();
 			iNode = 0;
-			var allow:Boolean;
-			var mult:Number = 2.9 / _generation;
 			while (iNode < totalBytes) {
 				x_ = Memory.readUnsignedShort(iNode + X__);
 				y_ = Memory.readUnsignedShort(iNode + Y__);
@@ -515,6 +519,8 @@ package net.rezmason.wireworld.brains {
 		override protected function refreshImage(fully:int = 0, freshTails:int = 0):void {
 			var iNode:int;
 			var allow:Boolean;
+			var x_:int;
+			var y_:int;
 			
 			_tailData.lock();
 			_headData.lock();

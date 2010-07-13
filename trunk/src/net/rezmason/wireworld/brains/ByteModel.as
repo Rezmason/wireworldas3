@@ -26,6 +26,7 @@ package net.rezmason.wireworld.brains {
 	// Downgraded from TDSIModel. Uses a ByteArray, but no TDSI.
 	// It demonstrates that ByteArrays do not magically improve performance. 
 	
+	
 	// Refer to the TDSIModel comments if the ones here don't help.
 	
 	public final class ByteModel extends BaseModel {
@@ -82,14 +83,8 @@ package net.rezmason.wireworld.brains {
 		private var tailFront:int = NULL, tailBack:int = NULL; // linked list of nodes that are currently electron tails
 		private var newHeadFront:int = NULL, newHeadBack:int = NULL; // linked list of nodes that are becoming electron heads
 		private var bytes:ByteArray = new ByteArray();
-		private var ike:int, jen:int;
 		private var neighborItr:int;
-		private var scratch:int;
-		private var iNode:int, jNode:int;
-		private var neighbor:*;
 		
-		private var x_:int, y_:int, taps_:int, next_:int, timesLit_:int, firstState_:int;
-
 		//---------------------------------------
 		// CONSTRUCTOR
 		//---------------------------------------
@@ -112,6 +107,16 @@ package net.rezmason.wireworld.brains {
 		
 		// update
 		override public function update():void {
+			var ike:int;
+			var jen:int;
+			var iNode:int;
+			var jNode:int;
+			
+			var scratch:int;
+			var next_:int;
+			var taps_:int;
+			var timesLit_:int;
+			
 			// find new heads in current head neighbors (and list them)
 			
 			//		first, list all wires that are adjacent to heads
@@ -220,7 +225,9 @@ package net.rezmason.wireworld.brains {
 		}
 		
 		override public function eraseRect(rect:Rectangle):void {
-			
+			var iNode:int;
+			var x_:int;
+			var y_:int;
 			// correct the offset
 			rect.x -= activeRect.x + 0.5;
 			rect.y -= activeRect.y + 0.5;
@@ -301,6 +308,9 @@ package net.rezmason.wireworld.brains {
 		}
 
 		override public function reset():void {
+			var iNode:int;
+			var firstState_:int;
+			var timesLit_:int;
 			// repopulate the lists - no need to empty any lists here 
 			headBack = headFront = NULL;
 			tailBack = tailFront = NULL;
@@ -411,6 +421,11 @@ package net.rezmason.wireworld.brains {
 		}
 		
 		private function partialFindNeighbors():void {
+			var ike:int;
+			var iNode:int;
+			var scratch:int;
+			var neighbor:*;
+			
 			for (ike = 0; ike < STEP && neighborItr < totalBytes; ike += 1) {
 				iNode = neighborItr;
 				bytes.position = iNode + X__;
@@ -440,6 +455,7 @@ package net.rezmason.wireworld.brains {
 		}
 		
 		private function addNeighbor(node:int, value:int):void {
+			var jen:int;
 			bytes.position = node + NEIGHBOR_COUNT__;
 			jen = bytes.readUnsignedByte();
 			bytes.position = node + NEIGHBOR_LIST__ + jen * INT_SIZE;
@@ -463,6 +479,9 @@ package net.rezmason.wireworld.brains {
 		}
 		
 		private function initDrawData():void {
+			var iNode:int;
+			var x_:int;
+			var y_:int;
 			activeRect.setEmpty();
 			iNode = 0;
 			while (iNode < totalBytes) {
@@ -522,7 +541,7 @@ package net.rezmason.wireworld.brains {
 		}
 
 		override protected function addNode(__x:int, __y:int, __state:int):void {
-			
+			var iNode:int;
 			iNode = totalBytes;
 			neighborLookupTable[__x + _width * __y] = iNode;
 			
@@ -532,12 +551,12 @@ package net.rezmason.wireworld.brains {
 			bytes.position = iNode;
 			bytes.writeByte(0); 		// byte
 			bytes.writeInt(NULL); 		// int
-			bytes.writeInt(0); 		// int
+			bytes.writeInt(0); 			// int
 			bytes.writeByte(0); 		// byte
-			bytes.writeShort(__x); 	// short
-			bytes.writeShort(__y); 	// short
+			bytes.writeShort(__x); 		// short
+			bytes.writeShort(__y); 		// short
 			bytes.writeByte(__state); 	// byte
-			bytes.writeByte(0);		// byte
+			bytes.writeByte(0);			// byte
 			
 			// ... plus room for eight neighbor ints, which will store pointers to neighbors
 			
@@ -546,10 +565,13 @@ package net.rezmason.wireworld.brains {
 		}
 		
 		override protected function refreshHeat(fully:int = 0):void {
-			_heatData.lock();
-			iNode = 0;
+			var iNode:int;
+			var x_:int;
+			var y_:int;
 			var allow:Boolean;
 			var mult:Number = 2.9 / _generation;
+			_heatData.lock();
+			iNode = 0;
 			while (iNode < totalBytes) {
 				bytes.position = iNode + X__;
 				x_ = bytes.readUnsignedShort();
@@ -565,7 +587,10 @@ package net.rezmason.wireworld.brains {
 		}
 
 		override protected function refreshImage(fully:int = 0, freshTails:int = 0):void {
+			var iNode:int;
 			var allow:Boolean;
+			var x_:int;
+			var y_:int;
 			
 			_tailData.lock();
 			_headData.lock();
