@@ -8,33 +8,27 @@
 */
 package net.rezmason.wireworld.views {
 	
-	import fl.text.TLFTextField;
-	
 	import flash.display.BlendMode;
 	import flash.display.Sprite;
 	import flash.events.Event;
 	import flash.events.FocusEvent;
 	import flash.events.MouseEvent;
 	import flash.events.TextEvent;
+	import flash.text.TextField;
 	import flash.text.TextFieldType;
 	import flash.text.TextFormat;
 	import flash.text.TextFormatAlign;
 	
-	import flashx.textLayout.edit.EditManager;
-	import flashx.textLayout.edit.SelectionFormat;
-	import flashx.textLayout.formats.VerticalAlign;
-
 	internal class WWTextField extends WWElement {
 		
-		private static const SEL_FORMAT:SelectionFormat = new SelectionFormat(0x0, 0.2, BlendMode.LAYER, 0x0, 1, BlendMode.LAYER, 300);
 		private var _text:String = "", _labelText:String;
-		private var field:TLFTextField, format:TextFormat;
+		private var field:TextField, format:TextFormat;
 		private var editing:Boolean = false;
 		
 		public function WWTextField(__label:String, __width:Number = 100, __height:Number = 10, __maxChars:int = -1, __capStyle:String = null, 
 				__acceptsInput:Boolean = false, __labelText:String = ""):void {
 			
-			field = new TLFTextField();
+			field = new TextField();
 			format = field.defaultTextFormat;
 			
 			super(__label, null, __width, __height, __capStyle);
@@ -53,8 +47,6 @@ package net.rezmason.wireworld.views {
 			if (__acceptsInput) {
 				backing.transform.colorTransform = WWGUIPalette.INPUT_TEXT_BACK_CT;
 				field.type = TextFieldType.INPUT;
-				field.textFlow.interactionManager = new EditManager();
-				field.textFlow.interactionManager.focusedSelectionFormat = SEL_FORMAT;
 				format.color = WWGUIPalette.DEFAULT_TEXT;
 				addEventListener(MouseEvent.CLICK, beginEdit);
 				addEventListener(TextEvent.TEXT_INPUT, enterResponder);
@@ -62,7 +54,7 @@ package net.rezmason.wireworld.views {
 				backing.transform.colorTransform = WWGUIPalette.PLAIN_TEXT_BACK_CT;
 				field.type = TextFieldType.DYNAMIC;
 				field.selectable = false;
-				field.mouseChildren = field.mouseEnabled = false;
+				field.mouseEnabled = false;
 				format.bold = true;
 				if (backing.visible) {
 					format.color = WWGUIPalette.NAKED_TEXT;
@@ -72,16 +64,12 @@ package net.rezmason.wireworld.views {
 				
 			}
 			
-			format.font = "_typewriter";
+			format.font = FontSet.getFontName("typewriter");
 			format.size = _height * 0.65;
 			
-			field.verticalAlign = VerticalAlign.MIDDLE;
 			field.defaultTextFormat = format;
-			field.setTextFormat(format, 0, field.text.length);
-			
-			
-			field.addEventListener(FocusEvent.FOCUS_IN, function(e:Event):void{trace(e.type, e.target, stage.focus);});
-			field.addEventListener(MouseEvent.MOUSE_DOWN, function(e:Event):void{trace(e.type, e.target);});
+			if (field.text) field.setTextFormat(format, 0, field.text.length);
+			field.embedFonts = (format.font.charAt(0) != "_");
 		}
 		
 		public function get text():String { return _text; }
@@ -101,6 +89,7 @@ package net.rezmason.wireworld.views {
 		}
 		
 		public function grabFocus():void {
+			/*
 			var sprite:* = (field.getChildAt(1) as Sprite);
 			var button:* = sprite.getChildAt(1);
 			var line:* = sprite.getChildAt(1);
@@ -108,16 +97,17 @@ package net.rezmason.wireworld.views {
 			stage.focus = line;
 			button.dispatchEvent(new MouseEvent(MouseEvent.MOUSE_DOWN));
 			sprite.dispatchEvent(new FocusEvent(FocusEvent.FOCUS_IN));
+			*/
 		}
 		
 		override protected function redraw():void {
 			super.redraw();
 			addChild(field);
 			
-			field.y = -_height * 0.5 + MARGIN;
+			field.y = -_height * 0.5;
 			field.x = startX + MARGIN;
 			field.width = endX - startX - MARGIN;
-			field.height = _height - MARGIN * 2;
+			field.height = _height;
 		}
 		
 		private function beginEdit(event:Event):void {
@@ -127,7 +117,7 @@ package net.rezmason.wireworld.views {
 			field.text = _text;
 			format.color = WWGUIPalette.EDITING_TEXT;
 			field.defaultTextFormat = format;
-			field.setTextFormat(format, 0, field.text.length);
+			if (field.text) field.setTextFormat(format, 0, field.text.length);
 			field.setSelection(field.text.length, field.text.length);
 		}
 		
@@ -139,7 +129,7 @@ package net.rezmason.wireworld.views {
 			field.setSelection(-1, -1);
 			format.color = WWGUIPalette.DEFAULT_TEXT;
 			field.defaultTextFormat = format;
-			field.setTextFormat(format, 0, field.text.length);
+			if (field.text) field.setTextFormat(format, 0, field.text.length);
 			
 			var arr:Array = _addParams ? _params.concat([_text]) : _params;
 			if (_trigger != null) _trigger.apply(null, arr);

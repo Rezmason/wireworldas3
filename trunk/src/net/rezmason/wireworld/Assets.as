@@ -91,7 +91,7 @@ package net.rezmason.wireworld {
 		[Embed(source='../../../../lib/symbols/zoom-out.svg')]
 		private static const Symbol_zoom_out:Class;
 		
-		public var library:Object = {
+		private var library:Object = {
 			Announcer:Symbol_announcer,
 			CC_BY_NC:Symbol_cc_by_nc,
 			EraserCursorDown:Symbol_eraser_cursor_down,
@@ -121,17 +121,31 @@ package net.rezmason.wireworld {
 		
 		[Embed(source='../../../../lib/fru_med_reg/FRUCM___.TTF', fontName="Frucade Medium", mimeType="application/x-font-truetype")]
 		private static const FrucadeMedium:Class;
-
-		public var fonts:Object = {
-			FrucadeMedium:FrucadeMedium
+		
+		[Embed(source='../../../../lib/MProFont/ProFontWindows.ttf', fontName="ProFont", mimeType="application/x-font-truetype")]
+		private static const ProFont:Class;
+		
+		private var fonts:Object = {
+			pixel:FrucadeMedium
+			//typewriter:ProFont
 		};
 		
 		[Embed(source='../../../../lib/web/readme.html', mimeType="application/octet-stream")]
 		private static const README:Class;
 		
-		public var files:Object = {
-			README:README
+		[Embed(source='../../../../lib/web/about.html', mimeType="application/octet-stream")]
+		private static const ABOUT:Class;
+		
+		private var files:Object = {
+			README:README,
+			ABOUT:ABOUT
 		};
+		
+		public var assets:Object = {
+			library:library,
+			fonts:fonts,
+			files:files
+		}
 		
 		public function Assets():void {
 			for (var prop:String in fonts) { Font.registerFont(fonts[prop]); }

@@ -8,31 +8,34 @@
 */
 package net.rezmason.wireworld.views {
 	
-	import fl.text.TLFTextField;
-	
 	import flash.display.DisplayObject;
 	import flash.display.Shape;
 	import flash.display.Sprite;
 	import flash.geom.Matrix;
 	import flash.geom.Point;
 	import flash.geom.Rectangle;
+	import flash.text.TextField;
+	import flash.text.TextFieldAutoSize;
+	import flash.text.TextFormat;
 	
 	import net.rezmason.gui.Toolbar;
 
 	internal class WWDialog extends Sprite {
 		
-		private static const MARGIN:Number = 20, CONTENT_MARGIN:Number = 5;
+		private static const BUBBLE_MARGIN:Number = 8, BOX_MARGIN:Number = 20, CONTENT_MARGIN:Number = 5;
 		
 		private var backing:Shape;
-		private var content:Sprite;
+		private var _content:Sprite;
 		private var gradient:Matrix;
-		private var titleBox:TLFTextField, subtitleBox:TLFTextField;
+		private var titleBox:TextField, subtitleBox:TextField;
 		
 		private var _width:Number;
 		private var _title:String, _subtitle:String;
-		private var toolbar:Toolbar;
+		private var _toolbar:Toolbar;
 		private var isBubble:Boolean = false;
 		private var centerX:Number = 0, centerY:Number = 0;
+		private var _margin:Number;
+		private var _pole:BarberPole;
 		
 		public function WWDialog(__width:Number = NaN, __title:String = null, __subtitle:String = null, 
 				__speechX:Number = NaN, __speechY:Number = NaN):void {
@@ -46,33 +49,96 @@ package net.rezmason.wireworld.views {
 				centerY = __speechY;
 			}
 			
+			_margin = isBubble ? BUBBLE_MARGIN : BOX_MARGIN;;
+			
 			backing = new Shape();
-			titleBox = new TLFTextField();
-			subtitleBox = new TLFTextField();
-			content = new Sprite();
-			toolbar = new Toolbar(_width, 18, 0x0, 1);
-			toolbar.leftMargin = toolbar.rightMargin = MARGIN;
+			
+			titleBox = new TextField();
+			titleBox.selectable = false;
+			titleBox.defaultTextFormat = new TextFormat(FontSet.getFontName("sans"), 36, 0xFFFFFF)
+			titleBox.embedFonts = (titleBox.defaultTextFormat.font.charAt(0) != "_");
+			titleBox.autoSize = TextFieldAutoSize.LEFT;
+			
+			subtitleBox = new TextField();
+			subtitleBox.selectable = false;
+			subtitleBox.defaultTextFormat = new TextFormat(FontSet.getFontName("sans"), 18, 0xFFFFFF);
+			subtitleBox.embedFonts = (subtitleBox.defaultTextFormat.font.charAt(0) != "_");
+			subtitleBox.autoSize = TextFieldAutoSize.LEFT;
+			
+			_content = new Sprite();
+			
+			_toolbar = new Toolbar(_width, 18, 0x00FF00, 1);
+			_toolbar.leftMargin = _toolbar.rightMargin = _margin;
+			_toolbar.visible = true;
+			
+			_pole = new BarberPole(_width, 18, 0x00FF00);
+			_pole.visible = false;
 			
 			redraw();
+		}
+		
+		public function get interactive():Boolean { return _pole.visible; }
+		public function set interactive(value:Boolean):void {
+			_pole.visible = !value;
+			_toolbar.visible = value;
+		}
+		
+		public function get title():String { return _title; }
+		public function set title(value:String):void { _title = value; redraw(); }
+		
+		public function get subtitle():String { return _subtitle; }
+		public function set subtitle(value:String):void { _subtitle = value; redraw(); }
+		
+		public function addGUIElementsToToolbar(hAlign:Object = null, kiss:Boolean = false, ...elements):void {
+			_toolbar.addGUIElements.apply(null, [hAlign, kiss].concat(elements));
 		}
 		
 		public function addContent(item:DisplayObject):void {
 			item.x = item.y = 0;
 			var rect:Rectangle = item.getBounds(item);
 			item.x = -rect.x;
-			item.y = -rect.y + content.height + CONTENT_MARGIN;
-			content.addChild(item);
+			item.y = -rect.y + _content.height;
+			if (_content.height > 0) item.y += CONTENT_MARGIN;
+			_content.addChild(item);
 			redraw();
 		}
 		
+		public function addHTML(input:XML, __height:Number = NaN):void {
+			if (!isNaN(__height)) __height = -1;
+			var box:TextField = new TextField();
+			box.background = true;
+			box.backgroundColor = 0xFF0000;
+			box.defaultTextFormat = new TextFormat(FontSet.getFontName("sans"), 12, 0x222222);
+			box.selectable = false;
+			box.embedFonts = (box.defaultTextFormat.font.charAt(0) != "_");
+			box.width = _width - 2 * _margin;
+			
+			box.height = (__height > 0) ? __height : 2000;
+			box.htmlText = input.toXMLString();
+			if (__height < 0) box.height = box.textHeight;
+			
+			addContent(box);
+		}
+		
 		public function clearContents():void {
-			while (content.numChildren) content.removeChildAt(0);
+			while (_content.numChildren) _content.removeChildAt(0);
 			redraw();
 		}
 		
 		private function redraw():void {
 			while (numChildren) removeChildAt(0);
 			
+			// draw backing
+			// maybe draw backing tail
+			
+			addChild(backing);
+			if (_title && _title.length) addChild(titleBox);
+			if (_subtitle && _subtitle.length) addChild(subtitleBox);
+			addChild(_content);
+			addChild(_toolbar);
+			addChild(_pole);
+			
+			// position everything
 		}
 	}
 }

@@ -8,7 +8,8 @@
 */
 package net.rezmason.wireworld.views {
 	
-	import fl.text.TLFTextField;
+	import com.greensock.TweenLite;
+	import com.greensock.easing.Quad;
 	
 	import flash.display.DisplayObject;
 	import flash.display.DisplayObjectContainer;
@@ -17,20 +18,18 @@ package net.rezmason.wireworld.views {
 	import flash.events.MouseEvent;
 	import flash.events.TimerEvent;
 	import flash.filters.DropShadowFilter;
+	import flash.geom.Rectangle;
+	import flash.text.TextField;
 	import flash.text.TextFieldAutoSize;
 	import flash.text.TextFormat;
 	import flash.utils.Timer;
-	
-	import com.greensock.TweenLite;
-	import com.greensock.easing.Quad;
 
 	internal final class Hint extends Sprite {
 
 		private var showTimer:Timer = new Timer(1000, 1);		
 		private var hideTimer:Timer = new Timer(5000, 1);
 		
-		private var field:TLFTextField, format:TextFormat;
-		private var tooFarX:Boolean, tooFarY:Boolean;
+		private var field:TextField, format:TextFormat;
 		
 		private var target:DisplayObject;
 		
@@ -39,15 +38,11 @@ package net.rezmason.wireworld.views {
 		public function Hint():void {
 			super();
 			
-			field = new TLFTextField();
-			field.defaultTextFormat = new TextFormat("_typewriter", 12, 0x0, true);;
+			field = new TextField();
+			field.defaultTextFormat = new TextFormat(FontSet.getFontName("typewriter"), 12, 0x0, true);;
 			field.selectable = false;
 			field.autoSize = TextFieldAutoSize.LEFT;
-			field.background = true;
-			field.backgroundColor = WWGUIPalette.HINT_BACK;
-			field.backgroundAlpha = 0.8;
-			field.border = true;
-			field.borderColor = 0x000000;
+			field.embedFonts = (field.defaultTextFormat.font.charAt(0) != "_");
 			visible = false;
 			mouseEnabled = mouseChildren = false;
 			
@@ -80,12 +75,20 @@ package net.rezmason.wireworld.views {
 			showTimer.stop();
 			showTimer.reset();
 			
-			field.text = target["label"];
+			field.text = target["label"] || "";
 			TweenLite.killTweensOf(this, true);
 			alpha = 1;
 			visible = true;
 			
 			position();
+			
+			var rect:Rectangle = field.getBounds(this);
+			
+			graphics.clear();
+			graphics.lineStyle(0, 0x0);
+			graphics.beginFill(WWGUIPalette.HINT_BACK, 0.7);
+			graphics.drawRect(rect.x, rect.y, rect.width, rect.height);
+			graphics.endFill();
 			
 			hideTimer.start();
 		}
@@ -94,16 +97,10 @@ package net.rezmason.wireworld.views {
 			field.x = mouseX;
 			if (field.x + field.width > stage.stageWidth) {
 				field.x = mouseX - field.width;
-				tooFarX = true;
-			} else {
-				tooFarX = false;
 			}
 			field.y = mouseY + 15;
 			if (field.y + field.height > stage.stageHeight) {
 				field.y = mouseY - 10 - field.height;
-				tooFarY = true;
-			} else {
-				tooFarY = false;
 			}
 		}
 		
