@@ -16,6 +16,7 @@ package net.rezmason.wireworld {
 	import flash.display.Sprite;
 	import flash.events.Event;
 	import flash.events.IEventDispatcher;
+	
 	import net.rezmason.gui.SimpleBridge;
 	
 	public interface IView extends IEventDispatcher {
@@ -30,15 +31,14 @@ package net.rezmason.wireworld {
 		function resetState(event:Event = null):void;
 		function placeAnnouncer(event:Event = null):void;
 		function updateAnnouncers():void;
-		function showAbout(event:Event = null):void;
-		function giveAlert(titleText:String, messageText:String, allowClose:Boolean = true):void;
+		function showAbout(event:Event = null, interactive:Boolean = true):void;
+		function giveAlert(titleText:String = null, messageText:String = null, interactive:Boolean = true):void;
 		function hideDialog(event:Event = null):void;
 		function resize(event:Event = null):void;
 		function updatePaper(flags:int = 0):void;
 		function updateGeneration(gen:uint):void;
 		function updateFPS(__fps:int):void;
-		function snapshot():BitmapData;
-		function showDisabler(event:Event = null):void;
-		function hideDisabler(event:Event = null):void;
+		function showDisabler(event:Event = null, instantly:Boolean = false):void;
+		function hideDisabler(event:Event = null, instantly:Boolean = false):void;
 	}
 }

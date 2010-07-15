@@ -1,8 +1,7 @@
 package net.rezmason.wireworld.views {
 	
-	import fl.text.TLFTextField;
-	
 	import flash.display.Sprite;
+	import flash.text.TextField;
 	import flash.text.TextFieldAutoSize;
 	import flash.text.TextFormat;
 	import flash.text.TextFormatAlign;
@@ -14,16 +13,16 @@ package net.rezmason.wireworld.views {
 			
 			var format:TextFormat = new TextFormat();
 			format.align = TextFormatAlign.CENTER;
-			format.font = "_sans";
+			format.font = FontSet.getFontName("sans");
 			format.bold = true;
 			format.size = __height * 0.65;
 			
-			var field:TLFTextField = new TLFTextField();
+			var field:TextField = new TextField();
 			field.autoSize = TextFieldAutoSize.CENTER;
 			field.text = __text;
-			
-			field.autoSize = TextFieldAutoSize.NONE;
-			field.width = field.textWidth + 2 * MARGIN;
+			field.embedFonts = (format.font.charAt(0) != "_");
+			field.width += 2 * MARGIN;
+			field.height = __height;
 			
 			field.defaultTextFormat = format;
 			field.setTextFormat(format, 0, field.text.length);

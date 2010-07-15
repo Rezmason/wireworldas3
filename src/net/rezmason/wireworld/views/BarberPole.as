@@ -11,6 +11,7 @@ package net.rezmason.wireworld.views {
 	import flash.display.BitmapData;
 	import flash.display.Shape;
 	import flash.events.Event;
+	import flash.geom.ColorTransform;
 	import flash.geom.Matrix;
 
 	internal final class BarberPole extends Shape {
@@ -18,7 +19,7 @@ package net.rezmason.wireworld.views {
 		private var stripe:BitmapData, mat:Matrix;
 		private var _width:Number, _height:Number;
 		
-		public function BarberPole(__width:Number = NaN, __height:Number = NaN):void {
+		public function BarberPole(__width:Number = NaN, __height:Number = NaN, __color:int = -1):void {
 			super();
 			
 			stripe = new BitmapData(2, 1, true, 0x0);
@@ -28,6 +29,12 @@ package net.rezmason.wireworld.views {
 			_width = isNaN(__width) ? 200 : __width;
 			_height = isNaN(__height) ? 25 : __height;
 			update();
+			
+			if (__color > 0) {
+				var ct:ColorTransform = new ColorTransform();
+				ct.color = __color;
+				transform.colorTransform = ct;
+			}
 			
 			addEventListener(Event.ENTER_FRAME, update);
 		}
@@ -46,13 +53,12 @@ package net.rezmason.wireworld.views {
 		
 		override public function set visible(value:Boolean):void {
 			if (visible == value) return;
-			visible = value;
+			super.visible = value;
 			(visible ? addEventListener : removeEventListener)(Event.ENTER_FRAME, update);
 		}
 		
 		private function update(event:Event = null):void {
 			if (event) mat.tx += 5;
-			trace(mat.tx);
 			
 			graphics.clear();
 			graphics.beginBitmapFill(stripe, mat, true);

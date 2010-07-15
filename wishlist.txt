@@ -1,3 +1,9 @@
+Make nice input textbox with FTE
+Embed ProFont
+Embed a sans serif
+
+Grab next Apparat release
+
 WWDialog
 	type
 		NORMAL
@@ -19,6 +25,7 @@ Some bug fixes
 	Input text box events are a pain to get right
 	Implement reset state
 	Init GUI with state values
+	Make sure CreditBox works properly
 New announcer system
 	Rename
 	Announcers are blank speech bubble prompts
