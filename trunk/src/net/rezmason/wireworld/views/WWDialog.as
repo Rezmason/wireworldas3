@@ -55,14 +55,12 @@ package net.rezmason.wireworld.views {
 			
 			titleBox = new TextField();
 			titleBox.selectable = false;
-			titleBox.defaultTextFormat = new TextFormat(FontSet.getFontName("sans"), 36, 0xFFFFFF)
-			titleBox.embedFonts = (titleBox.defaultTextFormat.font.charAt(0) != "_");
+			titleBox.defaultTextFormat = new TextFormat("_sans", 36, 0xFFFFFF);
 			titleBox.autoSize = TextFieldAutoSize.LEFT;
 			
 			subtitleBox = new TextField();
 			subtitleBox.selectable = false;
-			subtitleBox.defaultTextFormat = new TextFormat(FontSet.getFontName("sans"), 18, 0xFFFFFF);
-			subtitleBox.embedFonts = (subtitleBox.defaultTextFormat.font.charAt(0) != "_");
+			subtitleBox.defaultTextFormat = new TextFormat("_sans", 18, 0xFFFFFF);
 			subtitleBox.autoSize = TextFieldAutoSize.LEFT;
 			
 			_content = new Sprite();
@@ -108,9 +106,8 @@ package net.rezmason.wireworld.views {
 			var box:TextField = new TextField();
 			box.background = true;
 			box.backgroundColor = 0xFF0000;
-			box.defaultTextFormat = new TextFormat(FontSet.getFontName("sans"), 12, 0x222222);
+			box.defaultTextFormat = new TextFormat("_sans", 12, 0x222222);
 			box.selectable = false;
-			box.embedFonts = (box.defaultTextFormat.font.charAt(0) != "_");
 			box.width = _width - 2 * _margin;
 			
 			box.height = (__height > 0) ? __height : 2000;

@@ -39,10 +39,9 @@ package net.rezmason.wireworld.views {
 			super();
 			
 			field = new TextField();
-			field.defaultTextFormat = new TextFormat(FontSet.getFontName("typewriter"), 12, 0x0, true);;
+			field.defaultTextFormat = new TextFormat("_typewriter", 12, 0x0, true);;
 			field.selectable = false;
 			field.autoSize = TextFieldAutoSize.LEFT;
-			field.embedFonts = (field.defaultTextFormat.font.charAt(0) != "_");
 			visible = false;
 			mouseEnabled = mouseChildren = false;
 			

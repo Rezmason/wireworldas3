@@ -64,12 +64,11 @@ package net.rezmason.wireworld.views {
 				
 			}
 			
-			format.font = FontSet.getFontName("typewriter");
+			format.font = "_typewriter";
 			format.size = _height * 0.65;
 			
 			field.defaultTextFormat = format;
 			if (field.text) field.setTextFormat(format, 0, field.text.length);
-			field.embedFonts = (format.font.charAt(0) != "_");
 		}
 		
 		public function get text():String { return _text; }
