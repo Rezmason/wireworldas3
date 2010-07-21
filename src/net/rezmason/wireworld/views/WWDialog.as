@@ -27,7 +27,6 @@ package net.rezmason.wireworld.views {
 		private var backing:Shape;
 		private var _content:Sprite;
 		private var gradient:Matrix;
-		private var titleBox:TextField, subtitleBox:TextField;
 		
 		private var _width:Number;
 		private var _title:String, _subtitle:String;
@@ -52,7 +51,7 @@ package net.rezmason.wireworld.views {
 			_margin = isBubble ? BUBBLE_MARGIN : BOX_MARGIN;;
 			
 			backing = new Shape();
-			
+			/*
 			titleBox = new TextField();
 			titleBox.selectable = false;
 			titleBox.defaultTextFormat = new TextFormat("_sans", 36, 0xFFFFFF);
@@ -62,7 +61,7 @@ package net.rezmason.wireworld.views {
 			subtitleBox.selectable = false;
 			subtitleBox.defaultTextFormat = new TextFormat("_sans", 18, 0xFFFFFF);
 			subtitleBox.autoSize = TextFieldAutoSize.LEFT;
-			
+			*/
 			_content = new Sprite();
 			
 			_toolbar = new Toolbar(_width, 18, 0x00FF00, 1);
@@ -129,8 +128,8 @@ package net.rezmason.wireworld.views {
 			// maybe draw backing tail
 			
 			addChild(backing);
-			if (_title && _title.length) addChild(titleBox);
-			if (_subtitle && _subtitle.length) addChild(subtitleBox);
+			//if (_title && _title.length) addChild(titleBox);
+			//if (_subtitle && _subtitle.length) addChild(subtitleBox);
 			addChild(_content);
 			addChild(_toolbar);
 			addChild(_pole);
