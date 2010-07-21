@@ -13,14 +13,13 @@ package net.rezmason.wireworld.views {
 			
 			var format:TextFormat = new TextFormat();
 			format.align = TextFormatAlign.CENTER;
-			format.font = FontSet.getFontName("sans");
+			format.font = "_sans";
 			format.bold = true;
 			format.size = __height * 0.65;
 			
 			var field:TextField = new TextField();
 			field.autoSize = TextFieldAutoSize.CENTER;
 			field.text = __text;
-			field.embedFonts = (format.font.charAt(0) != "_");
 			field.width += 2 * MARGIN;
 			field.height = __height;
 			
