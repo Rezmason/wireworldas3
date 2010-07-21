@@ -127,7 +127,6 @@ package net.rezmason.wireworld {
 		
 		private var fonts:Object = {
 			pixel:FrucadeMedium
-			//typewriter:ProFont
 		};
 		
 		[Embed(source='../../../../lib/web/readme.html', mimeType="application/octet-stream")]

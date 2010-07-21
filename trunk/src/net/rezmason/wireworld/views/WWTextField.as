@@ -11,51 +11,54 @@ package net.rezmason.wireworld.views {
 	import flash.display.BlendMode;
 	import flash.display.Sprite;
 	import flash.events.Event;
-	import flash.events.FocusEvent;
 	import flash.events.MouseEvent;
-	import flash.events.TextEvent;
-	import flash.text.TextField;
-	import flash.text.TextFieldType;
-	import flash.text.TextFormat;
 	import flash.text.TextFormatAlign;
+	import flash.text.engine.ElementFormat;
+	import flash.text.engine.FontDescription;
+	import flash.text.engine.FontWeight;
+	
+	import net.rezmason.text.Tyro;
 	
 	internal class WWTextField extends WWElement {
 		
+		private static const FONT_DESCRIPTION:FontDescription = new FontDescription("_typewriter");
+		
 		private var _text:String = "", _labelText:String;
-		private var field:TextField, format:TextFormat;
+		private var field:Tyro, format:ElementFormat;
 		private var editing:Boolean = false;
 		
 		public function WWTextField(__label:String, __width:Number = 100, __height:Number = 10, __maxChars:int = -1, __capStyle:String = null, 
 				__acceptsInput:Boolean = false, __labelText:String = ""):void {
 			
-			field = new TextField();
-			format = field.defaultTextFormat;
+			var fontDesc:FontDescription = FONT_DESCRIPTION.clone();
+			field = new Tyro();
+			field.background = false;
+			field.border = NaN;
+			format = new ElementFormat();
 			
 			super(__label, null, __width, __height, __capStyle);
 			
 			if (__maxChars != -1) field.maxChars = __maxChars;
 			_labelText = __labelText;
 			if (_labelText.length > field.maxChars) _labelText = _labelText.substr(0, field.maxChars - 3) + "...";
-			field.text = _labelText;
+			field.defaultText = _labelText;
 			
 			if (leftCap) {
-				format.align = rightCap ? TextFormatAlign.CENTER : TextFormatAlign.RIGHT;
+				field.align = rightCap ? TextFormatAlign.CENTER : TextFormatAlign.RIGHT;
 			} else {
-				format.align = TextFormatAlign.LEFT;
+				field.align = TextFormatAlign.LEFT;
 			}
 			
 			if (__acceptsInput) {
 				backing.transform.colorTransform = WWGUIPalette.INPUT_TEXT_BACK_CT;
-				field.type = TextFieldType.INPUT;
-				format.color = WWGUIPalette.DEFAULT_TEXT;
-				addEventListener(MouseEvent.CLICK, beginEdit);
-				addEventListener(TextEvent.TEXT_INPUT, enterResponder);
+				field.editable = true;
+				field.defaultColor = WWGUIPalette.DEFAULT_TEXT;
+				field.addEventListener(Event.CHANGE, changeResponder);
 			} else {
 				backing.transform.colorTransform = WWGUIPalette.PLAIN_TEXT_BACK_CT;
-				field.type = TextFieldType.DYNAMIC;
 				field.selectable = false;
 				field.mouseEnabled = false;
-				format.bold = true;
+				fontDesc.fontWeight = FontWeight.BOLD;
 				if (backing.visible) {
 					format.color = WWGUIPalette.NAKED_TEXT;
 				} else {
@@ -64,39 +67,27 @@ package net.rezmason.wireworld.views {
 				
 			}
 			
-			format.font = "_typewriter";
-			format.size = _height * 0.65;
+			format.fontDescription = fontDesc;
+			format.fontSize = _height * 0.65;
 			
-			field.defaultTextFormat = format;
-			if (field.text) field.setTextFormat(format, 0, field.text.length);
+			field.format = format;
+			field.verticalMargin = 0;
+			field.selectionColor = 0x0;
+			field.delayedRefresh = true;
 		}
 		
 		public function get text():String { return _text; }
 		public function set text(value:String):void {
 			_text = value;
+			field.text = _text;
 			if (_text.length) {
 				if (_text.length > field.maxChars) _text = _text.substr(0, field.maxChars - 3) + "...";
 				field.text = _text;
-				if (field.type == TextFieldType.INPUT) format.color = WWGUIPalette.EDITING_TEXT;
 			} else {
 				field.text = _labelText;
-				if (field.type == TextFieldType.INPUT) format.color = WWGUIPalette.DEFAULT_TEXT;
 			}
 			
-			field.defaultTextFormat = format;
-			field.setTextFormat(format, 0, field.text.length);
-		}
-		
-		public function grabFocus():void {
-			/*
-			var sprite:* = (field.getChildAt(1) as Sprite);
-			var button:* = sprite.getChildAt(1);
-			var line:* = sprite.getChildAt(1);
-			
-			stage.focus = line;
-			button.dispatchEvent(new MouseEvent(MouseEvent.MOUSE_DOWN));
-			sprite.dispatchEvent(new FocusEvent(FocusEvent.FOCUS_IN));
-			*/
+			field.format = format;
 		}
 		
 		override protected function redraw():void {
@@ -106,39 +97,12 @@ package net.rezmason.wireworld.views {
 			field.y = -_height * 0.5;
 			field.x = startX + MARGIN;
 			field.width = endX - startX - MARGIN;
-			field.height = _height;
 		}
 		
-		private function beginEdit(event:Event):void {
-			if (editing) return;
-			editing = true;
-			stage.addEventListener(MouseEvent.MOUSE_DOWN, endEdit, false, 0, true);
-			field.text = _text;
-			format.color = WWGUIPalette.EDITING_TEXT;
-			field.defaultTextFormat = format;
-			if (field.text) field.setTextFormat(format, 0, field.text.length);
-			field.setSelection(field.text.length, field.text.length);
-		}
-		
-		private function endEdit(event:Event = null):void {
-			if (!editing) return;
-			editing = false;
-			stage.removeEventListener(MouseEvent.MOUSE_DOWN, endEdit);
-			text = field.text.replace(/[\r\n]/g, "");
-			field.setSelection(-1, -1);
-			format.color = WWGUIPalette.DEFAULT_TEXT;
-			field.defaultTextFormat = format;
-			if (field.text) field.setTextFormat(format, 0, field.text.length);
-			
+		private function changeResponder(event:Event):void {
+			_text = field.text;
 			var arr:Array = _addParams ? _params.concat([_text]) : _params;
 			if (_trigger != null) _trigger.apply(null, arr);
-		}
-		
-		private function enterResponder(event:TextEvent):void {
-			if (event.text == "\n" || event.text == "\r") {
-				endEdit();
-				stage.focus = stage;
-			}
 		}
 	}
 }

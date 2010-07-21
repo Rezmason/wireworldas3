@@ -1,8 +1,4 @@
-Make nice input textbox with FTE
-Embed ProFont
-Embed a sans serif
-
-Grab next Apparat release
+Replace WWDialog title/subtitle TextFields with TextLines
 
 WWDialog
 	type
@@ -22,7 +18,6 @@ WWDialog
 	get, set barberPole
 Make the dialogs
 Some bug fixes
-	Input text box events are a pain to get right
 	Implement reset state
 	Init GUI with state values
 	Make sure CreditBox works properly
