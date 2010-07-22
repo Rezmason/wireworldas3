@@ -73,7 +73,7 @@ package net.rezmason.wireworld.views {
 			field.format = format;
 			field.verticalMargin = 0;
 			field.selectionColor = 0x0;
-			field.delayedRefresh = true;
+			//field.delayedRefresh = true;
 		}
 		
 		public function get text():String { return _text; }

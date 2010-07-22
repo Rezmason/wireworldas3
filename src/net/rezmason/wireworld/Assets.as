@@ -122,9 +122,6 @@ package net.rezmason.wireworld {
 		[Embed(source='../../../../lib/fru_med_reg/FRUCM___.TTF', fontName="Frucade Medium", mimeType="application/x-font-truetype")]
 		private static const FrucadeMedium:Class;
 		
-		[Embed(source='../../../../lib/MProFont/ProFontWindows.ttf', fontName="ProFont", mimeType="application/x-font-truetype")]
-		private static const ProFont:Class;
-		
 		private var fonts:Object = {
 			pixel:FrucadeMedium
 		};
@@ -135,9 +132,13 @@ package net.rezmason.wireworld {
 		[Embed(source='../../../../lib/web/about.html', mimeType="application/octet-stream")]
 		private static const ABOUT:Class;
 		
+		[Embed(source='../../../../lib/web/styles.css', mimeType="application/octet-stream")]
+		private static const STYLESHEET:Class;
+		
 		private var files:Object = {
 			README:README,
-			ABOUT:ABOUT
+			ABOUT:ABOUT,
+			STYLESHEET:STYLESHEET
 		};
 		
 		public var assets:Object = {

@@ -76,8 +76,8 @@ function wwBuild {
 	echo
 }
 
-wwBuild VECTOR DESKTOP wwdebug true false true
-#wwBuild STANDARD DESKTOP wwdebug true false true
+wwBuild VECTOR DESKTOP wwdebug false false true
+#wwBuild STANDARD DESKTOP wwdebug true false false
 
 #wwBuild TREE DESKTOP wwdebug false false
 #wwBuild HAXE DESKTOP wwhx false true
