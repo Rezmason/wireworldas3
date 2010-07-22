@@ -1,0 +1,22 @@
+head {
+	display:none;
+	leading:-100px;
+}
+
+h1 {
+	display:none;
+	leading:-100px;
+}
+
+h2 {
+	font-size:18px;
+	leading:10px;
+}
+
+p {
+	text-align:justify;
+}
+
+a {
+	font-weight:bold;
+}

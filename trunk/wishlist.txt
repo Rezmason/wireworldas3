@@ -1,6 +1,6 @@
 Replace WWDialog title/subtitle TextFields with TextLines
 
-WWDialog
+Make the dialogs
 	type
 		NORMAL
 		SPEECH_BUBBLE
@@ -15,12 +15,16 @@ WWDialog
 		If there is none, leave it out
 	content sprite
 	toolbar
-	get, set barberPole
-Make the dialogs
+	barberPole
+
 Some bug fixes
+	Thaw bug?
+		Do some timers thaw when they shouldn't?
 	Implement reset state
 	Init GUI with state values
 	Make sure CreditBox works properly
+	Make sure Tyro doesn't leak
+	
 New announcer system
 	Rename
 	Announcers are blank speech bubble prompts

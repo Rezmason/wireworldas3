@@ -11,12 +11,15 @@ package net.rezmason.wireworld.views {
 	import flash.display.DisplayObject;
 	import flash.display.Shape;
 	import flash.display.Sprite;
+	import flash.events.Event;
 	import flash.geom.Matrix;
 	import flash.geom.Point;
 	import flash.geom.Rectangle;
+	import flash.text.StyleSheet;
 	import flash.text.TextField;
 	import flash.text.TextFieldAutoSize;
 	import flash.text.TextFormat;
+	import flash.text.engine.TextLine;
 	
 	import net.rezmason.gui.Toolbar;
 
@@ -24,8 +27,9 @@ package net.rezmason.wireworld.views {
 		
 		private static const BUBBLE_MARGIN:Number = 8, BOX_MARGIN:Number = 20, CONTENT_MARGIN:Number = 5;
 		
+		internal static var css:String;
+		
 		private var backing:Shape;
-		private var _content:Sprite;
 		private var gradient:Matrix;
 		
 		private var _width:Number;
@@ -35,6 +39,7 @@ package net.rezmason.wireworld.views {
 		private var centerX:Number = 0, centerY:Number = 0;
 		private var _margin:Number;
 		private var _pole:BarberPole;
+		private var _content:Array = [];
 		
 		public function WWDialog(__width:Number = NaN, __title:String = null, __subtitle:String = null, 
 				__speechX:Number = NaN, __speechY:Number = NaN):void {
@@ -51,18 +56,6 @@ package net.rezmason.wireworld.views {
 			_margin = isBubble ? BUBBLE_MARGIN : BOX_MARGIN;;
 			
 			backing = new Shape();
-			/*
-			titleBox = new TextField();
-			titleBox.selectable = false;
-			titleBox.defaultTextFormat = new TextFormat("_sans", 36, 0xFFFFFF);
-			titleBox.autoSize = TextFieldAutoSize.LEFT;
-			
-			subtitleBox = new TextField();
-			subtitleBox.selectable = false;
-			subtitleBox.defaultTextFormat = new TextFormat("_sans", 18, 0xFFFFFF);
-			subtitleBox.autoSize = TextFieldAutoSize.LEFT;
-			*/
-			_content = new Sprite();
 			
 			_toolbar = new Toolbar(_width, 18, 0x00FF00, 1);
 			_toolbar.leftMargin = _toolbar.rightMargin = _margin;
@@ -72,6 +65,8 @@ package net.rezmason.wireworld.views {
 			_pole.visible = false;
 			
 			redraw();
+			
+			addEventListener(Event.ADDED_TO_STAGE, resetHTMLBoxes);
 		}
 		
 		public function get interactive():Boolean { return _pole.visible; }
@@ -91,50 +86,125 @@ package net.rezmason.wireworld.views {
 		}
 		
 		public function addContent(item:DisplayObject):void {
-			item.x = item.y = 0;
-			var rect:Rectangle = item.getBounds(item);
-			item.x = -rect.x;
-			item.y = -rect.y + _content.height;
-			if (_content.height > 0) item.y += CONTENT_MARGIN;
-			_content.addChild(item);
+			if (item.parent) item.parent.removeChild(item);
+			
+			var index:int = _content.indexOf(item);
+			if (index != -1) _content.splice(index, 1);
+			_content.push(item);
+			
 			redraw();
 		}
 		
-		public function addHTML(input:XML, __height:Number = NaN):void {
-			if (!isNaN(__height)) __height = -1;
+		public function addHTML(input:String, __height:Number = NaN):void {
 			var box:TextField = new TextField();
-			box.background = true;
-			box.backgroundColor = 0xFF0000;
-			box.defaultTextFormat = new TextFormat("_sans", 12, 0x222222);
+			box.multiline = true;
+			box.wordWrap = true;
 			box.selectable = false;
+			box.defaultTextFormat = new TextFormat("_sans", 12, 0x222222);
+			
+			var sheet:StyleSheet = new StyleSheet();
+			sheet.parseCSS(css);
+			box.styleSheet = sheet;
+			box.htmlText = input.replace(/[\n\t]/g, "").replace(/<br\/>/g, "<br>");
 			box.width = _width - 2 * _margin;
 			
-			box.height = (__height > 0) ? __height : 2000;
-			box.htmlText = input.toXMLString();
-			if (__height < 0) box.height = box.textHeight;
+			if (!isNaN(__height)) {
+				box.height = __height;
+			} else {
+				box.height = 2000;
+				box.height = box.textHeight + 12;
+			}
 			
-			addContent(box);
+			if (box.height >= box.textHeight) {
+				addContent(box);
+			} else {
+				
+				var rect:Rectangle = box.getBounds(box);
+				var slider:WWSlider = new WWSlider("", box.height, 18, box.height / box.textHeight);
+				var scrollContainer:Sprite = new Sprite();
+				
+				rect.height = box.height;
+				
+				box.width -= 24;
+				box.height = 2000;
+				box.height = box.textHeight + 12;
+				box.scrollRect = rect;
+				
+				slider.bind(scroll, true, scrollContainer);
+				
+				slider.rotation = 90;
+				slider.x = box.width + 9;
+				
+				scrollContainer.addChild(box);
+				scrollContainer.addChild(slider);
+				addContent(scrollContainer);
+			}
+		}
+		
+		private function scroll(target:Sprite, amount:Number, updateSlider:Boolean = false):void {
+			var slider:WWSlider = target.getChildAt(1) as WWSlider;
+			
+			if (updateSlider) {
+				slider.value = amount;
+			} else {
+				
+				var box:TextField = target.getChildAt(0) as TextField;
+				var rect:Rectangle = box.scrollRect;
+				
+				rect.y = (box.textHeight + 12 - rect.height) * amount;
+				box.scrollRect = rect;
+			}
+		}
+		
+		private function resetHTMLBoxes(event:Event):void {
+			if (event.target != this) return;
+			for (var i:int = 0; i < _content.length; i++) {
+				var htmlBox:Sprite = _content[i] as Sprite;
+				if (htmlBox && htmlBox.getChildAt(1) is WWSlider) {
+					scroll(htmlBox, 0, true);
+				}
+			}
 		}
 		
 		public function clearContents():void {
-			while (_content.numChildren) _content.removeChildAt(0);
+			_content.length = 0;
 			redraw();
 		}
 		
 		private function redraw():void {
 			while (numChildren) removeChildAt(0);
 			
-			// draw backing
-			// maybe draw backing tail
-			
+			backing.graphics.clear();
 			addChild(backing);
-			//if (_title && _title.length) addChild(titleBox);
-			//if (_subtitle && _subtitle.length) addChild(subtitleBox);
-			addChild(_content);
-			addChild(_toolbar);
-			addChild(_pole);
 			
-			// position everything
+			if (_title && _title.length) attach(TextFactory.generate(_title, "_sans", 36, true));
+			if (_subtitle && _subtitle.length) attach(TextFactory.generate(_subtitle, "_sans", 18));
+			for (var i:int = 0; i < _content.length; i++) attach(_content[i]);
+			
+			var rect:Rectangle = getBounds(this);
+			
+			x = (rect.left + rect.right) * -0.5;
+			y = (rect.top + rect.bottom) * -0.5;
+			
+			rect.inflate(_margin, _margin);
+			
+			backing.graphics.beginFill(0xFFFFFF);
+			backing.graphics.drawRect(rect.x, rect.y, rect.width, rect.height);
+			backing.graphics.endFill();
+		}
+		
+		private function attach(item:DisplayObject):void {
+			item.transform.matrix = new Matrix();
+			
+			var rect:Rectangle = item.getBounds(item);
+			item.x = -rect.x;
+			item.y = -rect.y + _content.height;
+			
+			item.y += height + CONTENT_MARGIN;
+			
+			if (!(item is TextLine)) item.opaqueBackground = 0xFFFFFF;
+			
+			addChild(item);
 		}
 	}
 }

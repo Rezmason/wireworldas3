@@ -23,20 +23,22 @@ package net.rezmason.wireworld.views {
 		
 		private var dragging:Boolean = false, zipping:Boolean = false;
 		private var _value:Number = 0;
-		private var _thumb:Sprite, grip:Number;
-		private var minX:Number, maxX:Number, thumbHeight:Number;
+		private var _thumb:Sprite, grip:Number, _thumbRatio:Number;
+		private var minX:Number, maxX:Number, thumbHeight:Number, thumbWidth:Number;
 		private var zipTimer:Timer = new Timer(10);
 		private var zipAmount:Number;
 		
-		public function WWSlider(__label:String, __width:Number = 100, __height:Number = 10):void {
+		public function WWSlider(__label:String, __width:Number = 100, __height:Number = 10, __thumbRatio:Number = 0):void {
 			_thumb = new Sprite();
 			_thumb.transform.colorTransform = WWGUIPalette.FRONT_CT;
 			_thumb.useHandCursor = _thumb.buttonMode = true;
+			
 			thumbHeight = __height - MARGIN * 2;
-			minX = MARGIN;
-			maxX = __width - MARGIN - thumbHeight;
 			
 			super(__label, null, __width, __height, "[]");
+			
+			thumbRatio = isNaN(__thumbRatio) ? 0 : Math.max(0, Math.min(1, __thumbRatio));
+			
 			_thumb.addEventListener(MouseEvent.MOUSE_DOWN, beginDrag);
 			addEventListener(MouseEvent.MOUSE_UP, endDrag);
 			
@@ -54,13 +56,28 @@ package net.rezmason.wireworld.views {
 			if (_trigger != null) _trigger.apply(null, _addParams ? _params.concat([_value]) : _params);
 		}
 		
+		public function get thumbRatio():Number { return _thumbRatio; }
+		public function set thumbRatio(val:Number):void {
+			if (!isNaN(val)) {
+				_thumbRatio = FastMath.min(FastMath.max(0, val), 1);
+				thumbWidth = Math.max(thumbHeight, (_width - 2 * MARGIN) * _thumbRatio);
+				minX = MARGIN;
+				maxX = _width - MARGIN - thumbWidth;
+				trace(minX, maxX);
+				_thumb.x = minX + (maxX - minX) * _value;
+				redraw();
+			}
+		}
+		
 		override protected function redraw():void {
 			super.redraw();
+			
+			if (!thumbWidth || !thumbHeight) return;
 			
 			backing.transform.colorTransform = WWGUIPalette.BACK_DARK_CT;
 			
 			_thumb.graphics.beginFill(0x0);
-			_thumb.graphics.drawRoundRect(0, -thumbHeight * 0.5, thumbHeight, thumbHeight, thumbHeight * 0.25, thumbHeight * 0.25);
+			_thumb.graphics.drawRoundRect(0, -thumbHeight * 0.5, thumbWidth, thumbHeight, thumbHeight * 0.25, thumbHeight * 0.25);
 			_thumb.graphics.endFill();
 			value = value;
 			addChild(_thumb);
