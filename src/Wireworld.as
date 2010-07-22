@@ -6,6 +6,8 @@ package {
 	
 	import net.rezmason.gui.SimpleBridge;
 	import net.rezmason.wireworld.Main;
+	
+	import com.flashdynamix.utils.SWFProfiler;
 
 	/**
 	*	Application entry point for Wireworld Player.
@@ -19,7 +21,7 @@ package {
 	[SWF(width='800', height='648', backgroundColor='#000000', frameRate='30')]
 	public final class Wireworld extends Sprite {
 		
-		public var bridge:SimpleBridge = new SimpleBridge();;
+		public var bridge:SimpleBridge = new SimpleBridge();
 		
 		// Entry point.
 		
@@ -37,6 +39,7 @@ package {
 				var scene:Sprite = new Sprite();
 				stage.addChild(scene);
 				init(scene);
+				SWFProfiler.init(stage, scene);
 				removeEventListener(Event.ADDED_TO_STAGE, connectToStage);
 			} else if (!event) {
 				addEventListener(Event.ADDED_TO_STAGE, connectToStage);
