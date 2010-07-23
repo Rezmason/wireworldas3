@@ -13,6 +13,7 @@ package net.rezmason.wireworld {
 	//---------------------------------------
 
 	import flash.display.BitmapData;
+	import flash.display.DisplayObject;
 	import flash.display.Sprite;
 	import flash.events.Event;
 	import flash.events.IEventDispatcher;
@@ -33,7 +34,7 @@ package net.rezmason.wireworld {
 		function updateAnnouncers():void;
 		function showAbout(event:Event = null, interactive:Boolean = true):void;
 		function giveAlert(titleText:String = null, messageText:String = null, interactive:Boolean = true):void;
-		function hideDialog(event:Event = null):void;
+		function hideDialog(target:DisplayObject = null):void;
 		function resize(event:Event = null):void;
 		function updatePaper(flags:int = 0):void;
 		function updateGeneration(gen:uint):void;

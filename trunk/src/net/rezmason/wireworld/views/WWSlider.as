@@ -17,7 +17,7 @@ package net.rezmason.wireworld.views {
 	import flash.events.TimerEvent;
 	import flash.utils.Timer;
 	
-	internal final class WWSlider extends WWElement {
+	internal class WWSlider extends WWElement {
 		
 		public static const ZIP_STEP:Number = 5;
 		
@@ -38,6 +38,7 @@ package net.rezmason.wireworld.views {
 			super(__label, null, __width, __height, "[]");
 			
 			thumbRatio = isNaN(__thumbRatio) ? 0 : Math.max(0, Math.min(1, __thumbRatio));
+			backing.transform.colorTransform = WWGUIPalette.BACK_DARK_CT;
 			
 			_thumb.addEventListener(MouseEvent.MOUSE_DOWN, beginDrag);
 			addEventListener(MouseEvent.MOUSE_UP, endDrag);
@@ -73,8 +74,6 @@ package net.rezmason.wireworld.views {
 			super.redraw();
 			
 			if (!thumbWidth || !thumbHeight) return;
-			
-			backing.transform.colorTransform = WWGUIPalette.BACK_DARK_CT;
 			
 			_thumb.graphics.beginFill(0x0);
 			_thumb.graphics.drawRoundRect(0, -thumbHeight * 0.5, thumbWidth, thumbHeight, thumbHeight * 0.25, thumbHeight * 0.25);
@@ -126,10 +125,10 @@ package net.rezmason.wireworld.views {
 			if (zipAmount) {
 				_thumb.x += zipAmount;
 			} else {
-				if (FastMath.abs(mouseX - (_thumb.x + thumbHeight * 0.5)) < ZIP_STEP) {
-					_thumb.x = mouseX - thumbHeight * 0.5;
+				if (FastMath.abs(mouseX - (_thumb.x + thumbWidth * 0.5)) < ZIP_STEP) {
+					_thumb.x = mouseX - thumbWidth * 0.5;
 				} else {
-					_thumb.x += (mouseX < _thumb.x + thumbHeight * 0.5) ? -ZIP_STEP : ZIP_STEP;
+					_thumb.x += (mouseX < _thumb.x + thumbWidth * 0.5) ? -ZIP_STEP : ZIP_STEP;
 				}
 			}
 			_thumb.x = FastMath.min(maxX, FastMath.max(minX, _thumb.x));
