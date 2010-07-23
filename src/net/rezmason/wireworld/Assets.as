@@ -79,9 +79,6 @@ package net.rezmason.wireworld {
 		[Embed(source='../../../../lib/symbols/stop.svg')]
 		private static const Symbol_stop:Class;
 		
-		[Embed(source='../../../../lib/symbols/tdsi.svg')]
-		private static const Symbol_tdsi:Class;
-		
 		[Embed(source='../../../../lib/symbols/ww_about.svg')]
 		private static const Symbol_ww_about:Class;
 		
@@ -113,7 +110,6 @@ package net.rezmason.wireworld {
 			Snapshot:Symbol_snapshot,
 			Step:Symbol_step,
 			Stop:Symbol_stop,
-			TDSI:Symbol_tdsi,
 			WWAbout:Symbol_ww_about,
 			ZoomIn:Symbol_zoom_in,
 			ZoomOut:Symbol_zoom_out
@@ -122,7 +118,17 @@ package net.rezmason.wireworld {
 		[Embed(source='../../../../lib/fru_med_reg/FRUCM___.TTF', fontName="Frucade Medium", mimeType="application/x-font-truetype")]
 		private static const FrucadeMedium:Class;
 		
+		/*
+		[Embed(source='../../../../lib/mplus-TESTFLIGHT-031/mplus-2p-regular.ttf', fontName="M Plus", fontWeight="Regular", mimeType="application/x-font-truetype")]
+		private static const MPlusRegular:Class;
+		
+		[Embed(source='../../../../lib/mplus-TESTFLIGHT-031/mplus-2p-regular.ttf', fontName="M Plus", fontWeight="Bold", mimeType="application/x-font-truetype")]
+		private static const MPlusBold:Class;
+		*/
+		
 		private var fonts:Object = {
+			//MPlusRegular:MPlusRegular,
+			//MPlusBold:MPlusBold,
 			pixel:FrucadeMedium
 		};
 		
