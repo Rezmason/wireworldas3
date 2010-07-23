@@ -121,10 +121,10 @@ package net.rezmason.wireworld.brains {
 		}
 		
 		public function setBounds(top:int, left:int, bottom:int, right:int):void {
-			topBound = top - activeCorner.x;
-			leftBound = left - activeCorner.y;
-			bottomBound = bottom - activeCorner.x;
-			rightBound = right - activeCorner.y;
+			topBound = top - activeCorner.y;
+			leftBound = left - activeCorner.x;
+			bottomBound = bottom - activeCorner.y;
+			rightBound = right - activeCorner.x;
 			
 			bound.x = leftBound;
 			bound.y = topBound;
