@@ -12,9 +12,10 @@ package net.rezmason.wireworld.views {
 	import flash.display.Shape;
 	import flash.display.Sprite;
 	import flash.events.Event;
-	import flash.geom.Matrix;
+	import flash.events.MouseEvent;
 	import flash.geom.Point;
 	import flash.geom.Rectangle;
+	import flash.net.URLRequest;
 	import flash.text.StyleSheet;
 	import flash.text.TextField;
 	import flash.text.TextFieldAutoSize;
@@ -25,43 +26,44 @@ package net.rezmason.wireworld.views {
 
 	internal class WWDialog extends Sprite {
 		
-		private static const BUBBLE_MARGIN:Number = 8, BOX_MARGIN:Number = 20, CONTENT_MARGIN:Number = 5;
+		private static const CONTENT_MARGIN:Number = 10;
 		
 		internal static var css:String;
 		
 		private var backing:Shape;
-		private var gradient:Matrix;
 		
 		private var _width:Number;
 		private var _title:String, _subtitle:String;
 		private var _toolbar:Toolbar;
 		private var isBubble:Boolean = false;
-		private var centerX:Number = 0, centerY:Number = 0;
-		private var _margin:Number;
 		private var _pole:BarberPole;
 		private var _content:Array = [];
+		private var _speechX:Number = 0, _speechY:Number = 0;
+		private var _margin:Number;
+		private var bottom:Number;
 		
 		public function WWDialog(__width:Number = NaN, __title:String = null, __subtitle:String = null, 
-				__speechX:Number = NaN, __speechY:Number = NaN):void {
+				__speechX:Number = NaN, __speechY:Number = NaN, __margin:Number = 20):void {
 			
+			super();
+			
+			_margin = isNaN(__margin) ? 320 : __margin;
 			_width = isNaN(__width) ? 320 : __width;
 			_title = __title;
 			_subtitle = __subtitle;
 			if (!isNaN(__speechX + __speechY)) {
 				isBubble = true;
-				centerX = __speechX;
-				centerY = __speechY;
+				_speechX = isNaN(__speechX) ? 0 : __speechX;
+				_speechY = isNaN(__speechY) ? 0 : __speechY;
 			}
-			
-			_margin = isBubble ? BUBBLE_MARGIN : BOX_MARGIN;;
 			
 			backing = new Shape();
 			
-			_toolbar = new Toolbar(_width, 18, 0x00FF00, 1);
-			_toolbar.leftMargin = _toolbar.rightMargin = _margin;
+			_toolbar = new Toolbar(_width, 18, 0xFFFFFF, 1);
+			_toolbar.leftMargin = _toolbar.rightMargin = 0;
 			_toolbar.visible = true;
 			
-			_pole = new BarberPole(_width, 18, 0x00FF00);
+			_pole = new BarberPole(_width, 18, 0x222222);
 			_pole.visible = false;
 			
 			redraw();
@@ -81,18 +83,36 @@ package net.rezmason.wireworld.views {
 		public function get subtitle():String { return _subtitle; }
 		public function set subtitle(value:String):void { _subtitle = value; redraw(); }
 		
+		public function get speechX():Number { return _speechX; }
+		public function get speechY():Number { return _speechY; }
+		
 		public function addGUIElementsToToolbar(hAlign:Object = null, kiss:Boolean = false, ...elements):void {
 			_toolbar.addGUIElements.apply(null, [hAlign, kiss].concat(elements));
 		}
 		
-		public function addContent(item:DisplayObject):void {
+		public function addContent(item:DisplayObject, makeOpaque:Boolean = true, link:String = ""):void {
 			if (item.parent) item.parent.removeChild(item);
 			
 			var index:int = _content.indexOf(item);
 			if (index != -1) _content.splice(index, 1);
 			_content.push(item);
 			
+			if (makeOpaque) item.opaqueBackground = 0xFFFFFF;
+			
+			if (item is Sprite && link && link.length) {
+				linkTo(item as Sprite, link);
+			}
+			
 			redraw();
+		}
+		
+		public function addSpacer(__height:Number = NaN):void {
+			if (isNaN(height) || __height < 0) return;
+			var spacer:Shape = new Shape();
+			spacer.graphics.beginFill(0xFFFFFF);
+			spacer.graphics.drawRect(0, 0, 1, __height);
+			spacer.graphics.endFill();
+			addContent(spacer);
 		}
 		
 		public function addHTML(input:String, __height:Number = NaN):void {
@@ -106,12 +126,11 @@ package net.rezmason.wireworld.views {
 			sheet.parseCSS(css);
 			box.styleSheet = sheet;
 			box.htmlText = input.replace(/[\n\t]/g, "").replace(/<br\/>/g, "<br>");
-			box.width = _width - 2 * _margin;
+			box.width = _width;
 			
 			if (!isNaN(__height)) {
 				box.height = __height;
 			} else {
-				box.height = 2000;
 				box.height = box.textHeight + 12;
 			}
 			
@@ -120,29 +139,32 @@ package net.rezmason.wireworld.views {
 			} else {
 				
 				var rect:Rectangle = box.getBounds(box);
-				var slider:WWSlider = new WWSlider("", box.height, 18, box.height / box.textHeight);
+				var slider:WWSlider = new WWDialogSlider("", box.height, 18, box.height / box.textHeight);
 				var scrollContainer:Sprite = new Sprite();
+			
+				box.addEventListener(MouseEvent.MOUSE_WHEEL, scrollByScroll);
 				
 				rect.height = box.height;
 				
-				box.width -= 24;
-				box.height = 2000;
+				slider.rotation = 90;
+				slider.x = box.width - 9;
+				slider.bind(scroll, true, scrollContainer);
+				
+				box.width -= 36;
 				box.height = box.textHeight + 12;
 				box.scrollRect = rect;
 				
-				slider.bind(scroll, true, scrollContainer);
-				
-				slider.rotation = 90;
-				slider.x = box.width + 9;
-				
 				scrollContainer.addChild(box);
 				scrollContainer.addChild(slider);
+				scrollContainer.name = scrollContainer.name.replace("instance", "html");
 				addContent(scrollContainer);
 			}
 		}
 		
-		private function scroll(target:Sprite, amount:Number, updateSlider:Boolean = false):void {
+		private function scroll(target:Sprite, amount:Number, updateSlider:Boolean = false, increment:Boolean = false):void {
 			var slider:WWSlider = target.getChildAt(1) as WWSlider;
+			
+			if (increment) amount += slider.value;
 			
 			if (updateSlider) {
 				slider.value = amount;
@@ -156,11 +178,16 @@ package net.rezmason.wireworld.views {
 			}
 		}
 		
+		private function scrollByScroll(event:MouseEvent):void {
+			var target:Sprite = (event.currentTarget as TextField).parent as Sprite;
+			scroll(target, event.delta * -0.005, true, true);
+		}
+		
 		private function resetHTMLBoxes(event:Event):void {
 			if (event.target != this) return;
 			for (var i:int = 0; i < _content.length; i++) {
 				var htmlBox:Sprite = _content[i] as Sprite;
-				if (htmlBox && htmlBox.getChildAt(1) is WWSlider) {
+				if (htmlBox && htmlBox.name.indexOf("html") == 0) {
 					scroll(htmlBox, 0, true);
 				}
 			}
@@ -177,32 +204,59 @@ package net.rezmason.wireworld.views {
 			backing.graphics.clear();
 			addChild(backing);
 			
+			bottom = 0;
+			
 			if (_title && _title.length) attach(TextFactory.generate(_title, "_sans", 36, true));
-			if (_subtitle && _subtitle.length) attach(TextFactory.generate(_subtitle, "_sans", 18));
+			if (_subtitle && _subtitle.length) attach(TextFactory.generate(_subtitle, "_sans", 14));
 			for (var i:int = 0; i < _content.length; i++) attach(_content[i]);
 			
+			_toolbar.width = _width;
+			attach(_toolbar);
+			
 			var rect:Rectangle = getBounds(this);
+			var topRect:Rectangle = getChildAt(1).getBounds(this);
+			var bottomRect:Rectangle = getChildAt(numChildren - 1).getBounds(this);
+			
+			rect.top = topRect.top;
+			rect.bottom = bottomRect.bottom;
+			
+			_toolbar.width = rect.width;
 			
 			x = (rect.left + rect.right) * -0.5;
 			y = (rect.top + rect.bottom) * -0.5;
 			
 			rect.inflate(_margin, _margin);
 			
+			addChild(_pole);
+			_pole.x = rect.left;
+			_pole.y = _toolbar.y;
+			_pole.width = rect.width;
+			_pole.height = rect.bottom - _margin - _pole.y;
+			
 			backing.graphics.beginFill(0xFFFFFF);
-			backing.graphics.drawRect(rect.x, rect.y, rect.width, rect.height);
+			backing.graphics.drawRoundRect(rect.x, rect.y, rect.width, rect.height, _margin * 2, _margin * 2);
 			backing.graphics.endFill();
 		}
 		
 		private function attach(item:DisplayObject):void {
-			item.transform.matrix = new Matrix();
 			
 			var rect:Rectangle = item.getBounds(item);
-			item.x = -rect.x;
-			item.y = -rect.y + _content.height;
 			
-			item.y += height + CONTENT_MARGIN;
+			item.x = -rect.left;
+			item.y = -rect.top + bottom;
 			
-			if (!(item is TextLine)) item.opaqueBackground = 0xFFFFFF;
+			if (item.name.indexOf("html") == 0) {
+				var box:TextField = (item as Sprite).getChildAt(0) as TextField;
+				if (box.scrollRect) {
+					bottom += (item as Sprite).getChildAt(0).scrollRect.height;
+				} else {
+					bottom += box.height;
+				}
+			} else {
+				bottom += item.height;
+			}
+			
+			bottom += CONTENT_MARGIN;
 			
 			addChild(item);
 		}

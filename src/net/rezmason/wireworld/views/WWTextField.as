@@ -34,13 +34,14 @@ package net.rezmason.wireworld.views {
 			field = new Tyro();
 			field.background = false;
 			field.border = NaN;
+			field.delayedRefresh = true;
 			format = new ElementFormat();
 			
 			super(__label, null, __width, __height, __capStyle);
 			
 			if (__maxChars != -1) field.maxChars = __maxChars;
 			_labelText = __labelText;
-			if (_labelText.length > field.maxChars) _labelText = _labelText.substr(0, field.maxChars - 3) + "...";
+			if (field.maxChars && _labelText.length > field.maxChars) _labelText = _labelText.substr(0, field.maxChars - 3) + "...";
 			field.defaultText = _labelText;
 			
 			if (leftCap) {
@@ -73,7 +74,7 @@ package net.rezmason.wireworld.views {
 			field.format = format;
 			field.verticalMargin = 0;
 			field.selectionColor = 0x0;
-			//field.delayedRefresh = true;
+			field.delayedRefresh = false;
 		}
 		
 		public function get text():String { return _text; }
@@ -81,13 +82,17 @@ package net.rezmason.wireworld.views {
 			_text = value;
 			field.text = _text;
 			if (_text.length) {
-				if (_text.length > field.maxChars) _text = _text.substr(0, field.maxChars - 3) + "...";
+				if (field.maxChars && _text.length > field.maxChars) _text = _text.substr(0, field.maxChars - 3) + "...";
 				field.text = _text;
 			} else {
 				field.text = _labelText;
 			}
 			
 			field.format = format;
+		}
+		
+		public function grabFocus():void {
+			if (stage) stage.focus = field;
 		}
 		
 		override protected function redraw():void {
