@@ -1,1 +1,0 @@
-﻿[Embed(source='./lib/web/readme.html', mimeType="application/octet-stream")]const README:Class;		[Embed(source='./lib/fru_med_reg/FRUCM___.TTF', fontName="Frucade Medium", mimeType="application/x-font-truetype")]const FrucadeMedium:Class;//trace(getQualifiedClassName(README));
