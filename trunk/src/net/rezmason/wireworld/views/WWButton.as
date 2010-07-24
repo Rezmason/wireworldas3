@@ -67,7 +67,7 @@ package net.rezmason.wireworld.views {
 		
 		public function get down():Boolean { return _down; }
 		public function set down(value:Boolean):void {
-			if (value && (_type != ButtonType.TOGGLABLE || _down != value)) click();
+			if ((_type != ButtonType.TOGGLABLE && value) || _down != value) click();
 		}
 		
 		public function click(event:Event = null):void {
