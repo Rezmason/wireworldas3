@@ -1,30 +1,3 @@
-Replace WWDialog title/subtitle TextFields with TextLines
-
-Make the dialogs
-	type
-		NORMAL
-		SPEECH_BUBBLE
-	speechPoint
-		Only works with speech bubbles
-		Offsets the center
-	width & height
-		Centered
-	get, set title
-		If there is none, leave it out
-	get, set subtitle
-		If there is none, leave it out
-	content sprite
-	toolbar
-	barberPole
-
-Some bug fixes
-	Thaw bug?
-		Do some timers thaw when they shouldn't?
-	Implement reset state
-	Init GUI with state values
-	Make sure CreditBox works properly
-	Make sure Tyro doesn't leak
-	
 New announcer system
 	Rename
 	Announcers are blank speech bubble prompts
@@ -41,15 +14,16 @@ New announcer system
 		State should contain list of announcers
 			List is erased when a new document is loaded
 			List is not saved to shared object in AIR
+
 Put Add Announcer in AIR app
 Build API
-
 
 Add comments to code in all the right places
 	Class header
 	Class sections
 	Comments for methods
 	Comments in complex functions
+Finalize classes that can be finalized
 
 Improving render performance
 
