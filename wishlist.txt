@@ -1,5 +1,4 @@
 New announcer system
-	Rename
 	Announcers are blank speech bubble prompts
 		On change,
 			Announcer system takes screenshot
@@ -26,24 +25,7 @@ Add comments to code in all the right places
 Finalize classes that can be finalized
 
 Improving render performance
-
-	Idea: Would redrawing the paper to only fit in the window be any help?
-	
-	Another idea: fragmenting the graphics
-		Rewrite the system for bringing graphics from the model
-			IModel.makeFragment(rect:Rectangle, colorPalette)
-				Returns a Shape containing wire, tail and head graphics layers
-				Colored in correctly
-			IModel.makeHeatFragment(rect:Rectangle)
-				Returns a Shape containing heatmap graphics layer
-		Cut up the wire/head/tail /heat data into fragments
-			IModel.spewRects(fWidth:Number, fHeight:Number)
-				Breaks non-dead area of BitmapData into rects and returns them
-			Fragments that are entirely off-screen should not be in the display list
-				Paper will manage its display list after
-					zooming
-					reset
-					dragging
+	Redraw the paper to only fit in the window be any help
 
 Test on Mac and PC
 Then Rip out debug stuff
@@ -68,6 +50,7 @@ WireworldAndroid
 	Run the APK maker on the resulting SWF
 	Figure out two-finger "scrolling" and positioning
 	Use the Android menu system instead of toolbars
+		Make your own if you must
 	Tap to start, stop
 	How do FileReference.browse() and FileReference.save() work on Android?
 	Redesign dialogs for vertical mobile screen
