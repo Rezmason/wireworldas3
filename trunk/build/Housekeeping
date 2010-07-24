@@ -7,6 +7,6 @@ mydir=`dirname "$abspath"`
 pushd $mydir/../
 
 rsync --exclude=.svn -va ./lib/web/ ./deploy
-rsync --exclude=.svn -va ./lib/resources.swf ./deploy/lib/
+#rsync --exclude=.svn -va ./lib/resources.swf ./deploy/lib/
 rsync --exclude=.svn -va ./lib/assets.swf ./deploy/lib/
 rsync --exclude=.svn -va ./examples/ ./deploy/examples
