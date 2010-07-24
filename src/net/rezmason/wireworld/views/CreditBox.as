@@ -38,7 +38,7 @@ package net.rezmason.wireworld.views {
             format.fontSize = 8;
             format.color = palette.wire;
             format.fontDescription = fontDescription;
-            textColor = 0xFF000000 | palette.wire;
+            textColor = 0xFF000000 | palette.head;
             backgroundColor = 0xFF000000 | palette.dead;
             textBlock = new TextBlock();
 		}
