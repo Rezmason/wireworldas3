@@ -22,7 +22,7 @@ package net.rezmason.wireworld.views {
 	
 	import net.rezmason.text.TallyMan;
 	
-	internal class WWNumberField extends WWElement {
+	internal final class WWNumberField extends WWElement {
 		
 		private static const FONT_DESCRIPTION:FontDescription = new FontDescription("_typewriter");
 		

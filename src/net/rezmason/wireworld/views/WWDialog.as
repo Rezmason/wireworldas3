@@ -31,7 +31,7 @@ package net.rezmason.wireworld.views {
 	// little toolbars for buttons to go, and can contain
 	// anything.
 	
-	internal class WWDialog extends Sprite {
+	internal final class WWDialog extends Sprite {
 			
 		//---------------------------------------
 		// INTERNAL VARIABLES
