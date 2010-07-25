@@ -36,6 +36,9 @@ package net.rezmason.wireworld.views {
 			thumbHeight = __height - MARGIN * 2;
 			
 			super(__label, null, __width, __height, "[]");
+			cacheAsBitmap = false;
+			_thumb.cacheAsBitmap = true;
+			this.backing.cacheAsBitmap = true;
 			
 			thumbRatio = isNaN(__thumbRatio) ? 0 : Math.max(0, Math.min(1, __thumbRatio));
 			backing.transform.colorTransform = WWGUIPalette.BACK_DARK_CT;

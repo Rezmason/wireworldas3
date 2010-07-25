@@ -46,6 +46,8 @@ package net.rezmason.wireworld.views {
 			super();
 			if (__label) _label = __label;
 			
+			cacheAsBitmap = true;
+			
 			_content = __content;
 			_height = __height;
 			_specifiedWidth = __width;
