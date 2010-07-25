@@ -1,5 +1,5 @@
 /**
-* Wireworld Player by Jeremy Sachs. June 22, 2010
+* Wireworld Player by Jeremy Sachs. July 25, 2010
 *
 * Feel free to distribute the source, just try not to hand it off to some douchebag.
 * Keep this header here.
@@ -8,6 +8,9 @@
 */
 package net.rezmason.wireworld.views {
 	
+	//---------------------------------------
+	// IMPORT STATEMENTS
+	//---------------------------------------
 	import flash.display.DisplayObject;
 	import flash.display.Shape;
 	import flash.display.Sprite;
@@ -23,12 +26,22 @@ package net.rezmason.wireworld.views {
 	import flash.text.engine.TextLine;
 	
 	import net.rezmason.gui.Toolbar;
-
+	
+	// WWDialogs are dialog boxes. They have their own
+	// little toolbars for buttons to go, and can contain
+	// anything.
+	
 	internal class WWDialog extends Sprite {
-		
-		private static const CONTENT_MARGIN:Number = 10;
-		
+			
+		//---------------------------------------
+		// INTERNAL VARIABLES
+		//---------------------------------------	
 		internal static var css:String;
+		
+		//---------------------------------------
+		// PRIVATE VARIABLES
+		//---------------------------------------
+		private static const CONTENT_MARGIN:Number = 10;
 		
 		private var backing:Shape;
 		
@@ -41,7 +54,10 @@ package net.rezmason.wireworld.views {
 		private var _speechX:Number = 0, _speechY:Number = 0;
 		private var _margin:Number;
 		private var bottom:Number;
-		
+			
+		//---------------------------------------
+		// CONSTRUCTOR
+		//---------------------------------------
 		public function WWDialog(__width:Number = NaN, __title:String = null, __subtitle:String = null, 
 				__speechX:Number = NaN, __speechY:Number = NaN, __margin:Number = 20):void {
 			
@@ -59,7 +75,7 @@ package net.rezmason.wireworld.views {
 			
 			backing = new Shape();
 			
-			_toolbar = new Toolbar(_width, 18, 0xFFFFFF, 1);
+			_toolbar = new Toolbar(_width, 18, WWGUIPalette.DIALOG_BACK, 1);
 			_toolbar.leftMargin = _toolbar.rightMargin = 0;
 			_toolbar.visible = true;
 			
@@ -70,11 +86,18 @@ package net.rezmason.wireworld.views {
 			
 			addEventListener(Event.ADDED_TO_STAGE, resetHTMLBoxes);
 		}
+			
+		//---------------------------------------
+		// PUBLIC METHODS
+		//---------------------------------------
 		
+		// "Interactive" only means "The user can close the box". Otherwise,
+		// a barber pole is shown instead of the internal toolbar.
 		public function get interactive():Boolean { return _pole.visible; }
 		public function set interactive(value:Boolean):void {
 			_pole.visible = !value;
 			_toolbar.visible = value;
+			cacheAsBitmap = value;
 		}
 		
 		public function get title():String { return _title; }
@@ -83,6 +106,7 @@ package net.rezmason.wireworld.views {
 		public function get subtitle():String { return _subtitle; }
 		public function set subtitle(value:String):void { _subtitle = value; redraw(); }
 		
+		// These coordinates are used to distance a dialog away from a subject.
 		public function get speechX():Number { return _speechX; }
 		public function get speechY():Number { return _speechY; }
 		
@@ -90,6 +114,9 @@ package net.rezmason.wireworld.views {
 			_toolbar.addGUIElements.apply(null, [hAlign, kiss].concat(elements));
 		}
 		
+		// Content is packed together into a display object.
+		// When the WWDialog is redrawn, it draws a box around
+		// the content and centers it.
 		public function addContent(item:DisplayObject, makeOpaque:Boolean = true, link:String = ""):void {
 			if (item.parent) item.parent.removeChild(item);
 			
@@ -97,7 +124,7 @@ package net.rezmason.wireworld.views {
 			if (index != -1) _content.splice(index, 1);
 			_content.push(item);
 			
-			if (makeOpaque) item.opaqueBackground = 0xFFFFFF;
+			if (makeOpaque) item.opaqueBackground = WWGUIPalette.DIALOG_BACK;
 			
 			if (item is Sprite && link && link.length) {
 				linkTo(item as Sprite, link);
@@ -109,12 +136,13 @@ package net.rezmason.wireworld.views {
 		public function addSpacer(__height:Number = NaN):void {
 			if (isNaN(height) || __height < 0) return;
 			var spacer:Shape = new Shape();
-			spacer.graphics.beginFill(0xFFFFFF);
+			spacer.graphics.beginFill(WWGUIPalette.DIALOG_BACK);
 			spacer.graphics.drawRect(0, 0, 1, __height);
 			spacer.graphics.endFill();
 			addContent(spacer);
 		}
 		
+		// Annoying as hell. But it's a great way to display text.
 		public function addHTML(input:String, __height:Number = NaN):void {
 			var box:TextField = new TextField();
 			box.multiline = true;
@@ -142,7 +170,7 @@ package net.rezmason.wireworld.views {
 				var slider:WWSlider = new WWDialogSlider("", box.height, 18, box.height / box.textHeight);
 				var scrollContainer:Sprite = new Sprite();
 			
-				box.addEventListener(MouseEvent.MOUSE_WHEEL, scrollByScroll);
+				box.addEventListener(MouseEvent.MOUSE_WHEEL, scrollByWheel);
 				
 				rect.height = box.height;
 				
@@ -160,6 +188,17 @@ package net.rezmason.wireworld.views {
 				addContent(scrollContainer);
 			}
 		}
+			
+		public function clearContents():void {
+			_content.length = 0;
+			redraw();
+		}
+		
+		//---------------------------------------
+		// PRIVATE METHODS
+		//---------------------------------------
+		
+		// These methods determine the HTML text boxes' behavior.
 		
 		private function scroll(target:Sprite, amount:Number, updateSlider:Boolean = false, increment:Boolean = false):void {
 			var slider:WWSlider = target.getChildAt(1) as WWSlider;
@@ -178,7 +217,7 @@ package net.rezmason.wireworld.views {
 			}
 		}
 		
-		private function scrollByScroll(event:MouseEvent):void {
+		private function scrollByWheel(event:MouseEvent):void {
 			var target:Sprite = (event.currentTarget as TextField).parent as Sprite;
 			scroll(target, event.delta * -0.005, true, true);
 		}
@@ -191,11 +230,6 @@ package net.rezmason.wireworld.views {
 					scroll(htmlBox, 0, true);
 				}
 			}
-		}
-		
-		public function clearContents():void {
-			_content.length = 0;
-			redraw();
 		}
 		
 		private function redraw():void {
@@ -233,11 +267,12 @@ package net.rezmason.wireworld.views {
 			_pole.width = rect.width;
 			_pole.height = rect.bottom - _margin - _pole.y;
 			
-			backing.graphics.beginFill(0xFFFFFF);
+			backing.graphics.beginFill(WWGUIPalette.DIALOG_BACK);
 			backing.graphics.drawRoundRect(rect.x, rect.y, rect.width, rect.height, _margin * 2, _margin * 2);
 			backing.graphics.endFill();
 		}
 		
+		// Pins a display object to the bottom of the WWDialog's contents.
 		private function attach(item:DisplayObject):void {
 			
 			var rect:Rectangle = item.getBounds(item);

@@ -1,5 +1,5 @@
 /**
-* Wireworld Player by Jeremy Sachs. June 22, 2010
+* Wireworld Player by Jeremy Sachs. July 25, 2010
 *
 * Feel free to distribute the source, just try not to hand it off to some douchebag.
 * Keep this header here.
@@ -8,6 +8,9 @@
 */
 package net.rezmason.wireworld.views {
 	
+	//---------------------------------------
+	// IMPORT STATEMENTS
+	//---------------------------------------
 	import com.greensock.TweenLite;
 	import com.greensock.easing.Quad;
 	
@@ -19,18 +22,25 @@ package net.rezmason.wireworld.views {
 	import flash.events.TimerEvent;
 	import flash.filters.DropShadowFilter;
 	import flash.utils.Timer;
-
+	
+	// Every self-respecting piece of software has
+	// a contextual annotation system, like hint boxes,
+	// to help users learn their way around the GUI.
+	
 	internal final class Hint extends Sprite {
-
+		
+		//---------------------------------------
+		// PRIVATE VARIABLES
+		//---------------------------------------
 		private var showTimer:Timer = new Timer(1000, 1);		
 		private var hideTimer:Timer = new Timer(5000, 1);
-		
 		private var field:Sprite;
-		
 		private var target:DisplayObject;
-		
 		private var alphaTween:Object = {alpha:0, ease:Quad.easeOut, visible:false};
 		
+		//---------------------------------------
+		// CONSTRUCTOR
+		//---------------------------------------
 		public function Hint():void {
 			super();
 			
@@ -43,6 +53,11 @@ package net.rezmason.wireworld.views {
 			hideTimer.addEventListener(TimerEvent.TIMER_COMPLETE, hide);
 		}
 		
+		//---------------------------------------
+		// INTERNAL METHODS
+		//---------------------------------------
+		
+		// Looks for a potential subject. If it finds one, it starts the timer.
 		internal function check(event:Event):void {
 			
 			var candidate:DisplayObject = event.target as DisplayObject;
@@ -60,6 +75,7 @@ package net.rezmason.wireworld.views {
 			}
 		}
 		
+		// After hovering a while over a subject, the Hint pops up.
 		internal function show(event:Event = null):void {
 			
 			showTimer.stop();
@@ -77,6 +93,7 @@ package net.rezmason.wireworld.views {
 			hideTimer.start();
 		}
 		
+		// Makes sure the hint never goes off the side of the stage.
 		internal function position(event:Event = null):void {
 			field.x = mouseX + 15;
 			if (field.x + field.width > stage.stageWidth) {
@@ -88,6 +105,8 @@ package net.rezmason.wireworld.views {
 			}
 		}
 		
+		// A while after showing up, or after the mosue has rolled off the subject,
+		// the Hint hides.
 		internal function hide(event:Event = null):void {
 			showTimer.stop();
 			hideTimer.stop();

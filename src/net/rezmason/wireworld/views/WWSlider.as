@@ -1,5 +1,5 @@
 /**
-* Wireworld Player by Jeremy Sachs. June 22, 2010
+* Wireworld Player by Jeremy Sachs. July 25, 2010
 *
 * Feel free to distribute the source, just try not to hand it off to some douchebag.
 * Keep this header here.
@@ -9,6 +9,9 @@
 
 package net.rezmason.wireworld.views {
 	
+	//---------------------------------------
+	// IMPORT STATEMENTS
+	//---------------------------------------
 	import apparat.math.FastMath;
 	
 	import flash.display.Sprite;
@@ -17,8 +20,16 @@ package net.rezmason.wireworld.views {
 	import flash.events.TimerEvent;
 	import flash.utils.Timer;
 	
+	// A slider, or scroll bar. Depends on how it's used.
+	// Supports four types of manipulation: manually draging the thumb,
+	// grabbing the track, arbitrarily setting its value (0 to 1),
+	// and telling it to scroll by some amount over time.
+	
 	internal class WWSlider extends WWElement {
 		
+		//---------------------------------------
+		// PRIVATE VARIABLES
+		//---------------------------------------
 		public static const ZIP_STEP:Number = 5;
 		
 		private var dragging:Boolean = false, zipping:Boolean = false;
@@ -28,6 +39,9 @@ package net.rezmason.wireworld.views {
 		private var zipTimer:Timer = new Timer(10);
 		private var zipAmount:Number;
 		
+		//---------------------------------------
+		// CONSTRUCTOR
+		//---------------------------------------
 		public function WWSlider(__label:String, __width:Number = 100, __height:Number = 10, __thumbRatio:Number = 0):void {
 			_thumb = new Sprite();
 			_thumb.transform.colorTransform = WWGUIPalette.FRONT_CT;
@@ -51,6 +65,11 @@ package net.rezmason.wireworld.views {
 			zipTimer.addEventListener(TimerEvent.TIMER, updateZip);
 		}
 		
+		//---------------------------------------
+		// PUBLIC METHODS
+		//---------------------------------------
+		
+		// The value is always between 0 (left end) and 1 (right end)
 		public function get value():Number { return _value; }
 		public function set value(val:Number):void {
 			if (!isNaN(val)) {
@@ -60,6 +79,7 @@ package net.rezmason.wireworld.views {
 			if (_trigger != null) _trigger.apply(null, _addParams ? _params.concat([_value]) : _params);
 		}
 		
+		// The length of the thumb, relative to the length of the track.
 		public function get thumbRatio():Number { return _thumbRatio; }
 		public function set thumbRatio(val:Number):void {
 			if (!isNaN(val)) {
@@ -72,6 +92,23 @@ package net.rezmason.wireworld.views {
 				redraw();
 			}
 		}
+		
+		// When a WWSlider is paired with other buttons, this function can be bound to them
+		// to cause the slider to steadily "zip" in the given direction.
+		public function startZip(amount:Number):void {
+			if (!isNaN(amount)) {
+				zipAmount = amount;
+				beginZip();
+			}
+		}
+		
+		public function stopZip():void {
+			endZip();
+		}
+		
+		//---------------------------------------
+		// PRIVATE METHODS
+		//---------------------------------------
 		
 		override protected function redraw():void {
 			super.redraw();
@@ -87,16 +124,7 @@ package net.rezmason.wireworld.views {
 			value = value;
 		}
 		
-		public function startZip(amount:Number):void {
-			if (!isNaN(amount)) {
-				zipAmount = amount;
-				beginZip();
-			}
-		}
-		
-		public function stopZip():void {
-			endZip();
-		}
+		// Methods related to dragging the thumb
 		
 		private function beginDrag(event:MouseEvent):void {
 			stage.addEventListener(MouseEvent.MOUSE_MOVE, updateDrag, false, 0, true);
@@ -116,6 +144,8 @@ package net.rezmason.wireworld.views {
 			updateDrag();
 			dragging = false;
 		}
+		
+		// Methods related to touching the track or zipping.
 		
 		private function beginZip(event:Event = null):void {
 			if (event && event.target == _thumb) return;

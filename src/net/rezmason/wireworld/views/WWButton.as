@@ -1,5 +1,5 @@
 /**
-* Wireworld Player by Jeremy Sachs. June 22, 2010
+* Wireworld Player by Jeremy Sachs. July 25, 2010
 *
 * Feel free to distribute the source, just try not to hand it off to some douchebag.
 * Keep this header here.
@@ -9,13 +9,24 @@
 
 package net.rezmason.wireworld.views {
 	
+	//---------------------------------------
+	// IMPORT STATEMENTS
+	//---------------------------------------
 	import flash.display.Sprite;
 	import flash.events.Event;
 	import flash.events.MouseEvent;
 	import flash.geom.ColorTransform;
+	
+	// WWButton is an interactive clicky juggernaut. With it
+	// we can grab any DisplayObject and make it a button
+	// with normal logic, checkbox logic or radio button logic.
+	// And it looks fantastic.
 
 	internal class WWButton extends WWElement {
 		
+		//---------------------------------------
+		// PRIVATE VARIABLES
+		//---------------------------------------
 		private var _type:String;
 		private var _setID:String;
 		private var _down:Boolean = false;
@@ -26,6 +37,9 @@ package net.rezmason.wireworld.views {
 		
 		private var tapped:Boolean = false, hovering:Boolean = false;
 		
+		//---------------------------------------
+		// CONSTRUCTOR
+		//---------------------------------------
 		public function WWButton(__label:String, __content:* = null, 
 				__height:Number = NaN, __capStyle:String = null, __type:String = null, __setID:String = null, __option:* = null):void {
 			
@@ -65,6 +79,13 @@ package net.rezmason.wireworld.views {
 			}
 		}
 		
+		
+		//---------------------------------------
+		// GETTERS & SETTERS
+		//---------------------------------------
+		
+		// "down" means different things for different button types. Usually it means
+		// clicking the button.
 		public function get down():Boolean { return _down; }
 		public function set down(value:Boolean):void {
 			if ((_type != ButtonType.TOGGLABLE && value) || _down != value) click();
@@ -108,6 +129,14 @@ package net.rezmason.wireworld.views {
 			}
 			if (_trigger != null) _trigger.apply(null, arr);
 		}
+		
+		//---------------------------------------
+		// PRIVATE METHODS
+		//---------------------------------------
+		
+		// "Continuous" WWButtons are useful for representing processes that
+		// transpire only while the button is held down. Buttons on scrollbars
+		// behave this way.
 		
 		private function pressContinuous(event:Event = null):void {
 			if (tapped || event.type == MouseEvent.MOUSE_DOWN) {
@@ -154,6 +183,8 @@ package net.rezmason.wireworld.views {
 			updateCTs();
 		}
 		
+		// WWButtons use a lot of different color transforms to convey what they are
+		// and how they work.
 		private function updateCTs():void {
 			backing.transform.colorTransform = _backCT;
 			if (_content) _content.transform.colorTransform = _frontCT;

@@ -1,10 +1,15 @@
 package net.rezmason.wireworld.views {
 	
+	//---------------------------------------
+	// IMPORT STATEMENTS
+	//---------------------------------------
 	import flash.display.Sprite;
 	import flash.net.URLRequest;
 	import flash.net.navigateToURL;
 	import flash.events.Event;
 	import flash.events.MouseEvent;
+	
+	// linkTo turns Sprites into links.
 	
 	internal function linkTo(target:Sprite, link:String):void {
 		

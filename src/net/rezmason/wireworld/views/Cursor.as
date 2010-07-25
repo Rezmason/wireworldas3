@@ -1,5 +1,5 @@
 /**
-* Wireworld Player by Jeremy Sachs. June 22, 2010
+* Wireworld Player by Jeremy Sachs. July 25, 2010
 *
 * Feel free to distribute the source, just try not to hand it off to some douchebag.
 * Keep this header here.
@@ -8,13 +8,26 @@
 */
 package net.rezmason.wireworld.views {
 	
+	//---------------------------------------
+	// IMPORT STATEMENTS
+	//---------------------------------------
 	import flash.display.DisplayObject;
 	import flash.display.Sprite;
-
+	
+	// It's a cursor. It's no different from a SimpleButton,
+	// except that it has no over state and its x and y
+	// are always ints, to help with pixel alignment.
+	
 	internal final class Cursor extends Sprite {
 		
+		//---------------------------------------
+		// PRIVATE VARIABLES
+		//---------------------------------------
 		private var _down:DisplayObject, _up:DisplayObject;
 		
+		//---------------------------------------
+		// CONSTRUCTOR
+		//---------------------------------------
 		public function Cursor(__upAsset:Class, __downAsset:Class, centerX:int = 0, centerY:int = 0) {
 			super();
 			

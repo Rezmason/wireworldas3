@@ -1,5 +1,5 @@
 /**
-* Wireworld Player by Jeremy Sachs. June 22, 2010
+* Wireworld Player by Jeremy Sachs. July 25, 2010
 *
 * Feel free to distribute the source, just try not to hand it off to some douchebag.
 * Keep this header here.
@@ -8,17 +8,30 @@
 */
 package net.rezmason.wireworld.views {
 	
+	//---------------------------------------
+	// IMPORT STATEMENTS
+	//---------------------------------------
 	import flash.display.BitmapData;
 	import flash.display.Shape;
 	import flash.events.Event;
 	import flash.geom.ColorTransform;
 	import flash.geom.Matrix;
-
+	
+	// It's like a progress bar, except it doesn't indicate
+	// how far a process has progressed towards completion.
+	// AKA an indeterminate progress indicator, AKA a busy-bar.
+	
 	internal final class BarberPole extends Shape {
 		
+		//---------------------------------------
+		// PRIVATE VARIABLES
+		//---------------------------------------
 		private var stripe:BitmapData, mat:Matrix;
 		private var _width:Number, _height:Number;
 		
+		//---------------------------------------
+		// CONSTRUCTOR
+		//---------------------------------------
 		public function BarberPole(__width:Number = NaN, __height:Number = NaN, __color:int = -1):void {
 			super();
 			
@@ -51,6 +64,7 @@ package net.rezmason.wireworld.views {
 			update();
 		}
 		
+		// The barber pole only animates when it's visible.
 		override public function set visible(value:Boolean):void {
 			if (visible == value) return;
 			super.visible = value;
@@ -58,6 +72,7 @@ package net.rezmason.wireworld.views {
 		}
 		
 		private function update(event:Event = null):void {
+			trace("!");
 			if (event) mat.tx += 5;
 			
 			graphics.clear();

@@ -1,5 +1,5 @@
 /**
-* Wireworld Player by Jeremy Sachs. June 22, 2010
+* Wireworld Player by Jeremy Sachs. July 25, 2010
 *
 * Feel free to distribute the source, just try not to hand it off to some douchebag.
 * Keep this header here.
@@ -8,6 +8,9 @@
 */
 package net.rezmason.wireworld.views {
 	
+	//---------------------------------------
+	// IMPORT STATEMENTS
+	//---------------------------------------
 	import flash.display.Sprite;
 	import flash.geom.Rectangle;
 	import flash.text.engine.ElementFormat;
@@ -17,11 +20,14 @@ package net.rezmason.wireworld.views {
 	import flash.text.engine.TextElement;
 	import flash.text.engine.TextLine;
 	
+	// Making text lines from Strings can be a pain in the ass.
+	// Textfactory makes it a bit easier.
 	
 	internal final class TextFactory {
 		
 		private static const BLOCK:TextBlock = new TextBlock();
 		
+		// Spits out a TextLine.
 		internal static function generate(text:String, font:String, size:Number, bold:Boolean = false):TextLine {
 			var fd:FontDescription = new FontDescription(font, bold ? FontWeight.BOLD : FontWeight.NORMAL);
 			BLOCK.content = new TextElement(text, new ElementFormat(fd, size));
@@ -29,6 +35,8 @@ package net.rezmason.wireworld.views {
 			return BLOCK.createTextLine();
 		}
 		
+		// Puts a TextLine in a box. Handy for putting a spacer around text,
+		// so it doesn't get crowded.
 		internal static function generateInBox(text:String, font:String, size:Number, bold:Boolean = false, margin:Number = 3, 
 				border:int = -1, background:int = -1, backgroundAlpha:Number = NaN):Sprite {
 			
