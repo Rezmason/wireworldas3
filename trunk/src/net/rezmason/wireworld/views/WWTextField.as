@@ -26,7 +26,7 @@ package net.rezmason.wireworld.views {
 	// a dynamic text box, based on Tyro. Not to be
 	// confused with WWTextButton.
 	
-	internal class WWTextField extends WWElement {
+	internal final class WWTextField extends WWElement {
 		
 		//---------------------------------------
 		// PRIVATE VARIABLES
