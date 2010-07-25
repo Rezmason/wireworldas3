@@ -1,5 +1,5 @@
 /**
-* Wireworld Player by Jeremy Sachs. June 22, 2010
+* Wireworld Player by Jeremy Sachs. July 25, 2010
 *
 * Feel free to distribute the source, just try not to hand it off to some douchebag.
 * Keep this header here.
@@ -8,6 +8,9 @@
 */
 package net.rezmason.wireworld.views {
 	
+	//---------------------------------------
+	// IMPORT STATEMENTS
+	//---------------------------------------
 	import apparat.math.IntMath;
 	
 	import flash.display.BitmapData;
@@ -20,8 +23,13 @@ package net.rezmason.wireworld.views {
 	import flash.text.engine.TextElement;
 	import flash.text.engine.TextLine;
 	
+	// CreditBox staples a text blob to the side of an image, using a pixel font. 
+	
 	internal final class CreditBox extends Sprite {
 		
+		//---------------------------------------
+		// PRIVATE VARIABLES
+		//---------------------------------------
 		private static const MARGIN:Number = 8;
 		
 		private var drawPoint:Point = new Point;
@@ -31,6 +39,9 @@ package net.rezmason.wireworld.views {
         private var _credit:String;
         private var textColor:uint, backgroundColor:uint;
 		
+		//---------------------------------------
+		// CONSTRUCTOR
+		//---------------------------------------
 		public function CreditBox(fontName:String, palette:ColorPalette):void {
 			fontDescription = new FontDescription(fontName);
 			fontDescription.fontLookup = FontLookup.EMBEDDED_CFF;
@@ -42,6 +53,10 @@ package net.rezmason.wireworld.views {
             backgroundColor = 0xFF000000 | palette.dead;
             textBlock = new TextBlock();
 		}
+		
+		//---------------------------------------
+		// INTERNAL METHODS
+		//---------------------------------------
 		
 		internal function appendCredit(image:BitmapData, credit:String = null):BitmapData {
 			

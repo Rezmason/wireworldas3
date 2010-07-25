@@ -1,5 +1,5 @@
 /**
-* Wireworld Player by Jeremy Sachs. June 22, 2010
+* Wireworld Player by Jeremy Sachs. July 25, 2010
 *
 * Feel free to distribute the source, just try not to hand it off to some douchebag.
 * Keep this header here.
@@ -8,7 +8,12 @@
 */
 package net.rezmason.wireworld.views {
 	
+	//---------------------------------------
+	// IMPORT STATEMENTS
+	//---------------------------------------
 	import flash.geom.ColorTransform;
+	
+	// Where all the GUI-related colors are stored.
 	
 	internal final class WWGUIPalette {
 		
@@ -31,6 +36,7 @@ package net.rezmason.wireworld.views {
 		internal static const EDITING_TEXT:int = 0x0;
 		internal static const DEFAULT_TEXT:int = 0x909090;
 		
+		internal static const DIALOG_BACK:int = 0xFFFFFF;
 		internal static const DIALOG_BACK_CT:ColorTransform = new ColorTransform(0, 0, 0, 1, 0xFF, 0xFF, 0xFF);
 		
 		internal static const HINT_BACK:int = 0xFFFFAA;

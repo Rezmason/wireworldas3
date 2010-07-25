@@ -1,5 +1,5 @@
 /**
-* Wireworld Player by Jeremy Sachs. June 22, 2010
+* Wireworld Player by Jeremy Sachs. July 25, 2010
 *
 * Feel free to distribute the source, just try not to hand it off to some douchebag.
 * Keep this header here.
@@ -8,6 +8,9 @@
 */
 package net.rezmason.wireworld.views {
 	
+	//---------------------------------------
+	// IMPORT STATEMENTS
+	//---------------------------------------
 	import flash.display.BlendMode;
 	import flash.display.Sprite;
 	import flash.events.Event;
@@ -19,14 +22,24 @@ package net.rezmason.wireworld.views {
 	
 	import net.rezmason.text.Tyro;
 	
+	// WWTextField is a WWElement that contains
+	// a dynamic text box, based on Tyro. Not to be
+	// confused with WWTextButton.
+	
 	internal class WWTextField extends WWElement {
 		
+		//---------------------------------------
+		// PRIVATE VARIABLES
+		//---------------------------------------
 		private static const FONT_DESCRIPTION:FontDescription = new FontDescription("_typewriter");
 		
 		private var _text:String = "", _labelText:String;
 		private var field:Tyro, format:ElementFormat;
 		private var editing:Boolean = false;
 		
+		//---------------------------------------
+		// CONSTRUCTOR
+		//---------------------------------------
 		public function WWTextField(__label:String, __width:Number = 100, __height:Number = 10, __maxChars:int = -1, __capStyle:String = null, 
 				__acceptsInput:Boolean = false, __labelText:String = ""):void {
 			
@@ -44,11 +57,15 @@ package net.rezmason.wireworld.views {
 			if (field.maxChars && _labelText.length > field.maxChars) _labelText = _labelText.substr(0, field.maxChars - 3) + "...";
 			field.defaultText = _labelText;
 			
+			// The WWElement leftCap and rightCap properties are used to determine text alignment
+			
 			if (leftCap) {
 				field.align = rightCap ? TextFormatAlign.CENTER : TextFormatAlign.RIGHT;
 			} else {
 				field.align = TextFormatAlign.LEFT;
 			}
+			
+			// WWTextFields can be input text boxes, which look different from plain dynamic ones.
 			
 			if (__acceptsInput) {
 				backing.transform.colorTransform = WWGUIPalette.INPUT_TEXT_BACK_CT;
@@ -77,6 +94,10 @@ package net.rezmason.wireworld.views {
 			field.delayedRefresh = false;
 		}
 		
+		//---------------------------------------
+		// GETTERS & SETTERS
+		//---------------------------------------
+		
 		public function get text():String { return _text; }
 		public function set text(value:String):void {
 			_text = value;
@@ -91,9 +112,18 @@ package net.rezmason.wireworld.views {
 			field.format = format;
 		}
 		
+		//---------------------------------------
+		// PUBLIC METHODS
+		//---------------------------------------
+		
+		// Dialogs that contain text boxes should give focus to the top textbox.
 		public function grabFocus():void {
 			if (stage) stage.focus = field;
 		}
+		
+		//---------------------------------------
+		// PRIVATE METHODS
+		//---------------------------------------
 		
 		override protected function redraw():void {
 			super.redraw();

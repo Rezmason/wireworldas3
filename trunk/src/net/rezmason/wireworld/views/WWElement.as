@@ -1,5 +1,5 @@
 /**
-* Wireworld Player by Jeremy Sachs. June 22, 2010
+* Wireworld Player by Jeremy Sachs. July 25, 2010
 *
 * Feel free to distribute the source, just try not to hand it off to some douchebag.
 * Keep this header here.
@@ -9,6 +9,9 @@
 
 package net.rezmason.wireworld.views {
 	
+	//---------------------------------------
+	// IMPORT STATEMENTS
+	//---------------------------------------
 	import apparat.math.FastMath;
 	
 	import flash.display.DisplayObject;
@@ -20,9 +23,18 @@ package net.rezmason.wireworld.views {
 	import flash.geom.Matrix;
 	import flash.geom.Rectangle;
 	import flash.text.engine.TextLine;
-
+	
+	// WWElements are interactive objects with oblong
+	// background shapes that indicate their nature
+	// to the user. They can be bound to functions, 
+	// so that when they change state, they can trigger
+	// an action.
+	
 	internal class WWElement extends Sprite {
 		
+		//---------------------------------------
+		// PRIVATE VARIABLES
+		//---------------------------------------
 		protected var _label:String;
 		
 		protected static const MARGIN:Number = 2;
@@ -42,6 +54,9 @@ package net.rezmason.wireworld.views {
 		
 		protected var startX:Number, endX:Number;
 		
+		//---------------------------------------
+		// CONSTRUCTOR
+		//---------------------------------------
 		public function WWElement(__label:String, __content:DisplayObject = null, __width:Number = NaN, __height:Number = NaN, __capStyle:String = null):void {
 			super();
 			if (__label) _label = __label;
@@ -62,6 +77,10 @@ package net.rezmason.wireworld.views {
 			addEventListener(Event.REMOVED, unsubscribe);
 		}
 		
+		//---------------------------------------
+		// GETTERS & SETTERS
+		//---------------------------------------
+		
 		public function get label():String {
 			return _label;
 		}
@@ -76,15 +95,26 @@ package net.rezmason.wireworld.views {
 			redraw();
 		}
 		
+		//---------------------------------------
+		// PUBLIC METHODS
+		//---------------------------------------
+		
 		public function bind(func:Function = null, addParams:Boolean = false, ...params):void {
 			_trigger = func;
 			_params = params;
 			_addParams = addParams;
 		}
 		
+		// This is used to tell ALL WWElements that have recently received down events
+		// that the user has released the mouse, someplace else, typically nullifying
+		// whatever change in state would have occurred.
 		public static function releaseInstances(event:Event = null):void {
 			while (INSTANCES.length) INSTANCES.pop().release();
 		}
+		
+		//---------------------------------------
+		// PRIVATE METHODS
+		//---------------------------------------
 		
 		protected function redraw():void {
 			while (numChildren) removeChildAt(0);
@@ -136,6 +166,9 @@ package net.rezmason.wireworld.views {
 			
 			addChildAt(backing, 0);
 		}
+		
+		// These functions are how WWElements respond 
+		// to a mouse up event elsewhere in the GUI.
 		
 		private function subscribe(event:Event):void {
 			if (!subscribed) {

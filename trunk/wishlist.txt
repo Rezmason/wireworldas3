@@ -1,28 +1,8 @@
-New announcer system
-	Announcers are blank speech bubble prompts
-		On change,
-			Announcer system takes screenshot
-				Clears last screenshot
-			Records generation
-			Grow, flash with inverse CT
-		On shrink,
-			icon becomes eye button
-				Hint is "Save announcer's picture"
-				Clicking it opens a save box that uses label's name + generation of snapshot
-		Announcer hint shows label, cropped thumb if there is one
-		State should contain list of announcers
-			List is erased when a new document is loaded
-			List is not saved to shared object in AIR
-
-Put Add Announcer in AIR app
 Build API
 
-Add comments to code in all the right places
-	Class header
-	Class sections
-	Comments for methods
-	Comments in complex functions
 Finalize classes that can be finalized
+
+Color palette picker
 
 Improving render performance
 	Redraw the paper to only fit in the window be any help
@@ -57,3 +37,19 @@ WireworldAndroid
 	GPU acceleration
 		
 Try working with the tree model again
+
+New announcer system
+	Announcers are blank speech bubble prompts
+		On change,
+			Announcer system takes screenshot
+				Clears last screenshot
+			Records generation
+			Grow, flash with inverse CT
+		On shrink,
+			icon becomes eye button
+				Hint is "Save announcer's picture"
+				Clicking it opens a save box that uses label's name + generation of snapshot
+		Announcer hint shows label, cropped thumb if there is one
+		State should contain list of announcers
+			List is erased when a new document is loaded
+			List is not saved to shared object in AIR
