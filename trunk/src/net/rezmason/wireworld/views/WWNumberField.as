@@ -31,6 +31,7 @@ package net.rezmason.wireworld.views {
 			format = new ElementFormat();
 			
 			super(__label, null, __width, __height, __capStyle);
+			cacheAsBitmap = false;
 			
 			backing.transform.colorTransform = WWGUIPalette.PLAIN_TEXT_BACK_CT;
 			if (backing.visible) {
