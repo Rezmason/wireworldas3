@@ -257,10 +257,10 @@ package net.rezmason.wireworld.views {
 			attach(_toolbar);
 			
 			var rect:Rectangle = getBounds(this);
-			var topRect:Rectangle = getChildAt(1).getBounds(this);
+			var topRect:Rectangle = getChildAt(0).getBounds(this);
 			var bottomRect:Rectangle = getChildAt(numChildren - 1).getBounds(this);
 			
-			rect.top = Math.min(rect.top, topRect.top);
+			rect.top = topRect.top;
 			rect.bottom = bottomRect.bottom;
 			
 			_toolbar.width = rect.width;
