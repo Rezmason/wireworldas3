@@ -54,6 +54,7 @@ package net.rezmason.wireworld.views {
 		private var _speechX:Number = 0, _speechY:Number = 0;
 		private var _margin:Number;
 		private var bottom:Number;
+		private var touchedStage:Boolean = false;
 			
 		//---------------------------------------
 		// CONSTRUCTOR
@@ -85,6 +86,7 @@ package net.rezmason.wireworld.views {
 			redraw();
 			
 			addEventListener(Event.ADDED_TO_STAGE, resetHTMLBoxes);
+			addEventListener(Event.ADDED_TO_STAGE, handleAdd);
 		}
 			
 		//---------------------------------------
@@ -232,12 +234,19 @@ package net.rezmason.wireworld.views {
 			}
 		}
 		
+		// Apparently getting the bounds for some of this stuff 
+		// doesn't work properly until the WWDialog is in the display list.
+		private function handleAdd(event:Event):void {
+			removeEventListener(Event.ADDED_TO_STAGE, handleAdd);
+			touchedStage = true;
+			redraw();
+		}
+		
 		private function redraw():void {
+			if (!touchedStage) return;
+			
 			while (numChildren) removeChildAt(0);
-			
-			backing.graphics.clear();
-			addChild(backing);
-			
+			x = y = 0;
 			bottom = 0;
 			
 			if (_title && _title.length) attach(TextFactory.generate(_title, "_sans", 36, true));
@@ -251,7 +260,7 @@ package net.rezmason.wireworld.views {
 			var topRect:Rectangle = getChildAt(1).getBounds(this);
 			var bottomRect:Rectangle = getChildAt(numChildren - 1).getBounds(this);
 			
-			rect.top = topRect.top;
+			rect.top = Math.min(rect.top, topRect.top);
 			rect.bottom = bottomRect.bottom;
 			
 			_toolbar.width = rect.width;
@@ -267,6 +276,8 @@ package net.rezmason.wireworld.views {
 			_pole.width = rect.width;
 			_pole.height = rect.bottom - _margin - _pole.y;
 			
+			addChildAt(backing, 0);
+			backing.graphics.clear();
 			backing.graphics.beginFill(WWGUIPalette.DIALOG_BACK);
 			backing.graphics.drawRoundRect(rect.x, rect.y, rect.width, rect.height, _margin * 2, _margin * 2);
 			backing.graphics.endFill();
@@ -274,6 +285,8 @@ package net.rezmason.wireworld.views {
 		
 		// Pins a display object to the bottom of the WWDialog's contents.
 		private function attach(item:DisplayObject):void {
+			
+			item.x = item.y = 0;
 			
 			var rect:Rectangle = item.getBounds(item);
 			
