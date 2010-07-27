@@ -72,7 +72,6 @@ package net.rezmason.wireworld.views {
 		}
 		
 		private function update(event:Event = null):void {
-			trace("!");
 			if (event) mat.tx += 5;
 			
 			graphics.clear();
