@@ -58,7 +58,9 @@ package net.rezmason.wireworld.views {
 		//---------------------------------------
 		
 		// Looks for a potential subject. If it finds one, it starts the timer.
-		internal function check(event:Event):void {
+		internal function check(event:MouseEvent):void {
+			
+			if (event.buttonDown) return;
 			
 			var candidate:DisplayObject = event.target as DisplayObject;
 			

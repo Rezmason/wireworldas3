@@ -16,6 +16,7 @@ package net.rezmason.wireworld.views {
 	import flash.display.Sprite;
 	import flash.events.Event;
 	import flash.events.MouseEvent;
+	import flash.geom.Matrix;
 	import flash.geom.Point;
 	import flash.geom.Rectangle;
 	import flash.net.URLRequest;
@@ -23,7 +24,6 @@ package net.rezmason.wireworld.views {
 	import flash.text.TextField;
 	import flash.text.TextFieldAutoSize;
 	import flash.text.TextFormat;
-	import flash.text.engine.TextLine;
 	
 	import net.rezmason.gui.Toolbar;
 	
@@ -47,13 +47,12 @@ package net.rezmason.wireworld.views {
 		
 		private var _width:Number;
 		private var _title:String, _subtitle:String;
+		private var _titleLine:DisplayObject, _subtitleLine:DisplayObject;
 		private var _toolbar:Toolbar;
-		private var isBubble:Boolean = false;
 		private var _pole:BarberPole;
 		private var _content:Array = [];
 		private var _speechX:Number = 0, _speechY:Number = 0;
 		private var _margin:Number;
-		private var bottom:Number;
 		private var touchedStage:Boolean = false;
 			
 		//---------------------------------------
@@ -66,10 +65,9 @@ package net.rezmason.wireworld.views {
 			
 			_margin = isNaN(__margin) ? 320 : __margin;
 			_width = isNaN(__width) ? 320 : __width;
-			_title = __title;
-			_subtitle = __subtitle;
+			title = __title;
+			subtitle = __subtitle;
 			if (!isNaN(__speechX + __speechY)) {
-				isBubble = true;
 				_speechX = isNaN(__speechX) ? 0 : __speechX;
 				_speechY = isNaN(__speechY) ? 0 : __speechY;
 			}
@@ -103,10 +101,28 @@ package net.rezmason.wireworld.views {
 		}
 		
 		public function get title():String { return _title; }
-		public function set title(value:String):void { _title = value; redraw(); }
+		public function set title(value:String):void {
+			if (value != _title) {
+				_title = value;
+				_titleLine = null;
+				if (_title) {
+					_titleLine = TextFactory.generate(_title, "_sans", 36, true);
+				}
+				redraw();
+			}
+		}
 		
 		public function get subtitle():String { return _subtitle; }
-		public function set subtitle(value:String):void { _subtitle = value; redraw(); }
+		public function set subtitle(value:String):void {
+			if (value != _subtitle) {
+				_subtitle = value;
+				_subtitleLine = null;
+				if (_subtitle) {
+					_subtitleLine = TextFactory.generate(_subtitle, "_sans", 14);
+				}
+				redraw();
+			}
+		}
 		
 		// These coordinates are used to distance a dialog away from a subject.
 		public function get speechX():Number { return _speechX; }
@@ -161,7 +177,7 @@ package net.rezmason.wireworld.views {
 			if (!isNaN(__height)) {
 				box.height = __height;
 			} else {
-				box.height = box.textHeight + 12;
+				box.height = box.textHeight + 30;
 			}
 			
 			if (box.height >= box.textHeight) {
@@ -181,7 +197,7 @@ package net.rezmason.wireworld.views {
 				slider.bind(scroll, true, scrollContainer);
 				
 				box.width -= 36;
-				box.height = box.textHeight + 12;
+				box.height = box.textHeight + 30;
 				box.scrollRect = rect;
 				
 				scrollContainer.addChild(box);
@@ -214,7 +230,7 @@ package net.rezmason.wireworld.views {
 				var box:TextField = target.getChildAt(0) as TextField;
 				var rect:Rectangle = box.scrollRect;
 				
-				rect.y = (box.textHeight + 12 - rect.height) * amount;
+				rect.y = (box.textHeight + 12 - rect.height) * slider.value;
 				box.scrollRect = rect;
 			}
 		}
@@ -247,66 +263,62 @@ package net.rezmason.wireworld.views {
 			
 			while (numChildren) removeChildAt(0);
 			x = y = 0;
-			bottom = 0;
+			var bounds:Rectangle = new Rectangle();
 			
-			if (_title && _title.length) attach(TextFactory.generate(_title, "_sans", 36, true));
-			if (_subtitle && _subtitle.length) attach(TextFactory.generate(_subtitle, "_sans", 14));
-			for (var i:int = 0; i < _content.length; i++) attach(_content[i]);
+			if (_titleLine) attach(_titleLine, bounds);
+			if (_subtitleLine) attach(_subtitleLine, bounds);
+			for (var i:int = 0; i < _content.length; i++) attach(_content[i], bounds);
 			
 			_toolbar.width = _width;
-			attach(_toolbar);
+			attach(_toolbar, bounds);
 			
-			var rect:Rectangle = getBounds(this);
-			var topRect:Rectangle = getChildAt(0).getBounds(this);
-			var bottomRect:Rectangle = getChildAt(numChildren - 1).getBounds(this);
+			_toolbar.width = bounds.width;
 			
-			rect.top = topRect.top;
-			rect.bottom = bottomRect.bottom;
+			x = (bounds.left + bounds.right) * -0.5;
+			y = (bounds.top + bounds.bottom) * -0.5;
 			
-			_toolbar.width = rect.width;
-			
-			x = (rect.left + rect.right) * -0.5;
-			y = (rect.top + rect.bottom) * -0.5;
-			
-			rect.inflate(_margin, _margin);
+			bounds.inflate(_margin, _margin);
 			
 			addChild(_pole);
-			_pole.x = rect.left;
+			_pole.x = bounds.left;
 			_pole.y = _toolbar.y;
-			_pole.width = rect.width;
-			_pole.height = rect.bottom - _margin - _pole.y;
+			_pole.width = bounds.width;
+			_pole.height = _toolbar.height;
 			
 			addChildAt(backing, 0);
+			
 			backing.graphics.clear();
 			backing.graphics.beginFill(WWGUIPalette.DIALOG_BACK);
-			backing.graphics.drawRoundRect(rect.x, rect.y, rect.width, rect.height, _margin * 2, _margin * 2);
+			backing.graphics.drawRoundRect(bounds.x, bounds.y, bounds.width, bounds.height, _margin * 2, _margin * 2);
 			backing.graphics.endFill();
 		}
 		
 		// Pins a display object to the bottom of the WWDialog's contents.
-		private function attach(item:DisplayObject):void {
+		private function attach(item:DisplayObject, bounds:Rectangle):void {
 			
-			item.x = item.y = 0;
+			if (bounds.height) bounds.bottom += CONTENT_MARGIN;
 			
-			var rect:Rectangle = item.getBounds(item);
+			addChild(item);
+			
+			item.transform.matrix = new Matrix();
+			
+			var rect:Rectangle = item.getBounds(this);
 			
 			item.x = -rect.left;
-			item.y = -rect.top + bottom;
+			item.y = -rect.top + bounds.bottom;
 			
 			if (item.name.indexOf("html") == 0) {
 				var box:TextField = (item as Sprite).getChildAt(0) as TextField;
 				if (box.scrollRect) {
-					bottom += (item as Sprite).getChildAt(0).scrollRect.height;
+					bounds.bottom += (item as Sprite).getChildAt(0).scrollRect.height;
 				} else {
-					bottom += box.height;
+					bounds.bottom += box.height;
 				}
 			} else {
-				bottom += item.height;
+				bounds.bottom += item.height;
 			}
 			
-			bottom += CONTENT_MARGIN;
-			
-			addChild(item);
+			bounds.right = Math.max(bounds.right, item.width);
 		}
 	}
 }
