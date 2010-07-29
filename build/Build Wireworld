@@ -77,13 +77,13 @@ function wwBuild {
 }
 
 wwBuild STANDARD DESKTOP wireworld true
-#wwBuild STUPID DESKTOP wwfirst true
-#wwBuild BYTES DESKTOP wwbytes true
-#wwBuild CONVOLUTION_FILTER DESKTOP wwcf true
-#wwBuild PIXEL_BENDER DESKTOP wwpb true
-#wwBuild VECTOR DESKTOP wwvec true
-#wwBuild LINKED_LIST DESKTOP wwll true
-#wwBuild TDSI DESKTOP wwtdsi true
+wwBuild STUPID DESKTOP wwfirst true
+wwBuild BYTES DESKTOP wwbytes true
+wwBuild CONVOLUTION_FILTER DESKTOP wwcf true
+wwBuild PIXEL_BENDER DESKTOP wwpb true
+wwBuild VECTOR DESKTOP wwvec true
+wwBuild LINKED_LIST DESKTOP wwll true
+wwBuild TDSI DESKTOP wwtdsi true
 #wwBuild HAXE DESKTOP wwhx true
  
 zip -r ../archive/wireworld_`date "+%m_%d_%Y"` . -u -x '*.svn*' '*.DS_Store'
