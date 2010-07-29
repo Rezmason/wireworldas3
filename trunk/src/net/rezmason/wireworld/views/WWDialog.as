@@ -166,6 +166,7 @@ package net.rezmason.wireworld.views {
 			box.multiline = true;
 			box.wordWrap = true;
 			box.selectable = false;
+			box.mouseWheelEnabled = false;
 			box.defaultTextFormat = new TextFormat("_sans", 12, 0x222222);
 			
 			var sheet:StyleSheet = new StyleSheet();
@@ -183,7 +184,7 @@ package net.rezmason.wireworld.views {
 			if (box.height >= box.textHeight) {
 				addContent(box);
 			} else {
-				
+			
 				var rect:Rectangle = box.getBounds(box);
 				var slider:WWSlider = new WWDialogSlider("", box.height, 18, box.height / box.textHeight);
 				var scrollContainer:Sprite = new Sprite();
@@ -197,7 +198,7 @@ package net.rezmason.wireworld.views {
 				slider.bind(scroll, true, scrollContainer);
 				
 				box.width -= 36;
-				box.height = box.textHeight + 30;
+				box.height = box.textHeight + 300;
 				box.scrollRect = rect;
 				
 				scrollContainer.addChild(box);
@@ -230,7 +231,7 @@ package net.rezmason.wireworld.views {
 				var box:TextField = target.getChildAt(0) as TextField;
 				var rect:Rectangle = box.scrollRect;
 				
-				rect.y = (box.textHeight + 12 - rect.height) * slider.value;
+				rect.y = (box.textHeight - rect.height) * slider.value;
 				box.scrollRect = rect;
 			}
 		}
