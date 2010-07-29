@@ -84,7 +84,7 @@ package net.rezmason.wireworld.views {
 			showTimer.reset();
 			
 			if (field) removeChild(field);
-			field = TextFactory.generateInBox(target["label"], "_typewriter", 12, true, 3, 0x0, WWGUIPalette.HINT_BACK, 0.8);
+			field = TextFactory.generateInBox(target["label"], "_typewriter", 12, true, 3, -1, WWGUIPalette.HINT_BACK, 0.8);
 			addChild(field);
 			TweenLite.killTweensOf(this, true);
 			alpha = 1;
