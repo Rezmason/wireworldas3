@@ -62,7 +62,7 @@ package net.rezmason.wireworld.views {
 			
 			addEventListener(MouseEvent.MOUSE_DOWN, beginZip);
 			addEventListener(MouseEvent.MOUSE_UP, endZip);
-			zipTimer.addEventListener(TimerEvent.TIMER, updateZip);
+			zipTimer.addEventListener(TimerEvent.TIMER, changeZip);
 		}
 		
 		//---------------------------------------
@@ -153,7 +153,9 @@ package net.rezmason.wireworld.views {
 			zipTimer.start();
 		}
 		
-		private function updateZip(event:Event = null):void {
+		private function changeZip(event:Event):void { updateZip(); }
+		
+		private function updateZip():void {
 			if (!zipping) return;
 			if (zipAmount) {
 				_thumb.x += zipAmount;
