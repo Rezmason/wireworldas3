@@ -9,9 +9,9 @@ mydir=`dirname "$abspath"`
 
 pushd $mydir/../
 
-apparatDir="../../../apparat-aggregator-1.0.RC5"
+apparatDir="../../../apparat-aggregator-1.0.RC6"
 scala="/SDKs/scala-2.8.0.final/bin/scala"
-apparatSWC="../../../apparat-aggregator-1.0.RC5/apparat-ersatz-1.0.RC5.swc"
+apparatSWC="../../../apparat-aggregator-1.0.RC6/apparat-ersatz-1.0.RC6.swc"
 flexSWC="/SDKs/flex/flex_sdk_4.1.0.16248/frameworks/libs"
 greensockSWC="./lib/greensock.swc"
 
