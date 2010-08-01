@@ -9,8 +9,7 @@
 package net.rezmason.wireworld {
 	
 	public final class WWCommand {
-			
-		public static const SET_FROZEN:String = "setMotion";
+		
 		public static const STEP:String = "step";
 		public static const SET_OVERDRIVE:String = "setOverdrive";
 		public static const SET_RUNNING:String = "setRunning";
