@@ -1,31 +1,35 @@
-Build API
+Idea: Taps
+	White number balloon
+		Drag and drop to position it
+			Drop it off the paper to kill it
+	And a little white marker
+		Drag and drop to position it
+			It cannot go off the paper
+	Balloon and marker are connected by a one-pixel line
+	OUTLINES the pixels in question with marching ants
+		When they're at pixel size, just draw marching ants on top of them
+	Microns and period are set using labeled input boxes on balloon
+		Set to 3, 100 by default
+	Electron heads along the pixel line are "read" based on micron spacing	
+	
+	Taps are remembered when changing brains
+	Taps are cleared when loading a new document
 
-Finalize classes that can be finalized
+Accessibility in AIR
 
-Color palette picker
-
-Improving render performance
-	Redraw the paper to only fit in the window be any help
+Apparat tricks
+	Inlining, macros, bytecode
 
 Test on Mac and PC
 Then Rip out debug stuff
-Reorder the functions and vars
 
 Use fcsh instead of mxmlc in build scripts
 	fcshctl
 
-Example gallery
-	Controller
-		Detect an example gallery XML file
-		If the XML is loaded successfully, add the gallery button in the view
-	
-	The dialog is an accordion list of documents sorted by author and name
-	Highlighting a file name enables the Load button
 
-Dumb down the buttons to Sprites
-Wise up the dialogs to class instances
 
-WireworldAndroid
+
+Android app
 	Get it to build with AIR 2.5
 	Run the APK maker on the resulting SWF
 	Figure out two-finger "scrolling" and positioning
@@ -35,10 +39,20 @@ WireworldAndroid
 	How do FileReference.browse() and FileReference.save() work on Android?
 	Redesign dialogs for vertical mobile screen
 	GPU acceleration
-		
+
 Try working with the tree model again
 
-New announcer system
+Retry PixelBender model with cleverer shader
+
+Example gallery
+	Controller
+		Detect an example gallery XML file
+		If the XML is loaded successfully, add the gallery button in the view
+	
+	The dialog is an accordion list of documents sorted by author and name
+	Highlighting a file name enables the Load button
+
+Announcers
 	Announcers are blank speech bubble prompts
 		On change,
 			Announcer system takes screenshot
