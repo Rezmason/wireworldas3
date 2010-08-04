@@ -79,8 +79,8 @@ function wwBuild {
 wwBuild VECTOR DESKTOP wwdebug false false true
 #wwBuild STANDARD DESKTOP wwdebug true false false
 
-#wwBuild TREE DESKTOP wwdebug false false
-#wwBuild HAXE DESKTOP wwhx false true
+#wwBuild TREE DESKTOP wwdebug false false true
+#wwBuild HAXE DESKTOP wwhx false false true
 
 
 
