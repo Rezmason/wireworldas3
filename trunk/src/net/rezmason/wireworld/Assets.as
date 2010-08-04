@@ -19,7 +19,7 @@ package net.rezmason.wireworld {
 		[Embed(source='../../../../lib/symbols/announcer.svg')]
 		private static const Symbol_announcer:Class;
 		
-		[Embed(source='../../../../lib/symbols/cc_by-nc.png')]
+		[Embed(source='../../../../lib/symbols/cc_by-nc.svg')]
 		private static const Symbol_cc_by_nc:Class;
 		
 		[Embed(source='../../../../lib/symbols/eraser-tool.svg')]
