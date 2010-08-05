@@ -8,5 +8,5 @@ class HaXeModelMain {
 		model = new HaXeModel();
 	}
 	
-	public static function main(): Void { var m: HaXeModelMain = new HaXeModelMain(); }
+	public static function main():Void { var m:HaXeModelMain = new HaXeModelMain(); }
 }
