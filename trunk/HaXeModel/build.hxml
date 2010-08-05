@@ -1,5 +1,5 @@
 #build file
 -cp src
 -main HaXeModelMain
--swf9 deploy/out.swf
+-swf9 deploy/haxemodel.swc
 
