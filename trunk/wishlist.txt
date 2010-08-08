@@ -1,32 +1,16 @@
-Idea: Taps
-	White number balloon
-		Drag and drop to position it
-			Drop it off the paper to kill it
-	And a little white marker
-		Drag and drop to position it
-			It cannot go off the paper
-	Balloon and marker are connected by a one-pixel line
-	OUTLINES the pixels in question with marching ants
-		When they're at pixel size, just draw marching ants on top of them
-	Microns and period are set using labeled input boxes on balloon
-		Set to 3, 100 by default
-	Electron heads along the pixel line are "read" based on micron spacing	
-	
-	Taps are remembered when changing brains
-	Taps are cleared when loading a new document
-
-Accessibility in AIR
+HaXeFirstModel
+HaXeFastListModel
+HaXeMemoryModel
+Only include haxe SWC if brain is haxe brain 
 
 Apparat tricks
 	Inlining, macros, bytecode
-
-Test on Mac and PC
-Then Rip out debug stuff
-
 Use fcsh instead of mxmlc in build scripts
 	fcshctl
 
-
+Test AIR app on Windows
+Put AIR app online; make it available for download
+	Might Adobe be willing to pay for the cert?
 
 
 Android app
@@ -41,29 +25,47 @@ Android app
 	GPU acceleration
 
 Try working with the tree model again
-
-Retry PixelBender model with cleverer shader
+	Port it to Haxe?
+Retry PixelBender model with cleverer shader?
 
 Example gallery
 	Controller
-		Detect an example gallery XML file
-		If the XML is loaded successfully, add the gallery button in the view
+		Detect an example gallery XML file in the assets SWF
+		Add the gallery button to the view
 	
 	The dialog is an accordion list of documents sorted by author and name
 	Highlighting a file name enables the Load button
 
-Announcers
-	Announcers are blank speech bubble prompts
-		On change,
-			Announcer system takes screenshot
-				Clears last screenshot
-			Records generation
-			Grow, flash with inverse CT
-		On shrink,
-			icon becomes eye button
-				Hint is "Save announcer's picture"
-				Clicking it opens a save box that uses label's name + generation of snapshot
-		Announcer hint shows label, cropped thumb if there is one
-		State should contain list of announcers
-			List is erased when a new document is loaded
-			List is not saved to shared object in AIR
+Wireworld Builder
+	Infinite canvas
+	Open, save, new
+	Select all, undo, redo
+	Wipe
+	Tools
+		(Tools only work in selected region, if it exists)
+		Hand
+		Electron Eraser
+		Wire Eraser
+		Wire Line
+		Dotted Wire Line
+			Electrons are drawn from start to end
+			Specify micron
+		Marquees
+			Shift and alt put marquee in add/subtract mode
+		Flip and rotate
+		Run tool
+		Wipe electrons tool
+		Wipe tool
+		Pencil tool
+		Tube tool
+			Drags out a rectangle tube
+			Spews length out in numbox
+		Move selection tool
+		Library
+			Sits on right side
+			Stores "snippets"
+			Drag them out to create an instance
+			Manipulate and apply 
+	
+	Accessibility in AIR
+		Research this topic
