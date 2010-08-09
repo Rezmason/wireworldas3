@@ -30,7 +30,7 @@ package net.rezmason.wireworld.brains {
 	// While models don't necessarily have to 
 	// subclass BaseModel, it's a good starting point.
 	
-	internal class BaseModel extends EventDispatcher implements IModel {
+	public class BaseModel extends EventDispatcher implements IModel {
 		
 		//---------------------------------------
 		// CLASS CONSTANTS

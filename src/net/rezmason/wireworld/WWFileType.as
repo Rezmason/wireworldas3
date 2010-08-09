@@ -13,13 +13,13 @@ package net.rezmason.wireworld {
 	//---------------------------------------
 	import flash.net.FileFilter;
 
-	internal final class WWFileType {
+	public final class WWFileType {
 
 		//---------------------------------------
 		// CLASS CONSTANTS
 		//---------------------------------------
-		internal static const TXT_TYPE:FileFilter = new FileFilter("Text fileReferences (*.txt)","*.txt;");
-		internal static const MCL_TYPE:FileFilter = new FileFilter("MCell Wireworld fileReferences (*.mcl)","*.mcl;");
+		public static const TXT_TYPE:FileFilter = new FileFilter("Text fileReferences (*.txt)","*.txt;");
+		public static const MCL_TYPE:FileFilter = new FileFilter("MCell Wireworld fileReferences (*.mcl)","*.mcl;");
 	}
 
 }
