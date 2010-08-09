@@ -18,7 +18,7 @@ package net.rezmason.wireworld.brains {
 	import flash.display.SpreadMethod;
 	import flash.geom.Matrix;
 	
-	internal final class Spectrum extends BitmapData {
+	public final class Spectrum extends BitmapData {
 		
 		//---------------------------------------
 		// CONSTRUCTOR

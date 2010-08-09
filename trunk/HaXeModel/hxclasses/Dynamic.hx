@@ -1,0 +1,2 @@
+extern class Dynamic {
+}

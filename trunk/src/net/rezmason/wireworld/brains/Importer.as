@@ -22,7 +22,7 @@ package net.rezmason.wireworld.brains {
 	// All the models used to do this, so the job
 	// was broken off into a separate class.
 	
-	internal final class Importer extends EventDispatcher {
+	public final class Importer extends EventDispatcher {
 		
 		// This class used to be called ParserExtractor. What a terrible name!
 
@@ -70,7 +70,7 @@ package net.rezmason.wireworld.brains {
 		// PUBLIC METHODS
 		//---------------------------------------
 		
-		public function parse(txt:String, isMCell:Boolean = false, callback:Function = null):void {
+		public function parse(txt:String, isMCell:Boolean = false):void {
 			
 			txtFile = txt;
 			tempStringVector = Vector.<String>(txtFile.substr(0, 10).split(" "));
