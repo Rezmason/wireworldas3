@@ -3,7 +3,7 @@
 <plist version="1.0">
 <dict>
 	<key>currentDocument</key>
-	<string>src/net/rezmason/wireworld/HaXeModel.hx</string>
+	<string>src/net/rezmason/wireworld/brains/HaXeModel.hx</string>
 	<key>documents</key>
 	<array>
 		<dict>
@@ -37,21 +37,35 @@
 	<integer>200</integer>
 	<key>metaData</key>
 	<dict>
-		<key>src/net/rezmason/wireworld/HaXeModel.hx</key>
+		<key>build.hxml</key>
 		<dict>
 			<key>caret</key>
 			<dict>
 				<key>column</key>
-				<integer>2</integer>
+				<integer>0</integer>
 				<key>line</key>
-				<integer>7</integer>
+				<integer>5</integer>
 			</dict>
 			<key>firstVisibleColumn</key>
 			<integer>0</integer>
 			<key>firstVisibleLine</key>
-			<integer>71</integer>
+			<integer>0</integer>
 		</dict>
-		<key>src/net/rezmason/wireworld/HaXeNode.hx</key>
+		<key>src/HaXeModelMain.hx</key>
+		<dict>
+			<key>caret</key>
+			<dict>
+				<key>column</key>
+				<integer>37</integer>
+				<key>line</key>
+				<integer>8</integer>
+			</dict>
+			<key>firstVisibleColumn</key>
+			<integer>0</integer>
+			<key>firstVisibleLine</key>
+			<integer>0</integer>
+		</dict>
+		<key>src/net/rezmason/wireworld/IModel.hx</key>
 		<dict>
 			<key>caret</key>
 			<dict>
@@ -64,12 +78,56 @@
 			<integer>0</integer>
 			<key>firstVisibleLine</key>
 			<integer>0</integer>
+		</dict>
+		<key>src/net/rezmason/wireworld/brains/HaXeBaseModel.hx</key>
+		<dict>
+			<key>caret</key>
+			<dict>
+				<key>column</key>
+				<integer>26</integer>
+				<key>line</key>
+				<integer>13</integer>
+			</dict>
+			<key>columnSelection</key>
+			<false/>
+			<key>firstVisibleColumn</key>
+			<integer>0</integer>
+			<key>firstVisibleLine</key>
+			<integer>9</integer>
+			<key>selectFrom</key>
+			<dict>
+				<key>column</key>
+				<integer>31</integer>
+				<key>line</key>
+				<integer>14</integer>
+			</dict>
+			<key>selectTo</key>
+			<dict>
+				<key>column</key>
+				<integer>26</integer>
+				<key>line</key>
+				<integer>13</integer>
+			</dict>
+		</dict>
+		<key>src/net/rezmason/wireworld/brains/HaXeModel.hx</key>
+		<dict>
+			<key>caret</key>
+			<dict>
+				<key>column</key>
+				<integer>46</integer>
+				<key>line</key>
+				<integer>41</integer>
+			</dict>
+			<key>firstVisibleColumn</key>
+			<integer>0</integer>
+			<key>firstVisibleLine</key>
+			<integer>10</integer>
 		</dict>
 	</dict>
 	<key>openDocuments</key>
 	<array>
-		<string>src/net/rezmason/wireworld/HaXeModel.hx</string>
-		<string>src/net/rezmason/wireworld/HaXeNode.hx</string>
+		<string>src/net/rezmason/wireworld/brains/HaXeModel.hx</string>
+		<string>src/net/rezmason/wireworld/brains/HaXeBaseModel.hx</string>
 	</array>
 	<key>showFileHierarchyDrawer</key>
 	<false/>
@@ -107,7 +165,15 @@
 									<key>isExpanded</key>
 									<true/>
 									<key>subItems</key>
-									<dict/>
+									<dict>
+										<key>brains</key>
+										<dict>
+											<key>isExpanded</key>
+											<true/>
+											<key>subItems</key>
+											<dict/>
+										</dict>
+									</dict>
 								</dict>
 							</dict>
 						</dict>
