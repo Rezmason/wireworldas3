@@ -106,10 +106,10 @@ package net.rezmason.wireworld.brains {
 		// GETTERS & SETTERS
 		//---------------------------------------
 		
-		override public function get generation():Number { return _generationFloat; }
-		override public function get implementsOverdrive():Boolean { return true; }
-		override public function get overdriveActive():Boolean { return _overdriveActive; }
-		override public function set overdriveActive(value:Boolean):void { 
+		override public function generation():Number { return _generationFloat; }
+		override public function implementsOverdrive():Boolean { return true; }
+		override public function overdriveActive():Boolean { return _overdriveActive; }
+		override public function set_overdriveActive(value:Boolean):void { 
 			_overdriveActive = value;
 			resetTime();
 		}

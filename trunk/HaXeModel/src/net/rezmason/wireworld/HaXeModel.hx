@@ -26,34 +26,81 @@ class HaXeModel extends EventDispatcher, implements IModel {
 	
 	// GETTERS & SETTERS
 	
-	public var baseGraphics(default,null) : flash.display.Graphics;
-	public var credit(default,null) : String;
-	public var generation(default,null) : Float;
-	public var headData(default,null) : flash.display.BitmapData;
-	public var headGraphics(default,null) : flash.display.Graphics;
-	public var heatGraphics(default,null) : flash.display.Graphics;
-	public var height(default,null) : Int;
-	public var implementsOverdrive(default,null) : Bool;
-	public var overdriveActive : Bool;
-	public var tailData(default,null) : flash.display.BitmapData;
-	public var tailGraphics(default,null) : flash.display.Graphics;
-	public var width(default,null) : Int;
-	public var wireData(default,null) : flash.display.BitmapData;
-	public var wireGraphics(default,null) : flash.display.Graphics;
+	
+	public function width():Int {
+		return 0;
+	}
+	
+	public function height():Int {
+		return 0;
+	}
+	
+	public function wireData():flash.display.BitmapData {
+		return null;
+	}
+	
+	public function headData():flash.display.BitmapData {
+		return null;
+	}
+	
+	public function tailData():flash.display.BitmapData {
+		return null;
+	}
+	
+	public function credit():String {
+		return "";
+	}
+	
+	public function baseGraphics():flash.display.Graphics {
+		return null;
+	}
+	
+	public function generation():Float {
+		return 0;
+	}
+	
+	public function headGraphics():flash.display.Graphics {
+		return null;
+	}
+	
+	public function heatGraphics():flash.display.Graphics {
+		return null;
+	}
+	
+	public function implementsOverdrive():Bool {
+		return false;
+	}
+	
+	public function overdriveActive():Bool {
+		return false;
+	}
+	
+	public function set_overdriveActive(value:Bool):Void {
+	
+	}
+	
+	public function tailGraphics():flash.display.Graphics {
+		return null;
+	}
+	
+	public function wireGraphics():flash.display.Graphics {
+		return null;
+	}
+	
 	
 	// PUBLIC METHODS
 	
-	public function eraseRect(rect : flash.geom.Rectangle) : Void;
-	public function getState(__x : Int, __y : Int) : UInt {
+	public function eraseRect(rect:flash.geom.Rectangle):Void;
+	public function getState(__x:Int, __y:Int):UInt {
 		return 0;
 	}
-	public function init(txt : String, ?isMCell : Bool) : Void {
+	public function init(txt:String, isMCell:Bool):Void {
 		wait.start();
 	}
-	public function refresh(?flags : Int) : Void;
-	public function reset() : Void;
-	public function setBounds(t : Int, l : Int, b : Int, r : Int) : Void;
-	public function update() : Void;
+	public function refresh(flags:Int):Void;
+	public function reset():Void;
+	public function setBounds(t:Int, l:Int, b:Int, r:Int):Void;
+	public function update():Void;
 	
 	// PRIVATE METHODS
 	
