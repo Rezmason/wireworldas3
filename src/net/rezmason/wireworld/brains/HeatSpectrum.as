@@ -20,7 +20,7 @@ package net.rezmason.wireworld.brains {
 	
 	// Used to color the heat bitmap.
 	
-	internal final class HeatSpectrum extends BitmapData {
+	public final class HeatSpectrum extends BitmapData {
 		
 		//---------------------------------------
 		// CONSTRUCTOR

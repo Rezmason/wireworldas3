@@ -21,7 +21,7 @@ package net.rezmason.wireworld.brains {
 	import flash.geom.Point;
 	import flash.geom.Rectangle;
 	
-	import net.rezmason.utils.makeGraphics;
+	import net.rezmason.utils.GraphicsUtils;
 	
 	import net.rezmason.wireworld.IModel;
 	import net.rezmason.wireworld.WWEvent;
@@ -55,11 +55,11 @@ package net.rezmason.wireworld.brains {
 		protected var totalNodes:int = 0;
 		protected var _headData:BitmapData, _tailData:BitmapData, _wireData:BitmapData, _heatData:BitmapData;
 		protected var _generation:uint = 1;
-		protected var _baseGraphics:Graphics = makeGraphics();
-		protected var _wireGraphics:Graphics = makeGraphics();
-		protected var _headGraphics:Graphics = makeGraphics();
-		protected var _tailGraphics:Graphics = makeGraphics();
-		protected var _heatGraphics:Graphics = makeGraphics();
+		protected var _baseGraphics:Graphics = GraphicsUtils.makeGraphics();
+		protected var _wireGraphics:Graphics = GraphicsUtils.makeGraphics();
+		protected var _headGraphics:Graphics = GraphicsUtils.makeGraphics();
+		protected var _tailGraphics:Graphics = GraphicsUtils.makeGraphics();
+		protected var _heatGraphics:Graphics = GraphicsUtils.makeGraphics();
 		protected var importer:Importer = new Importer();
 		protected var bound:Rectangle = new Rectangle(0, 0, int.MAX_VALUE, int.MAX_VALUE);
 		protected var leftBound:int = 0, rightBound:int = int.MAX_VALUE;
@@ -91,11 +91,11 @@ package net.rezmason.wireworld.brains {
 		public function tailData():BitmapData { return _tailData.clone(); }
 		public function credit():String { return _credit; }
 		public function generation():Number { return _generation; }
-		public function baseGraphics():Graphics { return makeGraphics(_baseGraphics); }
-		public function wireGraphics():Graphics { return makeGraphics(_wireGraphics); }
-		public function headGraphics():Graphics { return makeGraphics(_headGraphics); }
-		public function tailGraphics():Graphics { return makeGraphics(_tailGraphics); }
-		public function heatGraphics():Graphics { return makeGraphics(_heatGraphics); }
+		public function baseGraphics():Graphics { return GraphicsUtils.makeGraphics(_baseGraphics); }
+		public function wireGraphics():Graphics { return GraphicsUtils.makeGraphics(_wireGraphics); }
+		public function headGraphics():Graphics { return GraphicsUtils.makeGraphics(_headGraphics); }
+		public function tailGraphics():Graphics { return GraphicsUtils.makeGraphics(_tailGraphics); }
+		public function heatGraphics():Graphics { return GraphicsUtils.makeGraphics(_heatGraphics); }
 		
 		public function implementsOverdrive():Boolean { return false; }
 		public function overdriveActive():Boolean { return false; }
