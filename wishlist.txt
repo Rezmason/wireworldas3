@@ -1,3 +1,4 @@
+HaXeBaseModel
 HaXeFirstModel
 HaXeFastListModel
 HaXeMemoryModel

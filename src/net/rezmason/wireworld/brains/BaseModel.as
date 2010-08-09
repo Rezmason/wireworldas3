@@ -84,35 +84,35 @@ package net.rezmason.wireworld.brains {
 		//---------------------------------------
 		// GETTER / SETTERS
 		//---------------------------------------
-		public function get width():int { return _width; }
-		public function get height():int { return _height; }
-		public function get wireData():BitmapData { return _wireData.clone(); }
-		public function get headData():BitmapData { return _headData.clone(); }
-		public function get tailData():BitmapData { return _tailData.clone(); }
-		public function get credit():String { return _credit; }
-		public function get generation():Number { return _generation; }
-		public function get baseGraphics():Graphics { return makeGraphics(_baseGraphics); }
-		public function get wireGraphics():Graphics { return makeGraphics(_wireGraphics); }
-		public function get headGraphics():Graphics { return makeGraphics(_headGraphics); }
-		public function get tailGraphics():Graphics { return makeGraphics(_tailGraphics); }
-		public function get heatGraphics():Graphics { return makeGraphics(_heatGraphics); }
+		public function width():int { return _width; }
+		public function height():int { return _height; }
+		public function wireData():BitmapData { return _wireData.clone(); }
+		public function headData():BitmapData { return _headData.clone(); }
+		public function tailData():BitmapData { return _tailData.clone(); }
+		public function credit():String { return _credit; }
+		public function generation():Number { return _generation; }
+		public function baseGraphics():Graphics { return makeGraphics(_baseGraphics); }
+		public function wireGraphics():Graphics { return makeGraphics(_wireGraphics); }
+		public function headGraphics():Graphics { return makeGraphics(_headGraphics); }
+		public function tailGraphics():Graphics { return makeGraphics(_tailGraphics); }
+		public function heatGraphics():Graphics { return makeGraphics(_heatGraphics); }
 		
-		public function get implementsOverdrive():Boolean { return false; }
-		public function get overdriveActive():Boolean { return false; }
-		public function set overdriveActive(value:Boolean):void {}
+		public function implementsOverdrive():Boolean { return false; }
+		public function overdriveActive():Boolean { return false; }
+		public function set_overdriveActive(value:Boolean):void {}
 		
 		//---------------------------------------
 		// PUBLIC METHODS
 		//---------------------------------------
 		
 		// Most of the implemented methods of IModel are empty here.
-		public function init(txt:String, isMCell:Boolean = false):void { importer.parse(txt, isMCell); }
+		public function init(txt:String, isMCell:Boolean):void { importer.parse(txt, isMCell); }
 		public function update():void {}
 		public function getState(__x:int, __y:int):uint { return 0; }
 		public function reset():void {}
 		public function eraseRect(rect:Rectangle):void {}
 		
-		public function refresh(flags:int = 0):void {
+		public function refresh(flags:int):void {
 			if (flags & WWRefreshFlag.HEAT) {
 				refreshHeat((flags & WWRefreshFlag.FULL));
 			} else {
