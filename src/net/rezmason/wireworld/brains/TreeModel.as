@@ -322,7 +322,7 @@ package net.rezmason.wireworld.brains {
 			}
 		}
 		
-		override protected function refreshImage(fully:int = 0, freshTails:int = 0):void {}
+		override protected function refreshImage(fully:int, freshTails:int):void {}
 		
 		private function drawPixels(node:TreeNode, currentX:int, currentY:int, currentWidth:int):void {
 			

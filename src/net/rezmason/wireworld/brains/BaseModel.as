@@ -156,9 +156,9 @@ package net.rezmason.wireworld.brains {
 			dispatchEvent(COMPLETE_EVENT);
 		}
 		
-		protected function refreshImage(fully:int = 0, freshTails:int = 0):void {}
+		protected function refreshImage(fully:int, freshTails:int):void {}
 		
-		protected function refreshHeat(fully:int = 0):void {}
+		protected function refreshHeat(fully:int):void {}
 		
 		// Draws the passed BitmapData into a Graphics object.
 		protected function drawData(graphicsObject:Graphics, rect:Rectangle, data:BitmapData):void {

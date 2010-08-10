@@ -564,7 +564,7 @@ package net.rezmason.wireworld.brains {
 			totalBytes += NODE_SIZE;
 		}
 		
-		override protected function refreshHeat(fully:int = 0):void {
+		override protected function refreshHeat(fully:int):void {
 			var iNode:int;
 			var x_:int;
 			var y_:int;
@@ -586,7 +586,7 @@ package net.rezmason.wireworld.brains {
 			_heatData.unlock();
 		}
 
-		override protected function refreshImage(fully:int = 0, freshTails:int = 0):void {
+		override protected function refreshImage(fully:int, freshTails:int):void {
 			var iNode:int;
 			var allow:Boolean;
 			var x_:int;
