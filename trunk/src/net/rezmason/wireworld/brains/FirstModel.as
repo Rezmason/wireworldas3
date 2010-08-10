@@ -165,11 +165,11 @@ package net.rezmason.wireworld.brains {
 			nodeTable[__y][__x] = new FirstWireNode(__x, __y, __state);
 		}
 		
-		override protected function refreshHeat(fully:int = 0):void {
+		override protected function refreshHeat(fully:int):void {
 			// not implemented. Nyaahh!
 		}
 		
-		override protected function refreshImage(fully:int = 0, freshTails:int = 0):void {
+		override protected function refreshImage(fully:int, freshTails:int):void {
 			var ike:int;
 			var jen:int;
 			var iNode:FirstWireNode;

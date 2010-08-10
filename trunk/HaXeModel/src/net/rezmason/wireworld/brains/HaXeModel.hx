@@ -30,4 +30,48 @@ class HaXeModel extends BaseModel, implements net.rezmason.wireworld.IModel {
 		super();
 		nodeTable = [];
 	}
+	
+	// PUBLIC METHODS
+	
+	override public function eraseRect(rect:flash.geom.Rectangle):Void {
+		
+	}
+	
+	override public function getState(__x:Int, __y:Int):UInt {
+		return 0;
+	}
+	
+	override public function refresh(flags:Int):Void {
+		
+	}
+	
+	override public function reset():Void {
+		
+	}
+	
+	override public function update():Void {
+		
+	}
+	
+	// PRIVATE METHODS
+	
+	override function addNode(__x:Int, __y:Int, __state:Int):Void {
+		
+	}
+	
+	override function finishExtraction(event:flash.events.Event):Void {
+		
+	}
+	
+	override function finishParse(event:flash.events.Event):Void {
+		
+	}
+	
+	override function refreshHeat(fully:Int):Void {
+		
+	}
+	
+	override function refreshImage(fully:Int, freshTails:Int):Void {
+		
+	}
 }

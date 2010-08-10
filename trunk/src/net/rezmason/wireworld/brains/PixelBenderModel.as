@@ -156,12 +156,12 @@ package net.rezmason.wireworld.brains {
 			_tempData.setPixel32(__x, __y, WWFormat.COLOR_MAP[__state]);
 		}
 		
-		override protected function refreshHeat(fully:int = 0):void {
+		override protected function refreshHeat(fully:int):void {
 			// not implemented. Nyaahh!
 		}
 		
 		// The model IS its own view, in a sense 
-		override protected function refreshImage(fully:int = 0, freshTails:int = 0):void {
+		override protected function refreshImage(fully:int, freshTails:int):void {
 			_headData.lock();
 			_tailData.lock();
 			_headData.copyChannel(_outputData, activeRect, ORIGIN, BitmapDataChannel.GREEN, BitmapDataChannel.ALPHA);
