@@ -1,7 +1,6 @@
 package net.rezmason.wireworld.brains;
 
 extern class WWFormat {
-	static var ALIVE_REG_EXP : RegExp;
 	static var BLUE : UInt;
 	static var CHAR_MAP : Dynamic;
 	static var COLOR_MAP : Dynamic;
