@@ -46,13 +46,14 @@ extern class BaseModel extends flash.events.EventDispatcher, implements net.rezm
 	private var rightBound:Int;
 	private var topBound:Int;
 	private var totalNodes:Int;
-	private function addNode(__x:Int, __y:Int, __state:Int):Void;
-	private function colorOf(input:Float):UInt;
-	private function drawBackground(graphicsObject:flash.display.Graphics, w:Float, h:Float, color:Int):Void;
-	private function drawData(graphicsObject:flash.display.Graphics, rect:flash.geom.Rectangle, data:flash.display.BitmapData):Void;
-	private function finishExtraction(event:flash.events.Event):Void;
-	private function finishParse(event:flash.events.Event):Void;
-	private function heatColorOf(input:Float):UInt;
-	private function refreshHeat(fully:Int):Void;
-	private function refreshImage(fully:Int, freshTails:Int):Void;
+	
+	function addNode(__x:Int, __y:Int, __state:Int):Void;
+	function colorOf(input:Float):UInt;
+	function drawBackground(graphicsObject:flash.display.Graphics, w:Float, h:Float, color:Int):Void;
+	function drawData(graphicsObject:flash.display.Graphics, rect:flash.geom.Rectangle, data:flash.display.BitmapData):Void;
+	function finishExtraction(event:flash.events.Event):Void;
+	function finishParse(event:flash.events.Event):Void;
+	function heatColorOf(input:Float):UInt;
+	function refreshHeat(fully:Int):Void;
+	function refreshImage(fully:Int, freshTails:Int):Void;
 }
