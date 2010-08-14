@@ -7,12 +7,14 @@
 * Please contact jeremysachs@rezmason.net prior to distributing modified versions of this class.
 */
 import net.rezmason.wireworld.brains.HaXeModel;
+import net.rezmason.wireworld.brains.FirstHaXeModel;
 import net.rezmason.wireworld.IModel;
 
 class HaXeModelMain {
 	var model:IModel;
 	
 	public function new() {
+		model = new FirstHaXeModel();
 		model = new HaXeModel();
 	}
 	
