@@ -7,5 +7,18 @@
 * Please contact jeremysachs@rezmason.net prior to distributing modified versions of this class.
 */
 package net.rezmason.wireworld.brains;
-// class HaXeModel extends FirstHaXeModel {}
-class HaXeModel extends LinkedListHaXeModel {}
+
+class FirstHaXeNode {
+
+	public var x:Int;
+	public var y:Int;
+	public var state:Int;
+	public var firstState:Int;
+	public var nextState:Int;
+
+	public function new(__x:Int = 0, __y:Int = 0, __firstState:Int = 0):Void {
+		x = __x;
+		y = __y;
+		firstState = __firstState;
+	}
+}
