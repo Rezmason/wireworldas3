@@ -1,6 +1,3 @@
-HaXeFastListModel
-HaXeMemoryModel
-
 Apparat tricks
 	Inlining, macros, bytecode
 Use fcsh instead of mxmlc in build scripts

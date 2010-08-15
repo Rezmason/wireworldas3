@@ -3,7 +3,7 @@
 #Here's the address to mxmlc. Modify it if yours isn't here.
 mxmlc="/SDKs/flex/flex_sdk_4.1.0.16248/bin/mxmlc"
 
-#find the folder "wireworld" in this executable's parent directory
+#find grab the parent directory
 abspath="$(cd "${0%/*}" 2>/dev/null; echo "$PWD"/"${0##*/}")"
 mydir=`dirname "$abspath"`
 
@@ -13,6 +13,7 @@ apparatDir="../../../apparat-aggregator-1.0.RC6"
 scala="/SDKs/scala-2.8.0.final/bin/scala"
 apparatSWC="../../../apparat-aggregator-1.0.RC6/apparat-ersatz-1.0.RC6.swc"
 flexSWC="/SDKs/flex/flex_sdk_4.1.0.16248/frameworks/libs"
+haxemodelSWC="HaXeModel/deploy/haxemodel.swc"
 greensockSWC="./lib/greensock.swc"
 
 function wwBuild {
@@ -62,7 +63,7 @@ function wwBuild {
 	
 	viewDefs="$viewDefs ${viewDef}VIEW_TYPE,\"$2\""
 	
-	"$mxmlc" src/Wireworld.as $brainDefs $viewDefs -sp src -o deploy/bin/$3.swf -l $apparatSWC $flexSWC $greensockSWC -static-link-runtime-shared-libraries=true -optimize=$optimize -debug=$debug && 
+	"$mxmlc" src/Wireworld.as $brainDefs $viewDefs -sp src -o deploy/bin/$3.swf -l $apparatSWC $haxemodelSWC $flexSWC $greensockSWC -static-link-runtime-shared-libraries=true -optimize=$optimize -debug=$debug && 
 	
 	if [ $# -ge 4 ] && $4; then
 		"$scala" -cp $apparatDir/\* apparat.tools.tdsi.TurboDieselSportInjection -i deploy/bin/$3.swf
@@ -85,7 +86,7 @@ wwBuild VECTOR DESKTOP wwvec true
 wwBuild LINKED_LIST DESKTOP wwll true
 wwBuild TDSI DESKTOP wwtdsi true
 wwBuild HAXE DESKTOP wwhx true
- 
+
 zip -r ../archive/wireworld_`date "+%m_%d_%Y"` . -u -x '*.svn*' '*.DS_Store'
 zip -r ../wireworld_deploy deploy -u -x '*.svn*' '*.DS_Store'
 
