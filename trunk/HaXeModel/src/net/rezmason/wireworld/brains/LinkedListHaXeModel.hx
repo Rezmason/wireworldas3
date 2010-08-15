@@ -18,9 +18,8 @@ import net.rezmason.utils.GreenThread;
 
 class LinkedListHaXeModel extends HaXeBaseModel {
 	
-	inline static var SURVEY_TEMPLATE:Array<Int> = [0, 0, 0, 0, 0, 0, 0, 0, 0];
-	
-	inline static var NULL:HaXeNode = new HaXeNode(-1, -1, -1);
+	private var SURVEY_TEMPLATE:Array<Int>;
+	private var NULL:HaXeNode;
 	
 	private var neighborLookupTable:Array<HaXeNode>; // sparse array of all nodes, listed by index
 	private var pool:Array<HaXeNode>; // vector of all nodes
@@ -28,10 +27,18 @@ class LinkedListHaXeModel extends HaXeBaseModel {
 	private var totalHeads:Int;
 	private var staticSurvey:Array<Int>;
 	private var neighborThread:GreenThread;
-
-	private var heads:List<HaXeNode>;		// nodes that are currently electron heads
-	private var tails:List<HaXeNode>;		// nodes that are currently electron tails
-	private var newHeads:List<HaXeNode>;	// nodes that are becoming  electron heads
+	
+	// linked list of nodes that are currently electron heads
+	private var headFront:HaXeNode;
+	private var headBack:HaXeNode;
+	
+	// linked list of nodes that are currently electron tails
+	private var tailFront:HaXeNode;
+	private var tailBack:HaXeNode;
+	
+	// linked list of nodes that are becoming electron heads
+	private var newHeadFront:HaXeNode;
+	private var newHeadBack:HaXeNode;
 	
 	private var pItr:Int;
 			
@@ -39,12 +46,19 @@ class LinkedListHaXeModel extends HaXeBaseModel {
 	public function new():Void {
 		super();
 		
+		SURVEY_TEMPLATE = [0, 0, 0, 0, 0, 0, 0, 0, 0];
+		NULL = new HaXeNode(-1, -1, -1);
+		
 		neighborLookupTable = [];
 		pool = [];
 		neighborThread = new GreenThread();
-		heads = new List<HaXeNode>();
-		tails = new List<HaXeNode>();
-		newHeads = new List<HaXeNode>();
+		
+		headFront = NULL;
+		headBack = NULL;
+		tailFront = NULL;
+		tailBack = NULL;
+		newHeadFront = NULL;
+		newHeadBack = NULL;
 		
 		neighborThread.taskFragment = partialFindNeighbors;
 		neighborThread.condition = checkFindNeighbors;
@@ -56,65 +70,95 @@ class LinkedListHaXeModel extends HaXeBaseModel {
 	
 	override public function eraseRect(rect:flash.geom.Rectangle):Void {
 		var iNode:HaXeNode;
+		var jNode:HaXeNode;
 		
 		// correct the offset
 		rect.x -= activeRect.x + 0.5;
 		rect.y -= activeRect.y + 0.5;
 		
 		// clear heads whose centers are within eraseRect
-		for (iNode in heads) {
-			if (rect.contains(iNode.x, iNode.y)) {
-				iNode.isWire = true;
-				heads.remove(iNode);
-				_heatData.setPixel32(Std.int(iNode.x), Std.int(iNode.y), 0xFF000800);
+		iNode = headFront;
+		while (iNode.next != NULL) {
+			jNode = iNode.next;
+			if (rect.contains(jNode.x, jNode.y)) {
+				jNode.isWire = true;
+				iNode.next = jNode.next;
+				_heatData.setPixel32(jNode.x, jNode.y, 0xFF008000);
+			} else {
+				iNode = jNode;
 			}
 		}
-
+		
 		// clear tails whose centers are within eraseRect
-		for (iNode in tails) {
-			if (rect.contains(iNode.x, iNode.y)) {
-				iNode.isWire = true;
-				tails.remove(iNode);
-				_heatData.setPixel32(iNode.x, iNode.y, 0xFF000800);
+		iNode = tailFront;
+		while (iNode.next != NULL) {
+			jNode = iNode.next;
+			if (rect.contains(jNode.x, jNode.y)) {
+				jNode.isWire = true;
+				iNode.next = jNode.next;
+				_heatData.setPixel32(jNode.x, jNode.y, 0xFF008000);
+			} else {
+				iNode = jNode;
 			}
 		}
 	}
 	
 	override public function getState(__x:Int, __y:Int):UInt {
-		return super.getState(__x, __y);
+		__x -= Std.int(activeRect.x);
+		__y -= Std.int(activeRect.y);
+		return _headData.getPixel32(__x, __y) | _tailData.getPixel32(__x, __y);
 	}
 	
 	override public function reset():Void {
 		var iNode:HaXeNode;
 		// empty lists
-		heads.clear();
-		tails.clear();
-		newHeads.clear();
-
-		pItr = 0;
+		emptyList(headFront);
+		emptyList(tailFront);
+		emptyList(newHeadFront);
+		// repopulate
+		headBack = headFront = NULL;
+		tailBack = tailFront = NULL;
 		
+		pItr = 0;
 		while (pItr < totalNodes) {
 			iNode = pool[pItr];
 			iNode.timesLit = 0;
-
+			
 			switch (iNode.firstState) {
 				case WWFormat.HEAD:
 					iNode.isWire = false;
-					heads.push(iNode);
+					if (headFront == NULL) {
+						headFront = iNode;
+					} else {
+						headBack.next = iNode;
+					}
+					headBack = iNode;
 					iNode.timesLit++;
 				case WWFormat.TAIL:
 					iNode.isWire = false;
-					tails.push(iNode);
+					if (tailFront == NULL) {
+						tailFront = iNode;
+					} else {
+						tailBack.next = iNode;
+					}
+					tailBack = iNode;
 				case WWFormat.WIRE:
 					iNode.isWire = true;
 			}
-
+			
 			pItr++;
 		}
 		
+		if (headBack != NULL) {
+			headBack.next = NULL;
+		}
+		if (tailBack != NULL) {
+			tailBack.next = NULL;
+		}
+
 		_heatData.fillRect(_heatData.rect, CLEAR);
 		refresh(WWRefreshFlag.FULL | WWRefreshFlag.TAIL);
-
+		
 		_generation = 1;
 	}
 	
@@ -123,51 +167,82 @@ class LinkedListHaXeModel extends HaXeBaseModel {
 		var iNode:HaXeNode;
 		var jNode:HaXeNode;
 		var scratch:Int;
-
+		
 		// find new heads in current head neighbors (and list them)
-
+		
 		//		first, list all wires that are adjacent to heads
-		for (iNode in heads) {
+		iNode = headFront;
+		while (iNode != NULL) {
 			scratch = iNode.neighbors.length;
 			for (ike in 0...scratch) {
 				jNode = iNode.neighbors[ike];
 				if (jNode.isWire) {
 					if (jNode.taps == 0) {
-						newHeads.push(jNode);
+						if (newHeadFront == NULL) {
+							newHeadFront = jNode;
+						} else {
+							newHeadBack.next = jNode;
+						}
+						newHeadBack = jNode;
 					}
 					jNode.taps++;
 				}
 			}
+			iNode = iNode.next;
 		}
-
+		if (newHeadBack != NULL) {
+			newHeadBack.next = NULL;
+		}
+		
 		//		then, remove from the list all nodes with more than two head neighbors
-		for (iNode in newHeads) {
+		iNode = newHeadFront;
+		while (iNode != NULL) {
 			if (iNode.taps > 2) {
-				newHeads.remove(iNode);
+				newHeadFront = iNode.next;
+				iNode.taps = 0;
+				iNode = iNode.next;
+			} else {
+				iNode.taps = 0;
+				break;
 			}
-			iNode.taps = 0;
 		}
-
-		totalHeads = newHeads.length;
+		
+		totalHeads = 0;
+		
+		if (iNode != NULL) {
+			jNode = iNode.next;
+			while (jNode != NULL) {
+				if (jNode.taps > 2) {
+					iNode.next = jNode.next;
+				} else {
+					totalHeads++;
+					iNode = jNode;
+				}
+				jNode.taps = 0;
+				jNode = jNode.next;
+			}
+		}
 		
 		// change states
-
-		for (iNode in tails) {
+		
+		iNode = tailFront;
+		while (iNode != NULL) {
 			iNode.isWire = true;
+			iNode = iNode.next;
 		}
-
-		for (iNode in newHeads) {
+		
+		iNode = newHeadFront;
+		while (iNode != NULL) {
 			iNode.isWire = false;
 			iNode.timesLit++;
+			iNode = iNode.next;
 		}
-
+		
 		// swap the linked lists
-		var temp:List<HaXeNode> = tails;
-		tails = heads;
-		heads = newHeads;
-		newHeads = temp;
-		newHeads.clear();
-
+		tailFront = headFront;
+		headFront = newHeadFront;
+		newHeadBack = newHeadFront = NULL;
+		
 		_generation++;
 	}
 	
@@ -193,6 +268,10 @@ class LinkedListHaXeModel extends HaXeBaseModel {
 		
 			neighborLookupTable.splice(0, neighborLookupTable.length);
 			pItr = 0;
+			while (pItr < totalNodes) {
+				pool[pItr].next = NULL;
+				pItr++;
+			}
 			pool.splice(0, totalNodes);
 			
 			importer.extract(addNode);
@@ -206,11 +285,13 @@ class LinkedListHaXeModel extends HaXeBaseModel {
 		var y_:Int;
 		var mult:Float = 2.9 / _generation;
 		_heatData.lock();
-		for (iNode in heads) {
+		iNode = headFront;
+		while (iNode != NULL) {
 			x_ = iNode.x;
 			y_ = iNode.y;
 			allow = (fully > 0) || (x_ >= leftBound && x_ < rightBound && y_ >= topBound && y_ < bottomBound);
 			if (allow) _heatData.setPixel32(x_, y_, heatColorOf(iNode.timesLit * mult));
+			iNode = iNode.next;
 		}
 		_heatData.unlock();
 	}
@@ -220,31 +301,35 @@ class LinkedListHaXeModel extends HaXeBaseModel {
 		var allow:Bool;
 		var x_:Int;
 		var y_:Int;
-
+		
 		_tailData.lock();
 		_headData.lock();
 		if (freshTails > 0) {
-
-			_tailData.fillRect(fully > 0 ? _tailData.rect : bound, CLEAR);
-
-			for (iNode in tails) {
+			
+			_tailData.fillRect((fully > 0) ? _tailData.rect : bound, CLEAR);
+			
+			iNode = tailFront;
+			while (iNode != NULL) {
 				x_ = iNode.x;
 				y_ = iNode.y;
 				allow = (fully > 0) || (x_ >= leftBound && x_ < rightBound && y_ >= topBound && y_ < bottomBound);
 				if (allow) _tailData.setPixel32(x_, y_, BLACK);
+				iNode = iNode.next;
 			}
-
+			
 		} else {
-			_tailData.copyPixels(_headData, fully > 0 ? _tailData.rect : bound, fully > 0 ? ORIGIN : bound.topLeft);
+			_tailData.copyPixels(_headData, (fully > 0) ? _tailData.rect : bound, (fully > 0) ? ORIGIN : bound.topLeft);
 		}
-
-		_headData.fillRect(fully > 0 ? _headData.rect : bound, CLEAR);
-
-		for (iNode in heads) {
+		
+		_headData.fillRect((fully > 0) ? _headData.rect : bound, CLEAR);
+		
+		iNode = headFront;
+		while (iNode != NULL) {
 			x_ = iNode.x;
 			y_ = iNode.y;
 			allow = (fully > 0) || (x_ >= leftBound && x_ < rightBound && y_ >= topBound && y_ < bottomBound);
 			if (allow) _headData.setPixel32(x_, y_, BLACK);
+			iNode = iNode.next;
 		}
 		_tailData.unlock();
 		_headData.unlock();
@@ -269,33 +354,24 @@ class LinkedListHaXeModel extends HaXeBaseModel {
 		
 		ike = 0;
 		while (ike < STEP && pItr < totalNodes) {
-			
 			iNode = pool[pItr];
 			tempVec = iNode.neighbors;
 			scratch = iNode.x + iNode.y * _width;
 
 			scratch -= _width;
-			neighbor = neighborLookupTable[scratch - 1];
-			if (neighbor != null) tempVec.push(neighbor);
-			neighbor = neighborLookupTable[scratch];
-			if (neighbor != null) tempVec.push(neighbor);
-			neighbor = neighborLookupTable[scratch + 1];
-			if (neighbor != null) tempVec.push(neighbor);
+			neighbor = neighborLookupTable[scratch - 1];	if (neighbor != null) tempVec.push(neighbor);
+			neighbor = neighborLookupTable[scratch];		if (neighbor != null) tempVec.push(neighbor);
+			neighbor = neighborLookupTable[scratch + 1]; 	if (neighbor != null) tempVec.push(neighbor);
 
 			scratch += _width;
-			neighbor = neighborLookupTable[scratch - 1];
-			if (neighbor != null) tempVec.push(neighbor);
-			neighbor = neighborLookupTable[scratch + 1];
-			if (neighbor != null) tempVec.push(neighbor);
+			neighbor = neighborLookupTable[scratch - 1];	if (neighbor != null) tempVec.push(neighbor);
+			neighbor = neighborLookupTable[scratch + 1];	if (neighbor != null) tempVec.push(neighbor);
 
 			scratch += _width;
-			neighbor = neighborLookupTable[scratch - 1];
-			if (neighbor != null) tempVec.push(neighbor);
-			neighbor = neighborLookupTable[scratch];
-			if (neighbor != null) tempVec.push(neighbor);
-			neighbor = neighborLookupTable[scratch + 1];
-			if (neighbor != null) tempVec.push(neighbor);
-
+			neighbor = neighborLookupTable[scratch - 1];	if (neighbor != null) tempVec.push(neighbor);
+			neighbor = neighborLookupTable[scratch];		if (neighbor != null) tempVec.push(neighbor);
+			neighbor = neighborLookupTable[scratch + 1];	if (neighbor != null) tempVec.push(neighbor);
+			
 			staticSurvey[tempVec.length]++;
 			pItr++;
 			
@@ -305,14 +381,14 @@ class LinkedListHaXeModel extends HaXeBaseModel {
 	
 	private function finishFindNeighbors():Void {
 		neighborLookupTable.splice(0, neighborLookupTable.length);
-
+		
 		initDrawData(); // This sounds like it should belong in the View, but it really doesn't.
-
-		Lib.trace(totalNodes + " total nodes");
+		
+		//Lib.trace(totalNodes + " total nodes");
 		Lib.trace("staticSurvey: " + staticSurvey);
-		Lib.trace("1-2: " + staticSurvey[1] + " " + staticSurvey[2]);
-		Lib.trace("3-4: " + staticSurvey[3] + " " + staticSurvey[4]);
-		Lib.trace("5-7: " + staticSurvey[5] + " " + staticSurvey[6] + " " + staticSurvey[7]);
+		Lib.trace("1-2: " + Std.int(staticSurvey[1] + staticSurvey[2]));
+		Lib.trace("3-4: " + Std.int(staticSurvey[3] + staticSurvey[4]));
+		Lib.trace("5-7: " + Std.int(staticSurvey[5] + staticSurvey[6] + staticSurvey[7]));
 		
 		dispatchEvent(COMPLETE_EVENT);
 	}
@@ -334,30 +410,30 @@ class LinkedListHaXeModel extends HaXeBaseModel {
 				activeRect.right = Math.max(activeRect.right, iNode.x + 1);
 				activeRect.bottom = Math.max(activeRect.bottom, iNode.y + 1);
 			}
-
+			
 			activeCorner.x = activeRect.left;
 			activeCorner.y = activeRect.top;
-
+			
 			pItr++;
 		}
-
+		
 		if (_wireData != null) _wireData.dispose();
 		if (_headData != null) _wireData.dispose();
 		if (_tailData != null) _wireData.dispose();
 		if (_heatData != null) _wireData.dispose();
-
+		
 		// The BitmapData objects only need to be as large as the active rectangle, with a one-pixel border to prevent artifacts.
 		_wireData = new BitmapData(Std.int(activeRect.width + 1), Std.int(activeRect.height + 1), true, CLEAR);
 		_headData = new BitmapData(Std.int(activeRect.width + 1), Std.int(activeRect.height + 1), true, CLEAR);
 		_tailData = new BitmapData(Std.int(activeRect.width + 1), Std.int(activeRect.height + 1), true, CLEAR);
 		_heatData = new BitmapData(Std.int(activeRect.width + 1), Std.int(activeRect.height + 1), true, CLEAR);
-
+		
 		drawBackground(_baseGraphics, _width, _height, BLACK);
 		drawData(_wireGraphics, activeRect, _wireData);
 		drawData(_headGraphics, activeRect, _headData);
 		drawData(_tailGraphics, activeRect, _tailData);
 		drawData(_heatGraphics, activeRect, _heatData);
-
+		
 		pItr = 0;
 		while (pItr < totalNodes) {
 			iNode = pool[pItr];
@@ -365,6 +441,17 @@ class LinkedListHaXeModel extends HaXeBaseModel {
 			iNode.y -= Std.int(activeRect.y);
 			_wireData.setPixel32(iNode.x, iNode.y, BLACK);
 			pItr++;
+		}
+	}
+	
+	private function emptyList(node:HaXeNode):Void {
+		var iNode:HaXeNode;
+		var jNode:HaXeNode;
+		iNode = node;
+		while (iNode != NULL) {
+			jNode = iNode.next;
+			iNode.next = NULL;
+			iNode = jNode;
 		}
 	}
 }

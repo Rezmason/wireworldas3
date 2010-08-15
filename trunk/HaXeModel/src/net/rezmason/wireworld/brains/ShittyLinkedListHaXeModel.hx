@@ -20,18 +20,18 @@ class ShittyLinkedListHaXeModel extends HaXeBaseModel {
 	
 	inline static var SURVEY_TEMPLATE:Array<Int> = [0, 0, 0, 0, 0, 0, 0, 0, 0];
 	
-	inline static var NULL:HaXeNode = new HaXeNode(-1, -1, -1);
+	inline static var NULL:ShittyHaXeNode = new ShittyHaXeNode(-1, -1, -1);
 	
-	private var neighborLookupTable:Array<HaXeNode>; // sparse array of all nodes, listed by index
-	private var pool:Array<HaXeNode>; // vector of all nodes
-	private var tempVec:Array<HaXeNode>;
+	private var neighborLookupTable:Array<ShittyHaXeNode>; // sparse array of all nodes, listed by index
+	private var pool:Array<ShittyHaXeNode>; // vector of all nodes
+	private var tempVec:Array<ShittyHaXeNode>;
 	private var totalHeads:Int;
 	private var staticSurvey:Array<Int>;
 	private var neighborThread:GreenThread;
 
-	private var heads:List<HaXeNode>;		// nodes that are currently electron heads
-	private var tails:List<HaXeNode>;		// nodes that are currently electron tails
-	private var newHeads:List<HaXeNode>;	// nodes that are becoming  electron heads
+	private var heads:List<ShittyHaXeNode>;		// nodes that are currently electron heads
+	private var tails:List<ShittyHaXeNode>;		// nodes that are currently electron tails
+	private var newHeads:List<ShittyHaXeNode>;	// nodes that are becoming  electron heads
 	
 	private var pItr:Int;
 			
@@ -42,9 +42,9 @@ class ShittyLinkedListHaXeModel extends HaXeBaseModel {
 		neighborLookupTable = [];
 		pool = [];
 		neighborThread = new GreenThread();
-		heads = new List<HaXeNode>();
-		tails = new List<HaXeNode>();
-		newHeads = new List<HaXeNode>();
+		heads = new List<ShittyHaXeNode>();
+		tails = new List<ShittyHaXeNode>();
+		newHeads = new List<ShittyHaXeNode>();
 		
 		neighborThread.taskFragment = partialFindNeighbors;
 		neighborThread.condition = checkFindNeighbors;
@@ -55,7 +55,7 @@ class ShittyLinkedListHaXeModel extends HaXeBaseModel {
 	// PUBLIC METHODS
 	
 	override public function eraseRect(rect:flash.geom.Rectangle):Void {
-		var iNode:HaXeNode;
+		var iNode:ShittyHaXeNode;
 		
 		// correct the offset
 		rect.x -= activeRect.x + 0.5;
@@ -85,7 +85,7 @@ class ShittyLinkedListHaXeModel extends HaXeBaseModel {
 	}
 	
 	override public function reset():Void {
-		var iNode:HaXeNode;
+		var iNode:ShittyHaXeNode;
 		// empty lists
 		heads.clear();
 		tails.clear();
@@ -120,8 +120,8 @@ class ShittyLinkedListHaXeModel extends HaXeBaseModel {
 	
 	override public function update():Void {
 		var ike:Int;
-		var iNode:HaXeNode;
-		var jNode:HaXeNode;
+		var iNode:ShittyHaXeNode;
+		var jNode:ShittyHaXeNode;
 		var scratch:Int;
 
 		// find new heads in current head neighbors (and list them)
@@ -162,7 +162,7 @@ class ShittyLinkedListHaXeModel extends HaXeBaseModel {
 		}
 
 		// swap the linked lists
-		var temp:List<HaXeNode> = tails;
+		var temp:List<ShittyHaXeNode> = tails;
 		tails = heads;
 		heads = newHeads;
 		newHeads = temp;
@@ -174,7 +174,7 @@ class ShittyLinkedListHaXeModel extends HaXeBaseModel {
 	// OVERRIDDEN PRIVATE METHODS
 	
 	override function addNode(__x:Int, __y:Int, __state:Int):Void {
-		pool.push(neighborLookupTable[__x + _width * __y] = new HaXeNode(__x, __y, __state));
+		pool.push(neighborLookupTable[__x + _width * __y] = new ShittyHaXeNode(__x, __y, __state));
 	}
 	
 	override function finishExtraction(event:flash.events.Event):Void {
@@ -200,7 +200,7 @@ class ShittyLinkedListHaXeModel extends HaXeBaseModel {
 	}
 	
 	override function refreshHeat(fully:Int):Void {
-		var iNode:HaXeNode;
+		var iNode:ShittyHaXeNode;
 		var allow:Bool;
 		var x_:Int;
 		var y_:Int;
@@ -216,7 +216,7 @@ class ShittyLinkedListHaXeModel extends HaXeBaseModel {
 	}
 	
 	override function refreshImage(fully:Int, freshTails:Int):Void {
-		var iNode:HaXeNode;
+		var iNode:ShittyHaXeNode;
 		var allow:Bool;
 		var x_:Int;
 		var y_:Int;
@@ -263,8 +263,8 @@ class ShittyLinkedListHaXeModel extends HaXeBaseModel {
 
 	private function partialFindNeighbors():Void {
 		var ike:Int;
-		var iNode:HaXeNode;
-		var neighbor:HaXeNode;
+		var iNode:ShittyHaXeNode;
+		var neighbor:ShittyHaXeNode;
 		var scratch:Int;
 		
 		ike = 0;
@@ -318,7 +318,7 @@ class ShittyLinkedListHaXeModel extends HaXeBaseModel {
 	}
 	
 	private function initDrawData():Void {
-		var iNode:HaXeNode;
+		var iNode:ShittyHaXeNode;
 		activeRect.setEmpty();
 		pItr = 0;
 		while (pItr < totalNodes) {
