@@ -33,7 +33,6 @@ package net.rezmason.wireworld.brains {
 		// CLASS CONSTANTS
 		//---------------------------------------
 		private static const SURVEY_TEMPLATE:Vector.<int> = new <int>[0, 0, 0, 0, 0, 0, 0, 0, 0];
-		private static const DARKEN:ColorTransform = new ColorTransform(1, 1, 1, 0.9);
 
 		//---------------------------------------
 		// PRIVATE VARIABLES

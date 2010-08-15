@@ -87,7 +87,6 @@ package net.rezmason.wireworld.views {
 				thumbWidth = Math.max(thumbHeight, (_width - 2 * MARGIN) * _thumbRatio);
 				minX = MARGIN;
 				maxX = _width - MARGIN - thumbWidth;
-				trace(minX, maxX);
 				_thumb.x = minX + (maxX - minX) * _value;
 				redraw();
 			}

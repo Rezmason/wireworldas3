@@ -36,7 +36,6 @@ package net.rezmason.wireworld.brains {
 		// CLASS CONSTANTS
 		//---------------------------------------
 		private static const EMPTY_SURVEY:Vector.<int>= new Vector.<int>(9, true);
-		private static const DARKEN:ColorTransform = new ColorTransform(1, 1, 1, 0.9);
 		
 		private static const NULL:int = -1;
 		
