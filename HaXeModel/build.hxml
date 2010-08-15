@@ -2,4 +2,5 @@
 -cp src
 -main HaXeModelMain
 -swf9 deploy/haxemodel.swc
+-swf-version 10
 
