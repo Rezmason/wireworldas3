@@ -8,4 +8,5 @@
 */
 package net.rezmason.wireworld.brains;
 // class HaXeModel extends FirstHaXeModel {}
-class HaXeModel extends LinkedListHaXeModel {}
+//class HaXeModel extends LinkedListHaXeModel {}
+class HaXeModel extends MemoryHaXeModel {}
