@@ -210,7 +210,7 @@ package net.rezmason.wireworld.brains {
 				y_ = Memory.readUnsignedShort(iNode + Y__);
 				if (rect.contains(x_, y_)) {
 					Memory.writeByte(1, iNode + IS_WIRE__);
-					_heatData.setPixel32(x_, y_, 0xFF0008000);
+					_heatData.setPixel32(x_, y_, 0xFF008000);
 				} else {
 					if (newHeadFront == NULL) {
 						newHeadFront = iNode;
@@ -240,7 +240,7 @@ package net.rezmason.wireworld.brains {
 				y_ = Memory.readUnsignedShort(iNode + Y__);
 				if (rect.contains(x_, y_)) {
 					Memory.writeByte(1, iNode + IS_WIRE__);
-					_heatData.setPixel32(x_, y_, 0xFF0008000);
+					_heatData.setPixel32(x_, y_, 0xFF008000);
 				} else {
 					if (newHeadFront == NULL) {
 						newHeadFront = iNode;

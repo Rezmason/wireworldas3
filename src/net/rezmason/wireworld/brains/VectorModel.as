@@ -163,7 +163,7 @@ package net.rezmason.wireworld.brains {
 				iNode = headVec[ike];
 				if (rect.contains(xVec[iNode], yVec[iNode])) {
 					isWireVec[iNode] = true;
-					_heatData.setPixel32(xVec[iNode], yVec[iNode], 0xFF0008000);
+					_heatData.setPixel32(xVec[iNode], yVec[iNode], 0xFF008000);
 				} else {
 					candidateVec[totalCandidates] = iNode;
 					totalCandidates++;
@@ -183,7 +183,7 @@ package net.rezmason.wireworld.brains {
 				iNode = tailVec[ike];
 				if (rect.contains(xVec[iNode], yVec[iNode])) {
 					isWireVec[iNode] = true;
-					_heatData.setPixel32(xVec[iNode], yVec[iNode], 0xFF0008000);
+					_heatData.setPixel32(xVec[iNode], yVec[iNode], 0xFF008000);
 				} else {
 					candidateVec[totalCandidates] = iNode;
 					totalCandidates++;

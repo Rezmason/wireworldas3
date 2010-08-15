@@ -241,7 +241,7 @@ package net.rezmason.wireworld.brains {
 				if (rect.contains(x_, y_)) {
 					bytes.position = iNode + IS_WIRE__;
 					bytes.writeByte(1);
-					_heatData.setPixel32(x_, y_, 0xFF0008000);
+					_heatData.setPixel32(x_, y_, 0xFF008000);
 				} else {
 					if (newHeadFront == NULL) {
 						newHeadFront = iNode;
@@ -276,7 +276,7 @@ package net.rezmason.wireworld.brains {
 				if (rect.contains(x_, y_)) {
 					bytes.position = iNode + IS_WIRE__;
 					bytes.writeByte(1);
-					_heatData.setPixel32(x_, y_, 0xFF0008000);
+					_heatData.setPixel32(x_, y_, 0xFF008000);
 				} else {
 					if (newHeadFront == NULL) {
 						newHeadFront = iNode;
