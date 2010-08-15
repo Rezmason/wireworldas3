@@ -119,13 +119,13 @@ class MemoryHaXeModel extends HaXeBaseModel {
 			x_ = Memory.getUI16(iNode + X__);
 			y_ = Memory.getUI16(iNode + Y__);
 			if (rect.contains(x_, y_)) {
-				Memory.setByte(1, iNode + IS_WIRE__);
+				Memory.setByte(iNode + IS_WIRE__, 1);
 				_heatData.setPixel32(x_, y_, 0xFF008000);
 			} else {
 				if (newHeadFront == NULL) {
 					newHeadFront = iNode;
 				} else {
-					Memory.setI32(iNode, newHeadBack + NEXT__);
+					Memory.setI32(newHeadBack + NEXT__, iNode);
 				}
 				newHeadBack = iNode;
 				totalHeads++;
@@ -134,7 +134,7 @@ class MemoryHaXeModel extends HaXeBaseModel {
 		}
 		
 		if (newHeadBack != NULL) {
-			Memory.setI32(NULL, newHeadBack + NEXT__);
+			Memory.setI32(newHeadBack + NEXT__, NULL);
 		}
 		
 		// those heads are the "good" heads; swap lists
@@ -149,13 +149,13 @@ class MemoryHaXeModel extends HaXeBaseModel {
 			x_ = Memory.getUI16(iNode + X__);
 			y_ = Memory.getUI16(iNode + Y__);
 			if (rect.contains(x_, y_)) {
-				Memory.setByte(1, iNode + IS_WIRE__);
+				Memory.setByte(iNode + IS_WIRE__, 1);
 				_heatData.setPixel32(x_, y_, 0xFF008000);
 			} else {
 				if (newHeadFront == NULL) {
 					newHeadFront = iNode;
 				} else {
-					Memory.setI32(iNode, newHeadBack + NEXT__);
+					Memory.setI32(newHeadBack + NEXT__, iNode);
 				}
 				newHeadBack = iNode;
 			}
@@ -163,7 +163,7 @@ class MemoryHaXeModel extends HaXeBaseModel {
 		}
 		
 		if (newHeadBack != NULL) {
-			Memory.setI32(NULL, newHeadBack + NEXT__);
+			Memory.setI32(newHeadBack + NEXT__, NULL);
 		}
 		
 		tailFront = newHeadFront;
@@ -189,38 +189,38 @@ class MemoryHaXeModel extends HaXeBaseModel {
 		// Technically this could be faster, but who really cares?
 		iNode = 0;
 		while (iNode < totalBytes) {
-			Memory.setI32(0, iNode + TIMES_LIT__);
+			Memory.setI32(iNode + TIMES_LIT__, 0);
 			
 			switch (Memory.getByte(iNode + FIRST_STATE__)) {
 				case WWFormat.HEAD:
-					Memory.setByte(0, iNode + IS_WIRE__);
+					Memory.setByte(iNode + IS_WIRE__, 0);
 					if (headFront == NULL) {
 						headFront = iNode;
 					} else {
-						Memory.setI32(iNode, headBack + NEXT__);
+						Memory.setI32(headBack + NEXT__, iNode);
 					}
 					headBack = iNode;
-					Memory.setI32(Memory.getI32(iNode + TIMES_LIT__) + 1, iNode + TIMES_LIT__);
+					Memory.setI32(iNode + TIMES_LIT__, Memory.getI32(iNode + TIMES_LIT__) + 1);
 				case WWFormat.TAIL:
-					Memory.setByte(0, iNode + IS_WIRE__);
+					Memory.setByte(iNode + IS_WIRE__, 0);
 					if (tailFront == NULL) {
 						tailFront = iNode;
 					} else {
-						Memory.setI32(iNode, tailBack + NEXT__);
+						Memory.setI32(tailBack + NEXT__, iNode);
 					}
 					tailBack = iNode;
 				case WWFormat.WIRE:
-					Memory.setByte(1, iNode + IS_WIRE__);
+					Memory.setByte(iNode + IS_WIRE__, 1);
 			}
 			
 			iNode += NODE_SIZE;
 		}
 		
 		if (headBack != NULL) {
-			Memory.setI32(NULL, headBack + NEXT__);
+			Memory.setI32(headBack + NEXT__, NULL);
 		}
 		if (tailBack != NULL) {
-			Memory.setI32(NULL, tailBack + NEXT__);
+			Memory.setI32(tailBack + NEXT__, NULL);
 		}
 		
 		// wipe the head data
@@ -252,17 +252,17 @@ class MemoryHaXeModel extends HaXeBaseModel {
 						if (newHeadFront == NULL) {
 							newHeadFront = jNode;
 						} else {
-							Memory.setI32(jNode, newHeadBack + NEXT__);
+							Memory.setI32(newHeadBack + NEXT__, jNode);
 						}
 						newHeadBack = jNode;
 					}
-					Memory.setByte(Memory.getByte(jen) + 1, jen);
+					Memory.setByte(jen, Memory.getByte(jen) + 1);
 				}
 			}
 			iNode = Memory.getI32(iNode + NEXT__);
 		}
 		if (newHeadBack != NULL) {
-			Memory.setI32(NULL, newHeadBack + NEXT__);
+			Memory.setI32(newHeadBack + NEXT__, NULL);
 		}
 		
 		//		then, remove from this list all nodes with more than two head neighbors
@@ -270,10 +270,10 @@ class MemoryHaXeModel extends HaXeBaseModel {
 		while (iNode != NULL) {
 			if (Memory.getByte(iNode + TAPS__) > 2) {
 				newHeadFront = Memory.getI32(iNode + NEXT__);
-				Memory.setByte(0, iNode + TAPS__);
+				Memory.setByte(iNode + TAPS__, 0);
 				iNode = newHeadFront;
 			} else {
-				Memory.setByte(0, iNode + TAPS__);
+				Memory.setByte(iNode + TAPS__, 0);
 				break;
 			}
 		}
@@ -284,12 +284,12 @@ class MemoryHaXeModel extends HaXeBaseModel {
 			jNode = Memory.getI32(iNode + NEXT__);
 			while (jNode != NULL) {
 				if (Memory.getByte(jNode + TAPS__) > 2) {
-					Memory.setI32(Memory.getI32(jNode + NEXT__), iNode + NEXT__);
+					Memory.setI32(iNode + NEXT__, Memory.getI32(jNode + NEXT__));
 				} else {
 					totalHeads++;
 					iNode = jNode;
 				}
-				Memory.setByte(0, jNode + TAPS__);
+				Memory.setByte(jNode + TAPS__, 0);
 				jNode = Memory.getI32(jNode + NEXT__);
 			}
 		}
@@ -298,14 +298,14 @@ class MemoryHaXeModel extends HaXeBaseModel {
 		
 		iNode = tailFront;
 		while (iNode != NULL) {
-			Memory.setByte(1, iNode + IS_WIRE__);
+			Memory.setByte(iNode + IS_WIRE__, 1);
 			iNode = Memory.getI32(iNode + NEXT__);
 		}
 		
 		iNode = newHeadFront;
 		while (iNode != NULL) {
-			Memory.setByte(0, iNode + IS_WIRE__);
-			Memory.setI32(Memory.getI32(iNode + TIMES_LIT__) + 1, iNode + TIMES_LIT__);
+			Memory.setByte(iNode + IS_WIRE__, 0);
+			Memory.setI32(iNode + TIMES_LIT__, Memory.getI32(iNode + TIMES_LIT__) + 1);
 			iNode = Memory.getI32(iNode + NEXT__);
 		}
 		
@@ -328,14 +328,15 @@ class MemoryHaXeModel extends HaXeBaseModel {
 		// You see here, a node is simply a sequence of information.
 		
 		// Known values first...
-		Memory.setByte(0, 		iNode + IS_WIRE__); 		// byte
-		Memory.setI32(NULL, 	iNode + NEXT__); 			// int
-		Memory.setI32(0, 		iNode + TIMES_LIT__); 		// int
-		Memory.setByte(0, 		iNode + TAPS__); 			// byte
-		Memory.setI16(__x, 		iNode + X__); 				// short
-		Memory.setI16(__y, 		iNode + Y__); 				// short
-		Memory.setByte(__state, iNode + FIRST_STATE__); 	// byte
-		Memory.setByte(0, 		iNode + NEIGHBOR_COUNT__);	// byte
+		
+		Memory.setByte(		iNode + IS_WIRE__, 			0); 		// byte
+		Memory.setI32(		iNode + NEXT__, 			NULL); 		// int
+		Memory.setI32(		iNode + TIMES_LIT__, 		0); 		// int
+		Memory.setByte(		iNode + TAPS__, 			0); 		// byte
+		Memory.setI16(		iNode + X__, 				__x); 		// short
+		Memory.setI16(		iNode + Y__, 				__y); 		// short
+		Memory.setByte(		iNode + FIRST_STATE__, 		__state); 	// byte
+		Memory.setByte(		iNode + NEIGHBOR_COUNT__, 	0);			// byte
 		
 		// ... plus room for eight neighbor ints, which will store pointers to neighbors
 		
@@ -451,7 +452,7 @@ class MemoryHaXeModel extends HaXeBaseModel {
 		while (ike < STEP && neighborItr < totalBytes) {
 			iNode = neighborItr;
 			scratch = Memory.getUI16(iNode + X__) + Memory.getUI16(iNode + Y__) * _width;
-			Memory.setByte(0, iNode + NEIGHBOR_COUNT__);
+			Memory.setByte(iNode + NEIGHBOR_COUNT__, 0);
 
 			scratch -= _width;
 			neighbor = neighborLookupTable[scratch - 1];	if (neighbor != null) addNeighbor(iNode, neighbor);
@@ -478,8 +479,8 @@ class MemoryHaXeModel extends HaXeBaseModel {
 	private function addNeighbor(node:Int, value:Int):Void {
 		var jen:Int;
 		jen = Memory.getByte(node + NEIGHBOR_COUNT__);
-		Memory.setI32(value, node + NEIGHBOR_LIST__ + jen * INT_SIZE);
-		Memory.setByte(jen + 1, node + NEIGHBOR_COUNT__);
+		Memory.setI32(	node + NEIGHBOR_LIST__ + jen * INT_SIZE, 	value		);
+		Memory.setByte(	node + NEIGHBOR_COUNT__, 					jen + 1		);
 	}
 	
 	private function finishFindNeighbors():Void {
@@ -545,8 +546,8 @@ class MemoryHaXeModel extends HaXeBaseModel {
 		while (iNode < totalBytes) {
 			x_ = Memory.getUI16(iNode + X__) - Std.int(activeRect.x);
 			y_ = Memory.getUI16(iNode + Y__) - Std.int(activeRect.y);
-			Memory.setI16(x_, iNode + X__);
-			Memory.setI16(y_, iNode + Y__);
+			Memory.setI16(iNode + X__, x_);
+			Memory.setI16(iNode + Y__, y_);
 			_wireData.setPixel32(x_, y_, BLACK);
 			iNode += NODE_SIZE;
 		}
