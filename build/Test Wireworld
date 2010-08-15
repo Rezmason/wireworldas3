@@ -77,8 +77,8 @@ function wwBuild {
 	echo
 }
 
-#wwBuild VECTOR DESKTOP wwdebug false false true
-wwBuild HAXE DESKTOP wwdebug false false true
+wwBuild LINKED_LIST DESKTOP wwdebug false false true
+#wwBuild HAXE DESKTOP wwdebug false false true
 #wwBuild STANDARD DESKTOP wwdebug true false false
 #wwBuild TREE DESKTOP wwdebug false false true
 

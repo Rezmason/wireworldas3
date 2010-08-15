@@ -8,7 +8,7 @@
 */
 package net.rezmason.wireworld.brains;
 
-class HaXeNode {
+class ShittyHaXeNode {
 
 	public var x:Int;
 	public var y:Int;
@@ -17,7 +17,6 @@ class HaXeNode {
 	public var neighbors:Array<HaXeNode>;
 	public var timesLit:Int;
 	public var taps:Int;
-	public var next:HaXeNode;
 
 	public function new(__x:Int = 0, __y:Int = 0, __firstState:Int = 0):Void {
 		x = __x;
