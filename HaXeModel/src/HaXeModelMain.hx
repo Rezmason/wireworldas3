@@ -8,6 +8,7 @@
 */
 import net.rezmason.wireworld.brains.HaXeModel;
 import net.rezmason.wireworld.brains.FirstHaXeModel;
+import net.rezmason.wireworld.brains.LinkedListHaXeModel;
 import net.rezmason.wireworld.IModel;
 
 class HaXeModelMain {
@@ -15,6 +16,7 @@ class HaXeModelMain {
 	
 	public function new() {
 		model = new FirstHaXeModel();
+		model = new LinkedListHaXeModel();
 		model = new HaXeModel();
 	}
 	

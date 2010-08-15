@@ -10,20 +10,11 @@ package net.rezmason.wireworld.brains;
 
 // IMPORT STATEMENTS
 import flash.display.BitmapData;
-import flash.display.Graphics;
-import flash.events.Event;
-import flash.events.EventDispatcher;
-import flash.events.IEventDispatcher;
-import flash.events.TimerEvent;
-import flash.geom.Rectangle;
-import flash.utils.Timer;
-import flash.events.ErrorEvent;
-
 import net.rezmason.wireworld.WWRefreshFlag;
 
 class FirstHaXeModel extends HaXeBaseModel {
 	
-	private var nodeTable:Array<Array<HaXeNode>>;
+	private var nodeTable:Array<Array<FirstHaXeNode>>;
 	
 	// CONSTRUCTOR
 	public function new():Void {
@@ -48,7 +39,7 @@ class FirstHaXeModel extends HaXeBaseModel {
 	override public function reset():Void {
 		var ike:Int;
 		var jen:Int;
-		var iNode:HaXeNode;
+		var iNode:FirstHaXeNode;
 		for (ike in 0..._height) {
 			for (jen in 0..._width) {
 				if (nodeTable[ike] == null) continue;
@@ -67,7 +58,7 @@ class FirstHaXeModel extends HaXeBaseModel {
 		var ken:Int;
 		var leo:Int;
 		var scratch:Int;
-		var iNode:HaXeNode;
+		var iNode:FirstHaXeNode;
 		var forgetIt:Bool;
 
 		for (ike in 0..._height) {
@@ -75,30 +66,31 @@ class FirstHaXeModel extends HaXeBaseModel {
 			for (jen in 0..._width) {
 				iNode = nodeTable[ike][jen];
 				if (iNode == null) continue;
-				if (iNode.state == WWFormat.WIRE) {
-					// count head neighbors; if it's one or two, nextState = HEAD
-					scratch = 0;
-					forgetIt = false;
-					for (ken in Std.int(Math.max(0, ike - 1))...Std.int(Math.min(_height - 1, ike + 2))) {
-						if (nodeTable[ken] == null) continue;
-						for (leo in Std.int(Math.max(0, jen - 1))...Std.int(Math.min(_width - 1, jen + 2))) {
-							if (nodeTable[ken][leo] != null && nodeTable[ken][leo].state == WWFormat.HEAD) scratch++;
-							if (scratch > 2) {
-								forgetIt = true;
-								break;
+				switch (iNode.state) {
+					case WWFormat.WIRE:
+						// count head neighbors; if it's one or two, nextState = HEAD
+						scratch = 0;
+						forgetIt = false;
+						for (ken in Std.int(Math.max(0, ike - 1))...Std.int(Math.min(_height - 1, ike + 2))) {
+							if (nodeTable[ken] == null) continue;
+							for (leo in Std.int(Math.max(0, jen - 1))...Std.int(Math.min(_width - 1, jen + 2))) {
+								if (nodeTable[ken][leo] != null && nodeTable[ken][leo].state == WWFormat.HEAD) scratch++;
+								if (scratch > 2) {
+									forgetIt = true;
+									break;
+								}
 							}
+							if (forgetIt) break;
 						}
-						if (forgetIt) break;
-					}
-					if (scratch == 1 || scratch == 2) {
-						iNode.nextState = WWFormat.HEAD;
-					} else {
+						if (scratch == 1 || scratch == 2) {
+							iNode.nextState = WWFormat.HEAD;
+						} else {
+							iNode.nextState = WWFormat.WIRE;
+						}
+					case WWFormat.HEAD:
+						iNode.nextState = WWFormat.TAIL;
+					case WWFormat.TAIL:
 						iNode.nextState = WWFormat.WIRE;
-					}
-				} else if (iNode.state == WWFormat.HEAD) {
-					iNode.nextState = WWFormat.TAIL;
-				} else if (iNode.state == WWFormat.TAIL) {
-					iNode.nextState = WWFormat.WIRE;
 				}
 			}
 		}
@@ -120,7 +112,7 @@ class FirstHaXeModel extends HaXeBaseModel {
 	
 	override function addNode(__x:Int, __y:Int, __state:Int):Void {
 		if (nodeTable[__y] == null) nodeTable[__y] = [];
-		nodeTable[__y][__x] = new HaXeNode(__x, __y, __state);
+		nodeTable[__y][__x] = new FirstHaXeNode(__x, __y, __state);
 		totalNodes++;
 	}
 	
@@ -166,7 +158,7 @@ class FirstHaXeModel extends HaXeBaseModel {
 
 			// empty everything
 			while (nodeTable.length > 0) {
-				var row:Array<HaXeNode> = nodeTable.pop();
+				var row:Array<FirstHaXeNode> = nodeTable.pop();
 				row.splice(0, row.length);
 			}
 			
@@ -181,7 +173,7 @@ class FirstHaXeModel extends HaXeBaseModel {
 	override function refreshImage(fully:Int, freshTails:Int):Void {
 		var ike:Int;
 		var jen:Int;
-		var iNode:HaXeNode;
+		var iNode:FirstHaXeNode;
 
 		_tailData.lock();
 		_headData.lock();
