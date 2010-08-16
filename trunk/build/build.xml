@@ -1,0 +1,161 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+This project uses Apparat. Ka-pow.
+
+Apparat is free software: you can redistribute it and/or modify
+it under the terms of the GNU Lesser General Public License as published by
+the Free Software Foundation, either version 3 of the License, or
+(at your option) any later version.
+
+Apparat is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU Lesser General Public License for more details.
+
+You should have received a copy of the GNU Lesser General Public License
+along with Apparat. If not, see <http://www.gnu.org/licenses />.
+
+Copyright (C) 2010 Joa Ebert
+http://www.joa-ebert.com/
+-->
+<project name='wireworld' default='default' basedir='../'>
+	<taskdef resource='flexTasks.tasks' classpath='${FLEX_HOME}/flexTasks/lib/flexTasks.jar' />
+	<taskdef resource='net/sf/antcontrib/antlib.xml' classpath='${ANT_CONTRIB_HOME}/ant-contrib-1.0b3.jar' />
+
+	<condition property='exe' value='.exe'>
+		<os family='windows' />
+	</condition>
+	<condition property='exe' value=''>
+		<os family='unix' />
+	</condition>
+
+	<property name='dir.build' value='${basedir}/build' />
+	<property name='dir.src' value='${basedir}/src' />
+	<property name='dir.bin' value='${basedir}/deploy/bin' />
+
+	<property file='${dir.build}/build.properties' />
+
+	<fail unless='APPARAT_HOME' />
+	<fail unless='SCALA_HOME' />
+	<fail unless='FLEX_HOME' />
+	<fail unless='flex.frameworks' />
+	<fail unless='flex.bin' />
+	<fail unless='flex.libs' />
+	<fail unless='flex.compc' />
+	<fail unless='flex.mxmlc' />
+	<fail unless='flex.asdoc' />
+
+	<target name='default' depends='compile-debug' />
+
+	<path id='apparat.path'>
+		<fileset dir='${SCALA_HOME}' includes='lib/*.jar' />
+		<fileset dir='${APPARAT_HOME}' includes='apparat.jar' />
+	</path>
+
+	<taskdef resource='apparat/embedding/ant/antlib.xml'>
+		<classpath refid='apparat.path' />
+	</taskdef>
+
+	<target name='clean'>
+		<delete failonerror='false' includeemptydirs='true'>
+			<fileset dir='${dir.bin}' includes='**/*' />
+		</delete>
+	</target>
+
+	<target name='pack' depends='compile-release'>
+		<tstamp>
+			<format property='CLEAN_DATE' pattern='MM_dd_yyyy' locale='en,US' />
+		</tstamp>
+		<zip destfile='${basedir}/../archive/wireworld_${CLEAN_DATE}.zip' basedir='${basedir}' update='true' />
+	</target>
+	
+	<property name='defPrefix' value='-define+=BRAIN::' />
+	<property name='defBrains' value='CONVOLUTION_FILTER|LINKED_LIST|PIXEL_BENDER|STANDARD|TREE|TREE_TDSI|TDSI|VECTOR|HAXE|STUPID|BYTES|ALL|' />
+
+	<macrodef name='wwBuild'>
+		<attribute name='brain' default='STANDARD' />
+		<attribute name='dest' default='${ant.project.name}' />
+		<attribute name='tdsi' default='false' />
+		<attribute name='debug' default='false' />
+		<attribute name='launch' default='false' />
+
+		<sequential>
+
+			<if>
+				<equals arg1='@{debug}' arg2='false' />
+				<then>
+					<property name='optimize' value='true' />
+				</then>
+				<else>
+					<property name='optimize' value='false' />
+				</else>
+			</if>
+
+			<propertyregex property='defLine.@{brain}.first' override='false' input='${defBrains}' regexp='([^\|]+)\|' replace='${defPrefix}\1,false ' />
+			<propertyregex property='defLine.@{brain}.final' input='${defLine.@{brain}.first}' regexp='(@{brain}\,)false' replace='\1true' />
+
+			<exec executable='${flex.mxmlc}'>
+				<arg line='${defLine.@{brain}.final}' />
+				<arg line='-debug=@{debug}' />
+				<arg line='-optimize=${optimize}' />
+				<arg line='-incremental=true' />
+				<arg line='-load-config "${FLEX_HOME}/frameworks/flex-config.xml"' />
+				<arg line='-load-config "${dir.src}/ww-config.xml"' />
+				<!-- <arg line='-load-config "${dir.src}/ww-def-config.xml"'/> -->
+				<arg line='-o="${dir.bin}/@{dest}.swf"' />
+				<arg line='-l="${APPARAT_HOME}/apparat.swc"' />
+				<arg line='-l="${FLEX_HOME}/frameworks/libs/flex.swc"' />
+				<arg line='-sp="${dir.src}"' />
+				<arg line='-- "${dir.src}/Wireworld.as"' />
+			</exec>
+
+			<if>
+				<not>
+					<equals arg1='@{debug}' arg2='true' />
+				</not>
+				<then>
+					<stripper in='${dir.bin}/@{dest}.swf' out='${dir.bin}/@{dest}.swf'>
+						<classpath refid='apparat.path' />
+					</stripper>
+				</then>
+			</if>
+
+			<if>
+				<equals arg1='@{tdsi}' arg2='true' />
+				<then>
+					<tdsi in='${dir.bin}/@{dest}.swf' out='${dir.bin}/@{dest}.swf'>
+						<classpath refid='apparat.path' />
+					</tdsi>
+				</then>
+			</if>
+
+			<if>
+				<equals arg1='@{launch}' arg2='true' />
+				<then>
+					<exec executable='open'>
+						<arg line='${dir.bin}/@{dest}.swf' />
+					</exec>
+				</then>
+			</if>
+
+		</sequential>
+	</macrodef>
+
+	<target name='compile-release' depends='clean'>
+		<wwBuild brain='STANDARD' dest='wireworld' tdsi='true' />
+		<wwBuild brain='CONVOLUTION_FILTER' dest='wwcf' />
+		<wwBuild brain='PIXEL_BENDER' dest='wwpb' />
+		<wwBuild brain='VECTOR' dest='wwvec' />
+		<wwBuild brain='LINKED_LIST' dest='wwll' />
+		<wwBuild brain='TDSI' dest='wwtdsi' tdsi='true' />
+		<wwBuild brain='HAXE' dest='wwhx' />
+	</target>
+
+	<target name='compile-debug'>
+		<wwBuild brain='LINKED_LIST' dest='wwll' tdsi='false' debug='true' launch='true' />
+	</target>
+
+	<target name='compile-test'>
+		<wwBuild brain='STANDARD' dest='wireworld' debug='false' />
+	</target>
+</project>
