@@ -92,7 +92,7 @@ package net.rezmason.wireworld.brains {
 			
 			// init the ByteArray.
 			bytes.endian = Endian.LITTLE_ENDIAN;
-			bytes.length = 1024;
+			bytes.length = MIN_BYTEARRAY_SIZE;
 			Memory.select(bytes);
 			
 			// Set up the neighbor thread.
@@ -339,6 +339,7 @@ package net.rezmason.wireworld.brains {
 				if (totalBytes) {
 					bytes.clear();
 				}
+				bytes.length = 0;
 				bytes.length = IntMath.max(NODE_SIZE * importer.totalNodes, MIN_BYTEARRAY_SIZE);
 				trace("Byte array size :", bytes.length);
 				Memory.select(bytes);
