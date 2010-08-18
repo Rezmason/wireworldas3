@@ -54,7 +54,7 @@ class MemoryHaXeModel extends HaXeBaseModel {
 	inline static var NODE_SIZE:Int = NEIGHBOR_LIST__ + 8 * INT_SIZE + 1;
 	inline static var MIN_BYTEARRAY_SIZE:Int = 1024;
 
-	private var neighborLookupTable:Array<Dynamic>;
+	private var neighborLookupTable:Array<Null<Int>>;
 	private var totalBytes:Int;
 	private var totalHeads:Int;
 	private var staticSurvey:Array<Int>;
@@ -446,7 +446,7 @@ class MemoryHaXeModel extends HaXeBaseModel {
 		var ike:Int;
 		var iNode:Int;
 		var scratch:Int;
-		var neighbor:Dynamic;
+		var neighbor:Null<Int>;
 		
 		ike = 0;
 		while (ike < STEP && neighborItr < totalBytes) {
