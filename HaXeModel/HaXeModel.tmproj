@@ -2,15 +2,13 @@
 <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
 <plist version="1.0">
 <dict>
-	<key>currentDocument</key>
-	<string>src/net/rezmason/wireworld/brains/LinkedListHaXeModel.hx</string>
 	<key>documents</key>
 	<array>
 		<dict>
 			<key>filename</key>
 			<string>build.hxml</string>
 			<key>lastUsed</key>
-			<date>2010-08-14T03:57:04Z</date>
+			<date>2010-08-15T16:09:38Z</date>
 		</dict>
 		<dict>
 			<key>expanded</key>
@@ -36,56 +34,7 @@
 	<key>fileHierarchyDrawerWidth</key>
 	<integer>200</integer>
 	<key>metaData</key>
-	<dict>
-		<key>src/HaXeModelMain.hx</key>
-		<dict>
-			<key>caret</key>
-			<dict>
-				<key>column</key>
-				<integer>56</integer>
-				<key>line</key>
-				<integer>10</integer>
-			</dict>
-			<key>firstVisibleColumn</key>
-			<integer>0</integer>
-			<key>firstVisibleLine</key>
-			<integer>0</integer>
-		</dict>
-		<key>src/net/rezmason/wireworld/brains/HaXeNode.hx</key>
-		<dict>
-			<key>caret</key>
-			<dict>
-				<key>column</key>
-				<integer>26</integer>
-				<key>line</key>
-				<integer>19</integer>
-			</dict>
-			<key>firstVisibleColumn</key>
-			<integer>0</integer>
-			<key>firstVisibleLine</key>
-			<integer>0</integer>
-		</dict>
-		<key>src/net/rezmason/wireworld/brains/LinkedListHaXeModel.hx</key>
-		<dict>
-			<key>caret</key>
-			<dict>
-				<key>column</key>
-				<integer>2</integer>
-				<key>line</key>
-				<integer>125</integer>
-			</dict>
-			<key>firstVisibleColumn</key>
-			<integer>0</integer>
-			<key>firstVisibleLine</key>
-			<integer>55</integer>
-		</dict>
-	</dict>
-	<key>openDocuments</key>
-	<array>
-		<string>src/net/rezmason/wireworld/brains/LinkedListHaXeModel.hx</string>
-		<string>src/net/rezmason/wireworld/brains/HaXeNode.hx</string>
-		<string>src/HaXeModelMain.hx</string>
-	</array>
+	<dict/>
 	<key>showFileHierarchyDrawer</key>
 	<false/>
 	<key>showFileHierarchyPanel</key>
@@ -140,6 +89,6 @@
 		</dict>
 	</dict>
 	<key>windowFrame</key>
-	<string>{{61, 39}, {923, 739}}</string>
+	<string>{{0, 4}, {1280, 774}}</string>
 </dict>
 </plist>
