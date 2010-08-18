@@ -74,6 +74,7 @@ package net.rezmason.wireworld.brains {
 		//---------------------------------------
 		// PRIVATE VARIABLES
 		//---------------------------------------
+		private var boundIsDirty:Boolean;
 		private var neighborLookupTable:Array = []; // sparse array of all nodes, listed by index
 		// NOTE: The neighbor lookup table is an Array because it's sparse, it's boundless, and because we only use it for parsing.
 		private var totalBytes:int, totalHeads:int;
@@ -317,9 +318,15 @@ package net.rezmason.wireworld.brains {
 			
 			// wipe the head data
 			_heatData.fillRect(_heatData.rect, CLEAR);
+			boundIsDirty = true;
 			refresh(WWRefreshFlag.FULL | WWRefreshFlag.TAIL);
 			
 			_generation = 1;
+		}
+		
+		override public function setBounds(top:int, left:int, bottom:int, right:int):void {
+			super.setBounds(top, left, bottom, right);
+			boundIsDirty = true;
 		}
 
 		//---------------------------------------
@@ -339,7 +346,6 @@ package net.rezmason.wireworld.brains {
 				if (totalBytes) {
 					bytes.clear();
 				}
-				bytes.length = 0;
 				bytes.length = IntMath.max(NODE_SIZE * importer.totalNodes, MIN_BYTEARRAY_SIZE);
 				trace("Byte array size :", bytes.length);
 				Memory.select(bytes);
@@ -524,7 +530,7 @@ package net.rezmason.wireworld.brains {
 			
 			_tailData.lock();
 			_headData.lock();
-			if (freshTails) {
+			if (freshTails || boundIsDirty) {
 				
 				_tailData.fillRect(fully ? _tailData.rect : bound, CLEAR);
 				
@@ -537,6 +543,7 @@ package net.rezmason.wireworld.brains {
 					iNode = Memory.readInt(iNode + NEXT__);
 				}
 				
+				boundIsDirty = false;
 			} else {
 				_tailData.copyPixels(_headData, fully ? _tailData.rect : bound, fully ? ORIGIN : bound.topLeft);
 			}
