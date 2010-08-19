@@ -79,7 +79,6 @@ function wwBuild {
 
 #wwBuild STANDARD DESKTOP wwdebug false false true
 wwBuild HAXE DESKTOP wwdebug false false true
-#wwBuild STANDARD DESKTOP wwdebug true false false
 #wwBuild TREE DESKTOP wwdebug false false true
 
 

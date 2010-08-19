@@ -349,28 +349,30 @@ class LinkedListHaXeModel extends HaXeBaseModel {
 	private function partialFindNeighbors():Void {
 		var ike:Int;
 		var iNode:HaXeNode;
-		var neighbor:HaXeNode;
+		var row:Int;
+		var node:HaXeNode;
 		var scratch:Int;
 		
 		ike = 0;
 		while (ike < STEP && pItr < totalNodes) {
 			iNode = pool[pItr];
 			tempVec = iNode.neighbors;
-			scratch = iNode.x + iNode.y * _width;
+			row = iNode.y;
+			scratch = iNode.x + row * _width;
 
-			scratch -= _width;
-			neighbor = neighborLookupTable[scratch - 1];	if (neighbor != null) tempVec.push(neighbor);
-			neighbor = neighborLookupTable[scratch];		if (neighbor != null) tempVec.push(neighbor);
-			neighbor = neighborLookupTable[scratch + 1]; 	if (neighbor != null) tempVec.push(neighbor);
+			scratch -= _width; row--;
+			node = neighborLookupTable[scratch - 1];	if (node != null && node.y == row) tempVec.push(node);
+			node = neighborLookupTable[scratch];		if (node != null && node.y == row) tempVec.push(node);
+			node = neighborLookupTable[scratch + 1]; 	if (node != null && node.y == row) tempVec.push(node);
 
-			scratch += _width;
-			neighbor = neighborLookupTable[scratch - 1];	if (neighbor != null) tempVec.push(neighbor);
-			neighbor = neighborLookupTable[scratch + 1];	if (neighbor != null) tempVec.push(neighbor);
+			scratch += _width; row++;
+			node = neighborLookupTable[scratch - 1];	if (node != null && node.y == row) tempVec.push(node);
+			node = neighborLookupTable[scratch + 1];	if (node != null && node.y == row) tempVec.push(node);
 
-			scratch += _width;
-			neighbor = neighborLookupTable[scratch - 1];	if (neighbor != null) tempVec.push(neighbor);
-			neighbor = neighborLookupTable[scratch];		if (neighbor != null) tempVec.push(neighbor);
-			neighbor = neighborLookupTable[scratch + 1];	if (neighbor != null) tempVec.push(neighbor);
+			scratch += _width; row++;
+			node = neighborLookupTable[scratch - 1];	if (node != null && node.y == row) tempVec.push(node);
+			node = neighborLookupTable[scratch];		if (node != null && node.y == row) tempVec.push(node);
+			node = neighborLookupTable[scratch + 1];	if (node != null && node.y == row) tempVec.push(node);
 			
 			staticSurvey[tempVec.length]++;
 			pItr++;
@@ -422,11 +424,11 @@ class LinkedListHaXeModel extends HaXeBaseModel {
 		if (_tailData != null) _wireData.dispose();
 		if (_heatData != null) _wireData.dispose();
 		
-		// The BitmapData objects only need to be as large as the active rectangle, with a one-pixel border to prevent artifacts.
-		_wireData = new BitmapData(Std.int(activeRect.width + 1), Std.int(activeRect.height + 1), true, CLEAR);
-		_headData = new BitmapData(Std.int(activeRect.width + 1), Std.int(activeRect.height + 1), true, CLEAR);
-		_tailData = new BitmapData(Std.int(activeRect.width + 1), Std.int(activeRect.height + 1), true, CLEAR);
-		_heatData = new BitmapData(Std.int(activeRect.width + 1), Std.int(activeRect.height + 1), true, CLEAR);
+		// The BitmapData objects only need to be as large as the active rectangle.
+		_wireData = new BitmapData(Std.int(activeRect.width), Std.int(activeRect.height), true, CLEAR);
+		_headData = new BitmapData(Std.int(activeRect.width), Std.int(activeRect.height), true, CLEAR);
+		_tailData = new BitmapData(Std.int(activeRect.width), Std.int(activeRect.height), true, CLEAR);
+		_heatData = new BitmapData(Std.int(activeRect.width), Std.int(activeRect.height), true, CLEAR);
 		
 		drawBackground(_baseGraphics, _width, _height, BLACK);
 		drawData(_wireGraphics, activeRect, _wireData);

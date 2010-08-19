@@ -41,7 +41,7 @@ package net.rezmason.wireworld.brains {
 		
 		private var staticSurvey:Vector.<int>;
 		private var neighborThread:GreenThread = new GreenThread;
-		private var neighborCount:int = 0;
+		
 		// Vectors that store nodes (by their address as ints)
 		private var headVec:Vector.<int> = new <int>[];
 		private var tailVec:Vector.<int> = new <int>[];
@@ -289,30 +289,34 @@ package net.rezmason.wireworld.brains {
 		private function partialFindNeighbors():void {
 			var ike:int;
 			var scratch:int;
-			var neighbor:*;
+			var row:int;
+			var node:*;
+			var count:int = 0;
+			
 			for (ike = 0; ike < STEP && pItr < totalNodes; ike += 1) {
 				tempVec = neighborsVec[pItr];
-				scratch = xVec[pItr] + yVec[pItr] * _width;
-				neighborCount = 0;
+				row = yVec[pItr];
+				scratch = xVec[pItr] + row * _width;
+				count = 0;
 				
-				scratch -= _width;
-				neighbor = neighborLookupTable[scratch - 1];	if (neighbor != undefined) tempVec[neighborCount++] = int(neighbor);
-				neighbor = neighborLookupTable[scratch];		if (neighbor != undefined) tempVec[neighborCount++] = int(neighbor);
-				neighbor = neighborLookupTable[scratch + 1];	if (neighbor != undefined) tempVec[neighborCount++] = int(neighbor);
+				scratch -= _width; row--;
+				node = neighborLookupTable[scratch - 1];	if (node != undefined && yVec[int(node)] == row) tempVec[count++] = int(node);
+				node = neighborLookupTable[scratch];		if (node != undefined && yVec[int(node)] == row) tempVec[count++] = int(node);
+				node = neighborLookupTable[scratch + 1];	if (node != undefined && yVec[int(node)] == row) tempVec[count++] = int(node);
 				
-				scratch += _width;
-				neighbor = neighborLookupTable[scratch - 1];	if (neighbor != undefined) tempVec[neighborCount++] = int(neighbor);
-				neighbor = neighborLookupTable[scratch + 1];	if (neighbor != undefined) tempVec[neighborCount++] = int(neighbor);
+				scratch += _width; row++;
+				node = neighborLookupTable[scratch - 1];	if (node != undefined && yVec[int(node)] == row) tempVec[count++] = int(node);
+				node = neighborLookupTable[scratch + 1];	if (node != undefined && yVec[int(node)] == row) tempVec[count++] = int(node);
 				
-				scratch += _width;
-				neighbor = neighborLookupTable[scratch - 1];	if (neighbor != undefined) tempVec[neighborCount++] = int(neighbor);
-				neighbor = neighborLookupTable[scratch];		if (neighbor != undefined) tempVec[neighborCount++] = int(neighbor);
-				neighbor = neighborLookupTable[scratch + 1];	if (neighbor != undefined) tempVec[neighborCount++] = int(neighbor);
+				scratch += _width; row++;
+				node = neighborLookupTable[scratch - 1];	if (node != undefined && yVec[int(node)] == row) tempVec[count++] = int(node);
+				node = neighborLookupTable[scratch];		if (node != undefined && yVec[int(node)] == row) tempVec[count++] = int(node);
+				node = neighborLookupTable[scratch + 1];	if (node != undefined && yVec[int(node)] == row) tempVec[count++] = int(node);
 				
-				tempVec.length = neighborCount;
+				tempVec.length = count;
 				tempVec.fixed = true;
-				neighborCountVec[pItr] = neighborCount;
-				staticSurvey[neighborCount]++;
+				neighborCountVec[pItr] = count;
+				staticSurvey[count]++;
 				pItr++;
 			}
 		}
@@ -359,11 +363,11 @@ package net.rezmason.wireworld.brains {
 			if (_tailData) _wireData.dispose();
 			if (_heatData) _wireData.dispose();
 			
-			// The BitmapData objects only need to be as large as the active rectangle, with a one-pixel border to prevent artifacts.
-			_wireData = new BitmapData(activeRect.width + 1, activeRect.height + 1, true, CLEAR);
-			_headData = new BitmapData(activeRect.width + 1, activeRect.height + 1, true, CLEAR);
-			_tailData = new BitmapData(activeRect.width + 1, activeRect.height + 1, true, CLEAR);
-			_heatData = new BitmapData(activeRect.width + 1, activeRect.height + 1, true, CLEAR);
+			// The BitmapData objects only need to be as large as the active rectangle
+			_wireData = new BitmapData(activeRect.width, activeRect.height, true, CLEAR);
+			_headData = new BitmapData(activeRect.width, activeRect.height, true, CLEAR);
+			_tailData = new BitmapData(activeRect.width, activeRect.height, true, CLEAR);
+			_heatData = new BitmapData(activeRect.width, activeRect.height, true, CLEAR);
 			
 			drawBackground(_baseGraphics, _width, _height, BLACK);
 			drawData(_wireGraphics, activeRect, _wireData);

@@ -447,26 +447,28 @@ class MemoryHaXeModel extends HaXeBaseModel {
 		var iNode:Int;
 		var scratch:Int;
 		var neighbor:Null<Int>;
+		var row:Int;
 		
 		ike = 0;
 		while (ike < STEP && neighborItr < totalBytes) {
 			iNode = neighborItr;
-			scratch = Memory.getUI16(iNode + X__) + Memory.getUI16(iNode + Y__) * _width;
+			row = Memory.getUI16(iNode + Y__);
+			scratch = Memory.getUI16(iNode + X__) + row * _width;
 			Memory.setByte(iNode + NEIGHBOR_COUNT__, 0);
 
-			scratch -= _width;
-			neighbor = neighborLookupTable[scratch - 1];	if (neighbor != null) addNeighbor(iNode, neighbor);
-			neighbor = neighborLookupTable[scratch + 0];	if (neighbor != null) addNeighbor(iNode, neighbor);
-			neighbor = neighborLookupTable[scratch + 1];	if (neighbor != null) addNeighbor(iNode, neighbor);
-                                                                                                                  
-			scratch += _width;                                                                                    
-			neighbor = neighborLookupTable[scratch - 1];	if (neighbor != null) addNeighbor(iNode, neighbor);
-			neighbor = neighborLookupTable[scratch + 1];	if (neighbor != null) addNeighbor(iNode, neighbor);
-                                                                                                                  
-			scratch += _width;                                                                                    
-			neighbor = neighborLookupTable[scratch - 1];	if (neighbor != null) addNeighbor(iNode, neighbor);
-			neighbor = neighborLookupTable[scratch + 0];	if (neighbor != null) addNeighbor(iNode, neighbor);
-			neighbor = neighborLookupTable[scratch + 1];	if (neighbor != null) addNeighbor(iNode, neighbor);
+			scratch -= _width; row--;
+			neighbor = neighborLookupTable[scratch - 1];	if (neighbor != null) addNeighbor(iNode, neighbor, row);
+			neighbor = neighborLookupTable[scratch + 0];	if (neighbor != null) addNeighbor(iNode, neighbor, row);
+			neighbor = neighborLookupTable[scratch + 1];	if (neighbor != null) addNeighbor(iNode, neighbor, row);
+			
+			scratch += _width; row++;
+			neighbor = neighborLookupTable[scratch - 1];	if (neighbor != null) addNeighbor(iNode, neighbor, row);
+			neighbor = neighborLookupTable[scratch + 1];	if (neighbor != null) addNeighbor(iNode, neighbor, row);
+			
+			scratch += _width; row++;
+			neighbor = neighborLookupTable[scratch - 1];	if (neighbor != null) addNeighbor(iNode, neighbor, row);
+			neighbor = neighborLookupTable[scratch + 0];	if (neighbor != null) addNeighbor(iNode, neighbor, row);
+			neighbor = neighborLookupTable[scratch + 1];	if (neighbor != null) addNeighbor(iNode, neighbor, row);
 
 			staticSurvey[Memory.getByte(iNode + NEIGHBOR_COUNT__)]++;
 			
@@ -476,7 +478,8 @@ class MemoryHaXeModel extends HaXeBaseModel {
 		}
 	}
 	
-	private function addNeighbor(node:Int, value:Int):Void {
+	private function addNeighbor(node:Int, value:Int, intendedRow:Int):Void {
+		if (Memory.getUI16(value + Y__) != intendedRow) return;
 		var jen:Int;
 		jen = Memory.getByte(node + NEIGHBOR_COUNT__);
 		Memory.setI32(	node + NEIGHBOR_LIST__ + jen * INT_SIZE, 	value		);
@@ -529,11 +532,11 @@ class MemoryHaXeModel extends HaXeBaseModel {
 		if (_tailData != null) _wireData.dispose();
 		if (_heatData != null) _wireData.dispose();
 		
-		// The BitmapData objects only need to be as large as the active rectangle, with a one-pixel border to prevent artifacts.
-		_wireData = new BitmapData(Std.int(activeRect.width + 1), Std.int(activeRect.height + 1), true, CLEAR);
-		_headData = new BitmapData(Std.int(activeRect.width + 1), Std.int(activeRect.height + 1), true, CLEAR);
-		_tailData = new BitmapData(Std.int(activeRect.width + 1), Std.int(activeRect.height + 1), true, CLEAR);
-		_heatData = new BitmapData(Std.int(activeRect.width + 1), Std.int(activeRect.height + 1), true, CLEAR);
+		// The BitmapData objects only need to be as large as the active rectangle.
+		_wireData = new BitmapData(Std.int(activeRect.width), Std.int(activeRect.height), true, CLEAR);
+		_headData = new BitmapData(Std.int(activeRect.width), Std.int(activeRect.height), true, CLEAR);
+		_tailData = new BitmapData(Std.int(activeRect.width), Std.int(activeRect.height), true, CLEAR);
+		_heatData = new BitmapData(Std.int(activeRect.width), Std.int(activeRect.height), true, CLEAR);
 		
 		drawBackground(_baseGraphics, _width, _height, BLACK);
 		drawData(_wireGraphics, activeRect, _wireData);
