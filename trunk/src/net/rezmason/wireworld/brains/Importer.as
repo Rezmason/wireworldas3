@@ -11,9 +11,9 @@ package net.rezmason.wireworld.brains {
 	//---------------------------------------
 	// IMPORT STATEMENTS
 	//---------------------------------------
-	import flash.events.EventDispatcher;
-	
 	import apparat.math.IntMath;
+	
+	import flash.events.EventDispatcher;
 	
 	import net.rezmason.utils.GreenThread;
 	import net.rezmason.wireworld.WWEvent;
@@ -190,21 +190,18 @@ package net.rezmason.wireworld.brains {
 		
 		private function finishMCLConversion():void {
 			// get the dimensions
-			mclWidth++, mclHeight++;
 			_width = mclWidth, _height = mclHeight;
 			
-			// Some final tweaks, and the MCL file has become a TXT string 
+			// Some final tweaks, and the MCL file has become a TXT string
 			tempStringVector = Vector.<String>(txtFile.split("*"));
 			txtFile = "";
 
 			for (ike = 0; ike < tempStringVector.length; ike += 1) {
-				for (jen = 0; jen < _width; jen += 10) {
-					tempStringVector[ike] += "          ";
-				}
-				txtFile += tempStringVector[ike].substr(0, _width - 1) + "\n";
+				// padding
+				var str:String = tempStringVector[ike];
+				while (str.length < _width) str += "          ";
+				txtFile += str.substr(0, _width);
 			}
-
-			txtFile = txtFile.slice(0, -2);
 			
 			_totalNodes = txtFile.split(WWFormat.ALIVE_REG_EXP).length;
 			

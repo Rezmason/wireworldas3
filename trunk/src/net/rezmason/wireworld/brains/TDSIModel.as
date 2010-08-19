@@ -67,7 +67,7 @@ package net.rezmason.wireworld.brains {
 		private static const NEIGHBOR_COUNT__:int = FIRST_STATE__ + BYTE_SIZE;
 		private static const NEIGHBOR_LIST__:int = NEIGHBOR_COUNT__ + BYTE_SIZE;
 		
-		private static const NODE_SIZE:int = NEIGHBOR_LIST__ + 8 * INT_SIZE + 1;
+		private static const NODE_SIZE:int = NEIGHBOR_LIST__ + 8 * INT_SIZE;
 		
 		private static const MIN_BYTEARRAY_SIZE:int = 1024;
 
@@ -384,26 +384,28 @@ package net.rezmason.wireworld.brains {
 			var ike:int;
 			var iNode:int;
 			var scratch:int;
-			var neighbor:*;
+			var row:int;
+			var node:*;
 			
 			for (ike = 0; ike < STEP && neighborItr < totalBytes; ike += 1) {
 				iNode = neighborItr;
-				scratch = Memory.readUnsignedShort(iNode + X__) + Memory.readUnsignedShort(iNode + Y__) * _width;
+				row = Memory.readUnsignedShort(iNode + Y__);
+				scratch = Memory.readUnsignedShort(iNode + X__) + row * _width;
 				Memory.writeByte(0, iNode + NEIGHBOR_COUNT__);
 
-				scratch -= _width;
-				neighbor = neighborLookupTable[scratch - 1];	if (neighbor != undefined) addNeighbor(iNode, int(neighbor));
-				neighbor = neighborLookupTable[scratch + 0];	if (neighbor != undefined) addNeighbor(iNode, int(neighbor));
-				neighbor = neighborLookupTable[scratch + 1];	if (neighbor != undefined) addNeighbor(iNode, int(neighbor));
+				scratch -= _width; row--;
+				node = neighborLookupTable[scratch - 1];	if (node != undefined) addNeighbor(iNode, int(node), row);
+				node = neighborLookupTable[scratch + 0];	if (node != undefined) addNeighbor(iNode, int(node), row);
+				node = neighborLookupTable[scratch + 1];	if (node != undefined) addNeighbor(iNode, int(node), row);
 
-				scratch += _width;
-				neighbor = neighborLookupTable[scratch - 1];	if (neighbor != undefined) addNeighbor(iNode, int(neighbor));
-				neighbor = neighborLookupTable[scratch + 1];	if (neighbor != undefined) addNeighbor(iNode, int(neighbor));
+				scratch += _width; row++;
+				node = neighborLookupTable[scratch - 1];	if (node != undefined) addNeighbor(iNode, int(node), row);
+				node = neighborLookupTable[scratch + 1];	if (node != undefined) addNeighbor(iNode, int(node), row);
 
-				scratch += _width;
-				neighbor = neighborLookupTable[scratch - 1];	if (neighbor != undefined) addNeighbor(iNode, int(neighbor));
-				neighbor = neighborLookupTable[scratch + 0];	if (neighbor != undefined) addNeighbor(iNode, int(neighbor));
-				neighbor = neighborLookupTable[scratch + 1];	if (neighbor != undefined) addNeighbor(iNode, int(neighbor));
+				scratch += _width; row++;
+				node = neighborLookupTable[scratch - 1];	if (node != undefined) addNeighbor(iNode, int(node), row);
+				node = neighborLookupTable[scratch + 0];	if (node != undefined) addNeighbor(iNode, int(node), row);
+				node = neighborLookupTable[scratch + 1];	if (node != undefined) addNeighbor(iNode, int(node), row);
 
 				staticSurvey[Memory.readUnsignedByte(iNode + NEIGHBOR_COUNT__)]++;
 				
@@ -411,7 +413,8 @@ package net.rezmason.wireworld.brains {
 			}
 		}
 		
-		private function addNeighbor(node:int, value:int):void {
+		private function addNeighbor(node:int, value:int, intendedRow:int):void {
+			if (Memory.readUnsignedShort(value + Y__) != intendedRow) return;
 			var jen:int;
 			jen = Memory.readUnsignedByte(node + NEIGHBOR_COUNT__);
 			Memory.writeInt(value, node + NEIGHBOR_LIST__ + jen * INT_SIZE);
@@ -464,11 +467,11 @@ package net.rezmason.wireworld.brains {
 			if (_tailData) _wireData.dispose();
 			if (_heatData) _wireData.dispose();
 			
-			// The BitmapData objects only need to be as large as the active rectangle, with a one-pixel border to prevent artifacts.
-			_wireData = new BitmapData(activeRect.width + 1, activeRect.height + 1, true, CLEAR);
-			_headData = new BitmapData(activeRect.width + 1, activeRect.height + 1, true, CLEAR);
-			_tailData = new BitmapData(activeRect.width + 1, activeRect.height + 1, true, CLEAR);
-			_heatData = new BitmapData(activeRect.width + 1, activeRect.height + 1, true, CLEAR);
+			// The BitmapData objects only need to be as large as the active rectangle
+			_wireData = new BitmapData(activeRect.width, activeRect.height, true, CLEAR);
+			_headData = new BitmapData(activeRect.width, activeRect.height, true, CLEAR);
+			_tailData = new BitmapData(activeRect.width, activeRect.height, true, CLEAR);
+			_heatData = new BitmapData(activeRect.width, activeRect.height, true, CLEAR);
 			
 			bufferOffset = totalBytes;
 			bufferSize = maxBufferSize = INT_SIZE * activeRect.width * activeRect.height;

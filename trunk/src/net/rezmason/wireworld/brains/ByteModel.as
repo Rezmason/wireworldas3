@@ -423,28 +423,31 @@ package net.rezmason.wireworld.brains {
 			var ike:int;
 			var iNode:int;
 			var scratch:int;
-			var neighbor:*;
+			var col:int, row:int;
+			var node:*;
 			
 			for (ike = 0; ike < STEP && neighborItr < totalBytes; ike += 1) {
 				iNode = neighborItr;
 				bytes.position = iNode + X__;
-				scratch = bytes.readUnsignedShort() + bytes.readUnsignedShort() * _width;
+				col = bytes.readUnsignedShort();
+				row = bytes.readUnsignedShort();
+				scratch = col + row * _width;
 				bytes.position = iNode + NEIGHBOR_COUNT__;
 				bytes.writeByte(0);
 
-				scratch -= _width;
-				neighbor = neighborLookupTable[scratch - 1];	if (neighbor != undefined) addNeighbor(iNode, int(neighbor));
-				neighbor = neighborLookupTable[scratch + 0];	if (neighbor != undefined) addNeighbor(iNode, int(neighbor));
-				neighbor = neighborLookupTable[scratch + 1];	if (neighbor != undefined) addNeighbor(iNode, int(neighbor));
+				scratch -= _width; row--;
+				node = neighborLookupTable[scratch - 1];	if (node != undefined) addNeighbor(iNode, int(node), row);
+				node = neighborLookupTable[scratch + 0];	if (node != undefined) addNeighbor(iNode, int(node), row);
+				node = neighborLookupTable[scratch + 1];	if (node != undefined) addNeighbor(iNode, int(node), row);
 
-				scratch += _width;
-				neighbor = neighborLookupTable[scratch - 1];	if (neighbor != undefined) addNeighbor(iNode, int(neighbor));
-				neighbor = neighborLookupTable[scratch + 1];	if (neighbor != undefined) addNeighbor(iNode, int(neighbor));
+				scratch += _width; row++;
+				node = neighborLookupTable[scratch - 1];	if (node != undefined) addNeighbor(iNode, int(node), row);
+				node = neighborLookupTable[scratch + 1];	if (node != undefined) addNeighbor(iNode, int(node), row);
 
-				scratch += _width;
-				neighbor = neighborLookupTable[scratch - 1];	if (neighbor != undefined) addNeighbor(iNode, int(neighbor));
-				neighbor = neighborLookupTable[scratch + 0];	if (neighbor != undefined) addNeighbor(iNode, int(neighbor));
-				neighbor = neighborLookupTable[scratch + 1];	if (neighbor != undefined) addNeighbor(iNode, int(neighbor));
+				scratch += _width; row++;
+				node = neighborLookupTable[scratch - 1];	if (node != undefined) addNeighbor(iNode, int(node), row);
+				node = neighborLookupTable[scratch + 0];	if (node != undefined) addNeighbor(iNode, int(node), row);
+				node = neighborLookupTable[scratch + 1];	if (node != undefined) addNeighbor(iNode, int(node), row);
 
 				bytes.position = iNode + NEIGHBOR_COUNT__;
 				staticSurvey[bytes.readUnsignedByte()]++;
@@ -453,7 +456,11 @@ package net.rezmason.wireworld.brains {
 			}
 		}
 		
-		private function addNeighbor(node:int, value:int):void {
+		private function addNeighbor(node:int, value:int, intendedRow:int):void {
+			
+			bytes.position = value + Y__;
+			if (bytes.readUnsignedShort() != intendedRow) return;
+			
 			var jen:int;
 			bytes.position = node + NEIGHBOR_COUNT__;
 			jen = bytes.readUnsignedByte();
@@ -511,11 +518,11 @@ package net.rezmason.wireworld.brains {
 			if (_tailData) _wireData.dispose();
 			if (_heatData) _wireData.dispose();
 			
-			// The BitmapData objects only need to be as large as the active rectangle, with a one-pixel border to prevent artifacts.
-			_wireData = new BitmapData(activeRect.width + 1, activeRect.height + 1, true, CLEAR);
-			_headData = new BitmapData(activeRect.width + 1, activeRect.height + 1, true, CLEAR);
-			_tailData = new BitmapData(activeRect.width + 1, activeRect.height + 1, true, CLEAR);
-			_heatData = new BitmapData(activeRect.width + 1, activeRect.height + 1, true, CLEAR);
+			// The BitmapData objects only need to be as large as the active rectangle
+			_wireData = new BitmapData(activeRect.width, activeRect.height, true, CLEAR);
+			_headData = new BitmapData(activeRect.width, activeRect.height, true, CLEAR);
+			_tailData = new BitmapData(activeRect.width, activeRect.height, true, CLEAR);
+			_heatData = new BitmapData(activeRect.width, activeRect.height, true, CLEAR);
 			
 			drawBackground(_baseGraphics, _width, _height, BLACK);
 			drawData(_wireGraphics, activeRect, _wireData);
