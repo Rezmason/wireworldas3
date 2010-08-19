@@ -87,7 +87,7 @@ package net.rezmason.wireworld.brains {
 		private var neighborItr:int;
 		
 		private var transferBuffer:ByteArray = new ByteArray(), maxBufferSize:int, bufferSize:int;
-		private var boundWidth:int = bound.width, boundHeight:int = bound.height;
+		private var boundWidth:int, boundHeight:int;
 		
 		//---------------------------------------
 		// CONSTRUCTOR
@@ -574,8 +574,7 @@ package net.rezmason.wireworld.brains {
 			
 			// BUFFER SETUP
 			
-			//_headData.fillRect(fully ? _headData.rect : bound, CLEAR);
-			
+			_headData.fillRect(fully ? _headData.rect : bound, CLEAR);
 			
 			iNode = headFront;
 			while (iNode != NULL) {
