@@ -77,7 +77,7 @@ package net.rezmason.wireworld.brains {
 		private var boundIsDirty:Boolean;
 		private var neighborLookupTable:Array = []; // sparse array of all nodes, listed by index
 		// NOTE: The neighbor lookup table is an Array because it's sparse, it's boundless, and because we only use it for parsing.
-		private var totalBytes:int, totalHeads:int;
+		private var totalBytes:int, bufferOffset:int, totalHeads:int;
 		private var staticSurvey:Vector.<int>;
 		private var neighborThread:GreenThread = new GreenThread; // The green thread that drives the neighbor finding algorithm
 		private var headFront:int = NULL, headBack:int = NULL; // linked list of nodes that are currently electron heads
@@ -85,6 +85,9 @@ package net.rezmason.wireworld.brains {
 		private var newHeadFront:int = NULL, newHeadBack:int = NULL; // linked list of nodes that are becoming electron heads
 		private var bytes:ByteArray = new ByteArray();
 		private var neighborItr:int;
+		
+		private var transferBuffer:ByteArray = new ByteArray(), maxBufferSize:int, bufferSize:int;
+		private var boundWidth:int = bound.width, boundHeight:int = bound.height;
 		
 		//---------------------------------------
 		// CONSTRUCTOR
@@ -326,6 +329,9 @@ package net.rezmason.wireworld.brains {
 		
 		override public function setBounds(top:int, left:int, bottom:int, right:int):void {
 			super.setBounds(top, left, bottom, right);
+			bufferSize = INT_SIZE * bound.width * bound.height;
+			boundWidth = bound.width;
+			boundHeight = bound.height;
 			boundIsDirty = true;
 		}
 
@@ -348,6 +354,7 @@ package net.rezmason.wireworld.brains {
 				}
 				bytes.length = IntMath.max(NODE_SIZE * importer.totalNodes, MIN_BYTEARRAY_SIZE);
 				trace("Byte array size :", bytes.length);
+				bytes.length += INT_SIZE * _width * _height;
 				Memory.select(bytes);
 				totalNodes = 0;
 				totalBytes = 0;
@@ -463,6 +470,9 @@ package net.rezmason.wireworld.brains {
 			_tailData = new BitmapData(activeRect.width + 1, activeRect.height + 1, true, CLEAR);
 			_heatData = new BitmapData(activeRect.width + 1, activeRect.height + 1, true, CLEAR);
 			
+			bufferOffset = totalBytes;
+			bufferSize = maxBufferSize = INT_SIZE * activeRect.width * activeRect.height;
+			
 			drawBackground(_baseGraphics, _width, _height, BLACK);
 			drawData(_wireGraphics, activeRect, _wireData);
 			drawData(_headGraphics, activeRect, _headData);
@@ -510,15 +520,22 @@ package net.rezmason.wireworld.brains {
 			var x_:int;
 			var y_:int;
 			var mult:Number = 2.9 / _generation;
+			
 			_heatData.lock();
+			
+			// BUFFER SETUP
+			
 			iNode = 0;
 			while (iNode < totalBytes) {
 				x_ = Memory.readUnsignedShort(iNode + X__);
 				y_ = Memory.readUnsignedShort(iNode + Y__);
 				allow = fully || (x_ >= leftBound && x_ <= rightBound && y_ >= topBound && y_ <= bottomBound);
-				if (allow) _heatData.setPixel32(x_, y_, heatColorOf(Memory.readInt(iNode + TIMES_LIT__) * mult));
+				if (allow) _heatData.setPixel32(x_, y_, heatColorOf(Memory.readInt(iNode + TIMES_LIT__) * mult)); // BUFFER OPERATION
 				iNode += NODE_SIZE;
 			}
+			
+			// BUFFER RESOLUTION
+			
 			_heatData.unlock();
 		}
 
@@ -528,10 +545,11 @@ package net.rezmason.wireworld.brains {
 			var x_:int;
 			var y_:int;
 			
-			_tailData.lock();
-			_headData.lock();
 			if (freshTails || boundIsDirty) {
 				
+				_tailData.lock();
+				
+				// BUFFER SETUP
 				_tailData.fillRect(fully ? _tailData.rect : bound, CLEAR);
 				
 				iNode = tailFront;
@@ -539,26 +557,37 @@ package net.rezmason.wireworld.brains {
 					x_ = Memory.readUnsignedShort(iNode + X__);
 					y_ = Memory.readUnsignedShort(iNode + Y__);
 					allow = fully || (x_ >= leftBound && x_ <= rightBound && y_ >= topBound && y_ <= bottomBound);
-					if (allow) _tailData.setPixel32(x_, y_, BLACK);
+					if (allow) _tailData.setPixel32(x_, y_, BLACK); // BUFFER OPERATION
 					iNode = Memory.readInt(iNode + NEXT__);
 				}
+				
+				// BUFFER RESOLUTION
+				
+				_tailData.unlock();
 				
 				boundIsDirty = false;
 			} else {
 				_tailData.copyPixels(_headData, fully ? _tailData.rect : bound, fully ? ORIGIN : bound.topLeft);
 			}
 			
-			_headData.fillRect(fully ? _headData.rect : bound, CLEAR);
+			_headData.lock();
+			
+			// BUFFER SETUP
+			
+			//_headData.fillRect(fully ? _headData.rect : bound, CLEAR);
+			
 			
 			iNode = headFront;
 			while (iNode != NULL) {
 				x_ = Memory.readUnsignedShort(iNode + X__);
 				y_ = Memory.readUnsignedShort(iNode + Y__);
 				allow = fully || (x_ >= leftBound && x_ <= rightBound && y_ >= topBound && y_ <= bottomBound);
-				if (allow) _headData.setPixel32(x_, y_, BLACK);
+				if (allow) _headData.setPixel32(x_, y_, BLACK); // BUFFER OPERATION
 				iNode = Memory.readInt(iNode + NEXT__);
 			}
-			_tailData.unlock();
+			
+			// BUFFER RESOLUTION
+			
 			_headData.unlock();
 		}
 	}
