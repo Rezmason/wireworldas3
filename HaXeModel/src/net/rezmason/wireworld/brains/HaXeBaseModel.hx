@@ -1,5 +1,5 @@
 /**
-* Wireworld Player by Jeremy Sachs. July 25, 2010
+* Wireworld Player by Jeremy Sachs. August 21, 2010
 *
 * Feel free to distribute the source, just try not to hand it off to some douchebag.
 * Keep this header here.
@@ -134,10 +134,10 @@ class HaXeBaseModel extends flash.events.EventDispatcher, implements net.rezmaso
 	public function reset():Void {}
 	
 	public function setBounds(top:Int, left:Int, bottom:Int, right:Int):Void {
-		topBound = Std.int(top - activeCorner.y);
-		leftBound = Std.int(left - activeCorner.x);
-		bottomBound = Std.int(bottom - activeCorner.y);
-		rightBound = Std.int(right - activeCorner.x);
+		topBound = Std.int(Math.max(0, top - activeCorner.y));
+		leftBound = Std.int(Math.max(0, left - activeCorner.x));
+		bottomBound = Std.int(Math.min(activeRect.height, bottom - activeCorner.y));
+		rightBound = Std.int(Math.min(activeRect.width, right - activeCorner.x));
 
 		bound.x = leftBound;
 		bound.y = topBound;
