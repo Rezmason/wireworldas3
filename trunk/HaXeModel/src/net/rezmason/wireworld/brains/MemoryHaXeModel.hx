@@ -386,7 +386,7 @@ class MemoryHaXeModel extends HaXeBaseModel {
 			x_ = Memory.getUI16(iNode + X__);
 			y_ = Memory.getUI16(iNode + Y__);
 			allow = (fully > 0) || (x_ >= leftBound && x_ <= rightBound && y_ >= topBound && y_ <= bottomBound);
-			if (allow) _heatData.setPixel32(x_, y_, heatColorOf(Memory.getI32(iNode + TIMES_LIT__) * mult));
+			if (allow) _heatData.setPixel32(x_, y_, heatSpectrum.colorOf(Memory.getI32(iNode + TIMES_LIT__) * mult));
 			iNode += NODE_SIZE;
 		}
 		_heatData.unlock();

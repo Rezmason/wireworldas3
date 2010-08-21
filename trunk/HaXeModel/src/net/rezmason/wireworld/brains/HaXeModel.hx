@@ -7,6 +7,6 @@
 * Please contact jeremysachs@rezmason.net prior to distributing modified versions of this class.
 */
 package net.rezmason.wireworld.brains;
-// class HaXeModel extends FirstHaXeModel {}
+//class HaXeModel extends FirstHaXeModel {}
 //class HaXeModel extends LinkedListHaXeModel {}
 class HaXeModel extends MemoryHaXeModel {}

@@ -190,14 +190,4 @@ class HaXeBaseModel extends flash.events.EventDispatcher, implements net.rezmaso
 	private function addNode(__x:Int, __y:Int, __state:Int):Void {
 		totalNodes++;
 	}
-	
-	private function heatColorOf(input:Float):UInt {
-		if (input > 1) return heatSpectrum.getPixel(heatSpectrum.width, 0);
-		return heatSpectrum.getPixel32(Std.int(input * heatSpectrum.width), 0);
-	}
-	
-	private function colorOf(input:Float):UInt {
-		if (input > 1) return spectrum.getPixel(spectrum.width, 0);
-		return spectrum.getPixel32(Std.int(input * spectrum.width), 0);
-	}
 }
