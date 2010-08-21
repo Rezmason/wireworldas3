@@ -20,28 +20,21 @@ package net.rezmason.wireworld.brains {
 	
 	// Used to color the heat bitmap.
 	
-	public final class HeatSpectrum extends BitmapData {
+	public final class HeatSpectrum extends Spectrum {
 		
-		//---------------------------------------
-		// CONSTRUCTOR
-		//---------------------------------------
-		public function HeatSpectrum():void {
-			
-			super(100, 1, true, 0xFF000000);
-			
+		override protected function fillIn():void {
 			var _matrix:Matrix = new Matrix;
 			var _shape:Shape = new Shape;
 			var _colors:Array = [0x000000, 0x0000FF, 0xFF00FF, 0xFF8800];
 			var _alphas:Array = [1, 1, 1, 1];
 			var _places:Array = [0, 20, 128, 255];
 			
-			_matrix.createGradientBox(width, height);
-			
+			_matrix.createGradientBox(bitmap.width, bitmap.height);
 			_shape.graphics.beginGradientFill(GradientType.LINEAR, _colors, _alphas, _places, _matrix, SpreadMethod.PAD, InterpolationMethod.LINEAR_RGB);
-			_shape.graphics.drawRect(0, 0, width, height);
-			_shape.graphics.endFill();
+			_shape.graphics.drawRect(0, 0, bitmap.width, bitmap.height);
+			_shape.graphics.endFill();	
 			
-			draw(_shape);
+			bitmap.draw(_shape);
 		}
 	}
 }
