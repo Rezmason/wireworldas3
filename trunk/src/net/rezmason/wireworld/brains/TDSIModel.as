@@ -38,6 +38,7 @@ package net.rezmason.wireworld.brains {
 		private static const EMPTY_SURVEY:Vector.<int>= new Vector.<int>(9, true);
 		
 		private static const NULL:int = -1;
+		private static const BACKWARDS_BLACK:int = 0xFF;
 		
 		private static const BYTE_SIZE:int = 1;
 		private static const SHORT_SIZE:int = 2;
@@ -86,8 +87,7 @@ package net.rezmason.wireworld.brains {
 		private var bytes:ByteArray = new ByteArray();
 		private var neighborItr:int;
 		
-		private var transferBuffer:ByteArray = new ByteArray(), maxBufferSize:int, bufferSize:int;
-		private var boundWidth:int, boundHeight:int;
+		private var transferBuffer:ByteArray = new ByteArray(), emptyBuffer:ByteArray = new ByteArray();
 		
 		//---------------------------------------
 		// CONSTRUCTOR
@@ -329,9 +329,6 @@ package net.rezmason.wireworld.brains {
 		
 		override public function setBounds(top:int, left:int, bottom:int, right:int):void {
 			super.setBounds(top, left, bottom, right);
-			bufferSize = INT_SIZE * bound.width * bound.height;
-			boundWidth = bound.width;
-			boundHeight = bound.height;
 			boundIsDirty = true;
 		}
 
@@ -354,6 +351,7 @@ package net.rezmason.wireworld.brains {
 				}
 				bytes.length = IntMath.max(NODE_SIZE * importer.totalNodes, MIN_BYTEARRAY_SIZE);
 				trace("Byte array size :", bytes.length);
+				trace("Buffer size :", INT_SIZE * _width * _height);
 				bytes.length += INT_SIZE * _width * _height;
 				Memory.select(bytes);
 				totalNodes = 0;
@@ -474,7 +472,9 @@ package net.rezmason.wireworld.brains {
 			_heatData = new BitmapData(activeRect.width, activeRect.height, true, CLEAR);
 			
 			bufferOffset = totalBytes;
-			bufferSize = maxBufferSize = INT_SIZE * activeRect.width * activeRect.height;
+			transferBuffer.clear();
+			emptyBuffer.clear();
+			transferBuffer.length = emptyBuffer.length = INT_SIZE * activeRect.width * activeRect.height;
 			
 			drawBackground(_baseGraphics, _width, _height, BLACK);
 			drawData(_wireGraphics, activeRect, _wireData);
@@ -533,7 +533,9 @@ package net.rezmason.wireworld.brains {
 				x_ = Memory.readUnsignedShort(iNode + X__);
 				y_ = Memory.readUnsignedShort(iNode + Y__);
 				allow = fully || (x_ >= leftBound && x_ <= rightBound && y_ >= topBound && y_ <= bottomBound);
-				if (allow) _heatData.setPixel32(x_, y_, heatColorOf(Memory.readInt(iNode + TIMES_LIT__) * mult)); // BUFFER OPERATION
+				if (allow) { 
+					_heatData.setPixel32(x_, y_, heatSpectrum.colorOf(Memory.readInt(iNode + TIMES_LIT__) * mult)); // BUFFER OPERATION
+				}
 				iNode += NODE_SIZE;
 			}
 			
@@ -548,23 +550,38 @@ package net.rezmason.wireworld.brains {
 			var x_:int;
 			var y_:int;
 			
+			var rect:Rectangle = fully ? _headData.rect : bound;
+			var rectWidth:int = rect.width;
+			var rectTop:int = rect.top;
+			var rectLeft:int = rect.left;
+			var bufferSize:int = rect.width * rect.height * INT_SIZE;
+			
 			if (freshTails || boundIsDirty) {
 				
 				_tailData.lock();
 				
 				// BUFFER SETUP
-				_tailData.fillRect(fully ? _tailData.rect : bound, CLEAR);
+				bytes.position = bufferOffset;
+				bytes.writeBytes(emptyBuffer, 0, bufferSize);
 				
 				iNode = tailFront;
 				while (iNode != NULL) {
 					x_ = Memory.readUnsignedShort(iNode + X__);
 					y_ = Memory.readUnsignedShort(iNode + Y__);
 					allow = fully || (x_ >= leftBound && x_ <= rightBound && y_ >= topBound && y_ <= bottomBound);
-					if (allow) _tailData.setPixel32(x_, y_, BLACK); // BUFFER OPERATION
+					if (allow) { 
+						x_ -= rectLeft;
+						y_ -= rectTop;
+						Memory.writeInt(BACKWARDS_BLACK, bufferOffset + INT_SIZE * (y_ * rectWidth + x_)); // BUFFER OPERATION
+					}
 					iNode = Memory.readInt(iNode + NEXT__);
 				}
 				
 				// BUFFER RESOLUTION
+				transferBuffer.position = 0;
+				transferBuffer.writeBytes(bytes, bufferOffset, bufferSize);
+				transferBuffer.position = 0;
+				_tailData.setPixels(rect, transferBuffer);
 				
 				_tailData.unlock();
 				
@@ -576,19 +593,27 @@ package net.rezmason.wireworld.brains {
 			_headData.lock();
 			
 			// BUFFER SETUP
-			
-			_headData.fillRect(fully ? _headData.rect : bound, CLEAR);
+			bytes.position = bufferOffset;
+			bytes.writeBytes(emptyBuffer, 0, bufferSize);
 			
 			iNode = headFront;
 			while (iNode != NULL) {
 				x_ = Memory.readUnsignedShort(iNode + X__);
 				y_ = Memory.readUnsignedShort(iNode + Y__);
 				allow = fully || (x_ >= leftBound && x_ <= rightBound && y_ >= topBound && y_ <= bottomBound);
-				if (allow) _headData.setPixel32(x_, y_, BLACK); // BUFFER OPERATION
+				if (allow) { 
+					x_ -= rectLeft;
+					y_ -= rectTop;
+					Memory.writeInt(BACKWARDS_BLACK, bufferOffset + INT_SIZE * (y_ * rectWidth + x_)); // BUFFER OPERATION
+				}
 				iNode = Memory.readInt(iNode + NEXT__);
 			}
 			
 			// BUFFER RESOLUTION
+			transferBuffer.position = 0;
+			transferBuffer.writeBytes(bytes, bufferOffset, bufferSize);
+			transferBuffer.position = 0;
+			_headData.setPixels(rect, transferBuffer);
 			
 			_headData.unlock();
 		}

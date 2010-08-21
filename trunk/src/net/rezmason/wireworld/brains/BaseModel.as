@@ -12,6 +12,8 @@ package net.rezmason.wireworld.brains {
 	// IMPORT STATEMENTS
 	//---------------------------------------
 	
+	import apparat.math.IntMath;
+	
 	import flash.display.BitmapData;
 	import flash.display.Graphics;
 	import flash.events.ErrorEvent;
@@ -68,8 +70,8 @@ package net.rezmason.wireworld.brains {
 		
 		// These are useful for certain kinds of drawing. 
 		// They're color gradient lookup tables.
-		private var heatSpectrum:HeatSpectrum = new HeatSpectrum;
-		private var spectrum:Spectrum = new Spectrum;
+		protected var heatSpectrum:HeatSpectrum = new HeatSpectrum;
+		protected var spectrum:Spectrum = new Spectrum;
 		
 		
 		//---------------------------------------
@@ -121,10 +123,10 @@ package net.rezmason.wireworld.brains {
 		}
 		
 		public function setBounds(top:int, left:int, bottom:int, right:int):void {
-			topBound = top - activeCorner.y;
-			leftBound = left - activeCorner.x;
-			bottomBound = bottom - activeCorner.y;
-			rightBound = right - activeCorner.x;
+			topBound = IntMath.max(0, top - activeCorner.y);
+			leftBound = IntMath.max(0, left - activeCorner.x);
+			bottomBound = IntMath.min(activeRect.height, bottom - activeCorner.y);
+			rightBound = IntMath.min(activeRect.width, right - activeCorner.x);
 			
 			bound.x = leftBound;
 			bound.y = topBound;
@@ -178,16 +180,6 @@ package net.rezmason.wireworld.brains {
 		
 		protected function addNode(__x:int, __y:int, __state:int):void {
 			totalNodes++;
-		}
-		
-		protected final function heatColorOf(input:Number):uint {
-			if (input > 1) return heatSpectrum.getPixel(heatSpectrum.width, 0);
-			return heatSpectrum.getPixel32(input * heatSpectrum.width, 0);
-		}
-		
-		protected final function colorOf(input:Number):uint {
-			if (input > 1) return spectrum.getPixel(spectrum.width, 0);
-			return spectrum.getPixel32(input * spectrum.width, 0);
 		}
 	}
 }
