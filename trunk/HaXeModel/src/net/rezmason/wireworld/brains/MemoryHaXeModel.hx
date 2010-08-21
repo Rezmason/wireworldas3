@@ -1,5 +1,5 @@
 /**
-* Wireworld Player by Jeremy Sachs. July 25, 2010
+* Wireworld Player by Jeremy Sachs. August 21, 2010
 *
 * Feel free to distribute the source, just try not to hand it off to some douchebag.
 * Keep this header here.
@@ -11,6 +11,7 @@ package net.rezmason.wireworld.brains;
 // IMPORT STATEMENTS
 import flash.display.BitmapData;
 import flash.geom.ColorTransform;
+import flash.geom.Rectangle;
 import flash.Lib;
 import flash.Memory;
 import flash.utils.ByteArray;
@@ -23,6 +24,7 @@ class MemoryHaXeModel extends HaXeBaseModel {
 	
 	inline static var EMPTY_SURVEY:Array<Int>= [0, 0, 0, 0, 0, 0, 0, 0, 0];
 	inline static var NULL:Int = -1;
+	inline static var BACKWARDS_BLACK:Int = 0xFF;
 	inline static var BYTE_SIZE:Int = 1;
 	inline static var SHORT_SIZE:Int = 2;
 	inline static var INT_SIZE:Int = 4;
@@ -51,11 +53,13 @@ class MemoryHaXeModel extends HaXeBaseModel {
 	inline static var NEIGHBOR_COUNT__:Int = FIRST_STATE__ + BYTE_SIZE;
 	inline static var NEIGHBOR_LIST__:Int = NEIGHBOR_COUNT__ + BYTE_SIZE;
 	
-	inline static var NODE_SIZE:Int = NEIGHBOR_LIST__ + 8 * INT_SIZE + 1;
+	inline static var NODE_SIZE:Int = NEIGHBOR_LIST__ + 8 * INT_SIZE;
 	inline static var MIN_BYTEARRAY_SIZE:Int = 1024;
 
+	private var boundIsDirty:Bool;
 	private var neighborLookupTable:Array<Null<Int>>;
 	private var totalBytes:Int;
+	private var bufferOffset:Int;
 	private var totalHeads:Int;
 	private var staticSurvey:Array<Int>;
 	private var neighborThread:GreenThread;
@@ -67,6 +71,9 @@ class MemoryHaXeModel extends HaXeBaseModel {
 	private var newHeadBack:Int;
 	private var bytes:ByteArray;
 	private var neighborItr:Int;
+	
+	private var transferBuffer:ByteArray;
+	private var emptyBuffer:ByteArray;
 	
 	// CONSTRUCTOR
 	public function new():Void {
@@ -89,6 +96,8 @@ class MemoryHaXeModel extends HaXeBaseModel {
 		newHeadBack = NULL;
 
 		bytes = new ByteArray();
+		transferBuffer = new ByteArray();
+		emptyBuffer = new ByteArray();
 		
 		// init the ByteArray.
 		bytes.endian = Endian.LITTLE_ENDIAN;
@@ -225,6 +234,7 @@ class MemoryHaXeModel extends HaXeBaseModel {
 		
 		// wipe the head data
 		_heatData.fillRect(_heatData.rect, CLEAR);
+		boundIsDirty = true;
 		refresh(WWRefreshFlag.FULL | WWRefreshFlag.TAIL);
 		
 		_generation = 1;
@@ -318,6 +328,11 @@ class MemoryHaXeModel extends HaXeBaseModel {
 		
 	}
 	
+	override public function setBounds(top:Int, left:Int, bottom:Int, right:Int):Void {
+		super.setBounds(top, left, bottom, right);
+		boundIsDirty = true;
+	}
+	
 	// OVERRIDDEN PRIVATE METHODS
 	
 	override function addNode(__x:Int, __y:Int, __state:Int):Void {
@@ -362,7 +377,9 @@ class MemoryHaXeModel extends HaXeBaseModel {
 				bytes.clear();
 			}
 			bytes.length = Std.int(Math.max(NODE_SIZE * importer.totalNodes, MIN_BYTEARRAY_SIZE));
-			Lib.trace("Byte array size :" + bytes.length);
+			Lib.trace("Byte array size: " + bytes.length);
+			Lib.trace("Buffer size: " + INT_SIZE * _width * _height);
+			bytes.length += INT_SIZE * _width * _height;
 			Memory.select(bytes);
 			totalNodes = 0;
 			totalBytes = 0;
@@ -398,10 +415,20 @@ class MemoryHaXeModel extends HaXeBaseModel {
 		var x_:Int;
 		var y_:Int;
 		
+		var rect:Rectangle = fully > 0 ? _headData.rect : bound;
+		var rectWidth:Int = Std.int(rect.width);
+		var rectTop:Int = Std.int(rect.top);
+		var rectLeft:Int = Std.int(rect.left);
+		var bufferSize:Int = Std.int(rect.width * rect.height * INT_SIZE);
+		
 		_tailData.lock();
-		_headData.lock();
-		if (freshTails > 0) {
+		
+		if (freshTails > 0 || boundIsDirty) {
 			
+			// BUFFER SETUP
+			bytes.position = bufferOffset;
+			bytes.writeBytes(emptyBuffer, 0, bufferSize);
+
 			_tailData.fillRect((fully > 0) ? _tailData.rect : bound, CLEAR);
 			
 			iNode = tailFront;
@@ -409,25 +436,51 @@ class MemoryHaXeModel extends HaXeBaseModel {
 				x_ = Memory.getUI16(iNode + X__);
 				y_ = Memory.getUI16(iNode + Y__);
 				allow = (fully > 0) || (x_ >= leftBound && x_ <= rightBound && y_ >= topBound && y_ <= bottomBound);
-				if (allow) _tailData.setPixel32(x_, y_, BLACK);
+				if (allow) { 
+					x_ -= rectLeft;
+					y_ -= rectTop;
+					Memory.setI32(bufferOffset + INT_SIZE * (y_ * rectWidth + x_), BACKWARDS_BLACK); // BUFFER OPERATION
+				}
 				iNode = Memory.getI32(iNode + NEXT__);
 			}
 			
+			// BUFFER RESOLUTION
+			transferBuffer.position = 0;
+			transferBuffer.writeBytes(bytes, bufferOffset, bufferSize);
+			transferBuffer.position = 0;
+			_tailData.setPixels(rect, transferBuffer);
+			
+			boundIsDirty = false;
 		} else {
 			_tailData.copyPixels(_headData, (fully > 0) ? _tailData.rect : bound, (fully > 0) ? ORIGIN : bound.topLeft);
 		}
 		
-		_headData.fillRect((fully > 0) ? _headData.rect : bound, CLEAR);
+		_tailData.unlock();
+		_headData.lock();
+		
+		// BUFFER SETUP
+		bytes.position = bufferOffset;
+		bytes.writeBytes(emptyBuffer, 0, bufferSize);
 		
 		iNode = headFront;
 		while (iNode != NULL) {
 			x_ = Memory.getUI16(iNode + X__);
 			y_ = Memory.getUI16(iNode + Y__);
 			allow = (fully > 0) || (x_ >= leftBound && x_ <= rightBound && y_ >= topBound && y_ <= bottomBound);
-			if (allow) _headData.setPixel32(x_, y_, BLACK);
+			if (allow) { 
+				x_ -= rectLeft;
+				y_ -= rectTop;
+				Memory.setI32(bufferOffset + INT_SIZE * (y_ * rectWidth + x_), BACKWARDS_BLACK); // BUFFER OPERATION
+			}
 			iNode = Memory.getI32(iNode + NEXT__);
 		}
-		_tailData.unlock();
+		
+		// BUFFER RESOLUTION
+		transferBuffer.position = 0;
+		transferBuffer.writeBytes(bytes, bufferOffset, bufferSize);
+		transferBuffer.position = 0;
+		_headData.setPixels(rect, transferBuffer);
+		
 		_headData.unlock();
 	}
 	
@@ -538,6 +591,11 @@ class MemoryHaXeModel extends HaXeBaseModel {
 		_tailData = new BitmapData(Std.int(activeRect.width), Std.int(activeRect.height), true, CLEAR);
 		_heatData = new BitmapData(Std.int(activeRect.width), Std.int(activeRect.height), true, CLEAR);
 		
+		bufferOffset = totalBytes;
+		transferBuffer.clear();
+		emptyBuffer.clear();
+		transferBuffer.length = emptyBuffer.length = Std.int(INT_SIZE * activeRect.width * activeRect.height);
+		
 		drawBackground(_baseGraphics, _width, _height, BLACK);
 		drawData(_wireGraphics, activeRect, _wireData);
 		drawData(_headGraphics, activeRect, _headData);
@@ -554,9 +612,5 @@ class MemoryHaXeModel extends HaXeBaseModel {
 			_wireData.setPixel32(x_, y_, BLACK);
 			iNode += NODE_SIZE;
 		}
-	}
-	
-	private function emptyList(node:HaXeNode):Void {
-		
 	}
 }

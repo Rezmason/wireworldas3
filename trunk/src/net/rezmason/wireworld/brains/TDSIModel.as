@@ -1,5 +1,5 @@
 /**
-* Wireworld Player by Jeremy Sachs. July 25, 2010
+* Wireworld Player by Jeremy Sachs. August 21, 2010
 *
 * Feel free to distribute the source, just try not to hand it off to some douchebag.
 * Keep this header here.
@@ -556,9 +556,10 @@ package net.rezmason.wireworld.brains {
 			var rectLeft:int = rect.left;
 			var bufferSize:int = rect.width * rect.height * INT_SIZE;
 			
+			_tailData.lock();
+			
 			if (freshTails || boundIsDirty) {
 				
-				_tailData.lock();
 				
 				// BUFFER SETUP
 				bytes.position = bufferOffset;
@@ -583,13 +584,12 @@ package net.rezmason.wireworld.brains {
 				transferBuffer.position = 0;
 				_tailData.setPixels(rect, transferBuffer);
 				
-				_tailData.unlock();
-				
 				boundIsDirty = false;
 			} else {
 				_tailData.copyPixels(_headData, fully ? _tailData.rect : bound, fully ? ORIGIN : bound.topLeft);
 			}
 			
+			_tailData.unlock();
 			_headData.lock();
 			
 			// BUFFER SETUP

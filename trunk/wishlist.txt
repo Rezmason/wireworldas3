@@ -1,12 +1,3 @@
-Image buffers to update the dirty rectangle
-	Variable sizes, based on areas that need updating
-	Not persistent
-		Persistent data is stored in the bitmaps
-		Still copying pixels from heads to tails, for instance
-	The whole point of the image buffer is to speed up drawing
-	Resizes to the number of pixels in the dirty rectangle
-	Copy bytes from the zeroed BA to zero the buffer
-
 Up the page rank
 
 Apparat tricks
