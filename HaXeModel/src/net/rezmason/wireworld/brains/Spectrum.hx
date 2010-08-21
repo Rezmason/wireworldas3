@@ -1,5 +1,6 @@
 package net.rezmason.wireworld.brains;
 
-extern class Spectrum extends flash.display.BitmapData {
+extern class Spectrum {
 	public function new():Void;
+	public function colorOf(input:Float):UInt;
 }
