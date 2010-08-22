@@ -77,11 +77,11 @@ function wwBuild {
 	echo
 }
 
-wwBuild STANDARD DESKTOP wwdebug false false true
+#wwBuild STANDARD DESKTOP wwdebug false false true
 #wwBuild HAXE DESKTOP wwdebug true false false
 #wwBuild TREE DESKTOP wwdebug false false true
 
-
+wwBuild HAXE DESKTOP wwdebug true
 
 
 popd

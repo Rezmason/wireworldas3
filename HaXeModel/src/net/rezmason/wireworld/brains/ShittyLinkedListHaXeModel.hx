@@ -210,7 +210,7 @@ class ShittyLinkedListHaXeModel extends HaXeBaseModel {
 			x_ = iNode.x;
 			y_ = iNode.y;
 			allow = (fully > 0) || (x_ >= leftBound && x_ < rightBound && y_ >= topBound && y_ < bottomBound);
-			if (allow) _heatData.setPixel32(x_, y_, heatSpectrum.colorOf(iNode.timesLit * mult));
+			if (allow) _heatData.setPixel32(x_, y_, heatSpectrum.colorOf(iNode.timesLit * mult, false));
 		}
 		_heatData.unlock();
 	}

@@ -21,7 +21,7 @@ package net.rezmason.wireworld.brains {
 	public class Spectrum {
 		
 		protected var width:int = 100, height:int = 1;
-		protected var bitmap:BitmapData, vec:Vector.<uint>;
+		protected var bitmap:BitmapData, vec:Vector.<uint>, flippedVec:Vector.<uint>;
 		
 		//---------------------------------------
 		// CONSTRUCTOR
@@ -30,6 +30,12 @@ package net.rezmason.wireworld.brains {
 			bitmap = new BitmapData(width, height, true, 0xFF000000);
 			fillIn();
 			vec = bitmap.getVector(bitmap.rect);
+			vec.push(vec[width - 1]);
+			flippedVec = vec.slice();
+			var ike:int, jen:int;
+			for (ike = 0; ike < flippedVec.length; ike++) {
+				flippedVec[ike] = reverseUInt(flippedVec[ike]);
+			}
 		}
 		
 		protected function fillIn():void {
@@ -47,10 +53,21 @@ package net.rezmason.wireworld.brains {
 			bitmap.draw(_shape);
 		}
 		
-		public function colorOf(input:Number):uint {
+		public function colorOf(input:Number, flipped:Boolean):uint {
 			if (input > 1) input = 1;
 			if (input < 0) input = 0;
-			return vec[int(input * width)];
+			return (flipped ? flippedVec : vec)[int(input * width)];
+		}
+		
+		private function reverseUInt(input:uint):uint {
+			var a:int, r:int, g:int, b:int;
+			
+			a = (input >> 24) & 0xFF;
+			r = (input >> 16) & 0xFF;
+			g = (input >> 08) & 0xFF;
+			b = (input >> 00) & 0xFF;
+			
+			return (b << 24) | (g << 16) | (r << 08) | (a << 00);
 		}
 	}
 }
