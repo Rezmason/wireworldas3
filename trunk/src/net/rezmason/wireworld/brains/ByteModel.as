@@ -585,7 +585,7 @@ package net.rezmason.wireworld.brains {
 				allow = fully || (x_ >= leftBound && x_ <= rightBound && y_ >= topBound && y_ <= bottomBound);
 				if (allow) {
 					bytes.position = iNode + TIMES_LIT__;
-					_heatData.setPixel32(x_, y_, heatSpectrum.colorOf(bytes.readInt() * mult));
+					_heatData.setPixel32(x_, y_, heatSpectrum.colorOf(bytes.readInt() * mult, false));
 				}
 				iNode += NODE_SIZE;
 			}

@@ -397,15 +397,40 @@ class MemoryHaXeModel extends HaXeBaseModel {
 		var x_:Int;
 		var y_:Int;
 		var mult:Float = 2.9 / _generation;
+		
+		var rect:Rectangle = fully > 0 ? _headData.rect : bound;
+		var rectWidth:Int = Std.int(rect.width);
+		var rectTop:Int = Std.int(rect.top);
+		var rectLeft:Int = Std.int(rect.left);
+		var bufferSize:Int = Std.int(rect.width * rect.height * INT_SIZE);
+		var value:UInt;
+		
 		_heatData.lock();
+		
+		// BUFFER SETUP
+		bytes.position = bufferOffset;
+		bytes.writeBytes(emptyBuffer, 0, bufferSize);
+		
 		iNode = 0;
 		while (iNode < totalBytes) {
 			x_ = Memory.getUI16(iNode + X__);
 			y_ = Memory.getUI16(iNode + Y__);
-			allow = (fully > 0) || (x_ >= leftBound && x_ <= rightBound && y_ >= topBound && y_ <= bottomBound);
-			if (allow) _heatData.setPixel32(x_, y_, heatSpectrum.colorOf(Memory.getI32(iNode + TIMES_LIT__) * mult));
+			allow = fully > 0 || (x_ >= leftBound && x_ <= rightBound && y_ >= topBound && y_ <= bottomBound);
+			if (allow) { 
+				x_ -= rectLeft;
+				y_ -= rectTop;
+				value = heatSpectrum.colorOf(Memory.getI32(iNode + TIMES_LIT__) * mult, true);
+				Memory.setI32(bufferOffset + INT_SIZE * (y_ * rectWidth + x_), value); // BUFFER OPERATION
+			}
 			iNode += NODE_SIZE;
 		}
+		
+		// BUFFER RESOLUTION
+		transferBuffer.position = 0;
+		transferBuffer.writeBytes(bytes, bufferOffset, bufferSize);
+		transferBuffer.position = 0;
+		_heatData.setPixels(rect, transferBuffer);
+		
 		_heatData.unlock();
 	}
 	

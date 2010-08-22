@@ -413,7 +413,7 @@ package net.rezmason.wireworld.brains {
 				x_ = xVec[iNode];
 				y_ = yVec[iNode];
 				allow = fully || (x_ >= leftBound && x_ < rightBound && y_ >= topBound && y_ < bottomBound);
-				if (allow) _heatData.setPixel32(x_, y_, heatSpectrum.colorOf(timesLitVec[iNode] * mult));
+				if (allow) _heatData.setPixel32(x_, y_, heatSpectrum.colorOf(timesLitVec[iNode] * mult, false));
 				iNode++;
 			}
 			_heatData.unlock();

@@ -524,9 +524,18 @@ package net.rezmason.wireworld.brains {
 			var y_:int;
 			var mult:Number = 2.9 / _generation;
 			
+			var rect:Rectangle = fully ? _headData.rect : bound;
+			var rectWidth:int = rect.width;
+			var rectTop:int = rect.top;
+			var rectLeft:int = rect.left;
+			var bufferSize:int = rect.width * rect.height * INT_SIZE;
+			var value:uint;
+			
 			_heatData.lock();
 			
 			// BUFFER SETUP
+			bytes.position = bufferOffset;
+			bytes.writeBytes(emptyBuffer, 0, bufferSize);
 			
 			iNode = 0;
 			while (iNode < totalBytes) {
@@ -534,12 +543,19 @@ package net.rezmason.wireworld.brains {
 				y_ = Memory.readUnsignedShort(iNode + Y__);
 				allow = fully || (x_ >= leftBound && x_ <= rightBound && y_ >= topBound && y_ <= bottomBound);
 				if (allow) { 
-					_heatData.setPixel32(x_, y_, heatSpectrum.colorOf(Memory.readInt(iNode + TIMES_LIT__) * mult)); // BUFFER OPERATION
+					x_ -= rectLeft;
+					y_ -= rectTop;
+					value = heatSpectrum.colorOf(Memory.readInt(iNode + TIMES_LIT__) * mult, true);
+					Memory.writeInt(value, bufferOffset + INT_SIZE * (y_ * rectWidth + x_)); // BUFFER OPERATION
 				}
 				iNode += NODE_SIZE;
 			}
 			
 			// BUFFER RESOLUTION
+			transferBuffer.position = 0;
+			transferBuffer.writeBytes(bytes, bufferOffset, bufferSize);
+			transferBuffer.position = 0;
+			_heatData.setPixels(rect, transferBuffer);
 			
 			_heatData.unlock();
 		}
@@ -559,7 +575,6 @@ package net.rezmason.wireworld.brains {
 			_tailData.lock();
 			
 			if (freshTails || boundIsDirty) {
-				
 				
 				// BUFFER SETUP
 				bytes.position = bufferOffset;
