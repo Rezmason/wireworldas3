@@ -1,7 +1,4 @@
-Up the page rank
-
-Apparat tricks
-	Inlining, macros, bytecode
+TDSI bytecode
 
 Improve build somehow
 	fcshctl?
@@ -10,16 +7,19 @@ Test AIR app on Windows
 Put AIR app online; make it available for download
 	Might Adobe be willing to pay for the cert?
 
-Android app
-	Get it to build with AIR 2.5
-	Run the APK maker on the resulting SWF
+Mobile (Android) targets
 	Figure out two-finger "scrolling" and positioning
-	Use the Android menu system instead of toolbars
-		Make your own if you must
 	Tap to start, stop
-	How do FileReference.browse() and FileReference.save() work on Android?
-	Redesign dialogs for vertical mobile screen
+	Redesign dialogs for mobile screen
+	Wide orientation only
 	GPU acceleration
+	
+	AIR app
+		Get it to build with AIR 2.5
+		Run the APK maker on the resulting SWF
+		Use the Android menu system instead of toolbars
+			Make your own if you must
+		How do FileReference.browse() and FileReference.save() work on Android?
 
 Alchemize Golly
 
