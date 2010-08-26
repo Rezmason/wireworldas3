@@ -11,7 +11,6 @@ package net.rezmason.wireworld.brains {
 	//---------------------------------------
 	// IMPORT STATEMENTS
 	//---------------------------------------
-	import __AS3__.vec.Vector;
 	
 	import flash.display.BitmapData;
 	import flash.events.Event;

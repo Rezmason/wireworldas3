@@ -15,10 +15,6 @@ package net.rezmason.wireworld {
 	
 	public final class WWEvent extends Event {
 		
-		public static const ANNOUNCER_SELECT:String = "announcerSelect";
-		public static const ANNOUNCER_REMOVE:String = "announcerRemove";
-		public static const ANNOUNCER_DROP  :String = "announcerDrop";
-		
 		public static const DATA_PARSED:String = "dataParsed";
 		public static const DATA_EXTRACTED:String = "dataExtracted";
 		

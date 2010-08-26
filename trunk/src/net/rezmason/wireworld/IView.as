@@ -30,8 +30,6 @@ package net.rezmason.wireworld {
 		function prime():void;
 		function resetView(event:Event = null):void;
 		function resetState(event:Event = null):void;
-		//function placeAnnouncer(event:Event = null):void;
-		//function updateAnnouncers():void;
 		function showAbout(event:Event = null, interactive:Boolean = true):void;
 		function giveAlert(titleText:String = null, messageText:String = null, interactive:Boolean = true):void;
 		function hideDialog(target:DisplayObject = null):void;
