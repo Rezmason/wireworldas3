@@ -1,42 +1,45 @@
+/**
+ * Wireworld Player by Jeremy Sachs. August 21, 2010
+ *
+ * Feel free to distribute the source, just try not to hand it off to some douchebag.
+ * Keep this header here.
+ *
+ * Please contact jeremysachs@rezmason.net prior to distributing modified versions of this class.
+ */
 package {
 	
+	//---------------------------------------
+	// IMPORT STATEMENTS
+	//---------------------------------------
 	import flash.desktop.ClipboardFormats;
-	import flash.desktop.DockIcon;
 	import flash.desktop.NativeApplication;
 	import flash.desktop.NativeDragManager;
-	import flash.desktop.SystemTrayIcon;
-	import flash.display.DisplayObject;
 	import flash.display.InteractiveObject;
 	import flash.display.Loader;
-	import flash.display.MovieClip;
 	import flash.display.NativeMenu;
 	import flash.display.NativeMenuItem;
 	import flash.display.NativeWindow;
-	import flash.display.NativeWindowInitOptions;
-	import flash.display.NativeWindowSystemChrome;
-	import flash.display.NativeWindowType;
-	import flash.display.Screen;
 	import flash.display.Sprite;
-	import flash.display.StageAlign;
-	import flash.display.StageScaleMode;
 	import flash.events.Event;
 	import flash.events.FocusEvent;
-	import flash.events.MouseEvent;
 	import flash.events.NativeDragEvent;
 	import flash.filesystem.File;
-	import flash.geom.Matrix;
-	import flash.geom.Rectangle;
 	import flash.net.SharedObject;
 	import flash.net.URLRequest;
-	import flash.profiler.showRedrawRegions;
 	import flash.system.Capabilities;
 	import flash.system.System;
-	import flash.ui.Keyboard;
 	
-	import mx.controls.Menu;
-
+	// This class is an AIR wrapper. It's designed to load multiple wireworld SWFs 
+	// and the assets SWF into the same application domain, which is very efficient.
+	// Moreover, it keeps track of the application's state, so that it is preserved 
+	// when switching from one brain to another.
+	
 	[SWF(width='800', height='648', backgroundColor='#000000', frameRate='30')]
 	public final class WireworldAIR extends Sprite {
+		
+		//---------------------------------------
+		// CLASS CONSTANTS
+		//---------------------------------------
 		
 		private static const SWF_EXTENSION:String = ".swf";
 		private static const MAX_RECENT_FILES:int = 10;
@@ -45,6 +48,10 @@ package {
 		private static const BRAIN_PATH:String = "./bin/";
 		private static const ASSETS_PATH:String = "./lib/assets.swf";
 		private static const FOLLOW_MAC_CONVENTIONS:Boolean = Capabilities.os.toLowerCase().indexOf("mac") != -1;
+		
+		//---------------------------------------
+		// PRIVATE VARIABLES
+		//---------------------------------------
 		
 		private var currentBrain:Object;
 		private var bridge:Object, state:Object = {}, assets:Object;
@@ -64,22 +71,23 @@ package {
 		private var validFileExtensions:String;
 		private var prefs:SharedObject;
 		
+		//---------------------------------------
+		// CONSTRUCTOR
+		//---------------------------------------
 		public function WireworldAIR():void {
 			
 			prefs = SharedObject.getLocal("wireworldAIR");
-			if (prefs.data.recentURLs) {
-				recentURLs = prefs.data.recentURLs;
-			}
-			if (prefs.data.state) {
-				state = prefs.data.state;
-			}
+			if (prefs.data.recentURLs) recentURLs = prefs.data.recentURLs;
+			if (prefs.data.state) state = prefs.data.state;
 			
+			// Some properties of the state should be forgotten after exiting the program.
 			state.interactive = true;
 			state.dx = state.dy = 0;
 			state.zoom = 1;
 			state.running = false;
 			state.speed = 1;
 			
+			// Others at least deserve some default values.
 			state.overdrive ||= false;
 			state.overdrive ||= false;
 			state.heatmap ||= false;
@@ -93,6 +101,7 @@ package {
 			buildMenu();
 			updateGUI();
 			
+			// The loader is responsible for loading and unloading the wireworld SWFs.
 			loader = new Loader();
 			loader.contentLoaderInfo.addEventListener(Event.INIT, initInstance);
 			request = new URLRequest();
@@ -101,13 +110,13 @@ package {
 			stage.addEventListener(NativeDragEvent.NATIVE_DRAG_DROP, loadDroppedFile);
 			stage.addEventListener(FocusEvent.FOCUS_IN, handleFocusChange);
 			
+			// The assetLoader only loads the assets SWF, and only does it once.
 			assetLoader = new Loader();
 			assetLoader.contentLoaderInfo.addEventListener(Event.COMPLETE, registerAssets);
 			assetLoader.load(new URLRequest(File.applicationDirectory.resolvePath(ASSETS_PATH).url));
 		}
 		
 		private function registerAssets(event:Event):void {
-			assetLoader.contentLoaderInfo.removeEventListener(Event.COMPLETE, loadBrain);
 			assets = assetLoader.content["assets"];
 			loadBrain();
 		}
@@ -117,7 +126,7 @@ package {
 			state.running = false;
 			
 			if (bridge) {
-				// grab whatever important data is still on the api, then kill it
+				// grab whatever important data is still on the bridge, then kill the brain
 				lastURL = bridge.file;
 				lastURL = lastURL.replace(/app\:/g, ".");
 				for (var prop:String in bridge.eventTypes) {
@@ -128,6 +137,9 @@ package {
 			
 			lastURL ||= DEFAULT_FILE_REL_PATH;
 			
+			// The scene is the Sprite that gets handed to the brain's view.
+			
+			// wipe down and preparethe scene
 			if (scene) {
 				while (scene.numChildren) scene.removeChildAt(0);
 				if (scene.parent == stage) stage.removeChild(scene);
@@ -138,6 +150,7 @@ package {
 			
 			if (loader.content) loader.unloadAndStop();
 			
+			// Grab the URL of the current open file
 			if (lastURL.indexOf("file://") == -1 && lastURL.indexOf("http://") == -1) {
 				lastURL = File.applicationDirectory.resolvePath(lastURL).url;
 			}
@@ -145,8 +158,6 @@ package {
 			request.url = File.applicationDirectory.resolvePath(BRAIN_PATH + brainFilename).url;
 			request.url += "?file=" + lastURL;
 			request.url += "&showSplash=false";
-			
-			trace(request.url);
 			
 			loader.load(request);
 		}
@@ -164,6 +175,7 @@ package {
 			updateGUI();
 		}
 		
+		// If a file is dragged onto the app window, this function decides whether to accept it 
 		private function validateDrag(event:NativeDragEvent):void {
 			var draggedFile:File = event.clipboard.getData(ClipboardFormats.FILE_LIST_FORMAT)[0];
 			
@@ -180,6 +192,7 @@ package {
 			}
 		}
 		
+		// Accepted dropped files get loaded in as if they were opened from the File menu.
 		private function loadDroppedFile(event:NativeDragEvent):void {
 			var draggedFile:File = event.clipboard.getData(ClipboardFormats.FILE_LIST_FORMAT)[0];
 			tryAPICall("loadFromURL", [draggedFile.url]);
@@ -292,6 +305,7 @@ package {
 			return item;
 		}
 		
+		// All calls made across the bridge should go through this validation function.
 		private function tryAPICall(functionName:String, params:Array = null):* {
 			if (bridge && bridge[functionName] && bridge[functionName] is Function) {
 				return bridge[functionName].apply(null, params || []);
@@ -300,6 +314,7 @@ package {
 			}
 		}
 		
+		// Responds to all app events dispatched by the bridge.
 		private function bridgeEventResponder(event:Event):void {
 			switch (event.type) {
 				case bridge.eventTypes.FILE_LOADED:
@@ -316,6 +331,7 @@ package {
 			}
 		}
 		
+		// Responds to all menu-related events.
 		private function menuResponder(event:Event):void {
 			
 			var targetData:Object = event.target.data;
@@ -364,8 +380,6 @@ package {
 		}
 		
 		private function addRecentURL(url:String):void {
-			// maintain the URL array
-			
 			if (url.length && url != DEFAULT_FILE_URL) {
 				var index:int = recentURLs.indexOf(url);
 				if (index != -1) recentURLs.splice(index, 1);
@@ -390,6 +404,7 @@ package {
 			}
 			if (recentMenu.containsItem(recentSep)) recentMenu.removeItem(recentSep);
 			
+			// Different URLs are interpreted as web links or as local files
 			for (var ike:int = 0; ike < recentURLs.length; ike++) {
 				var url:String = recentURLs[ike];
 				if (url.indexOf("file") != 0) {
@@ -419,6 +434,7 @@ package {
 						itemsByLabel[item.label].push(item);
 						recentMenu.addItemAt(item, 2);
 					} else {
+						// Files that are gone disappear from the recent items list.
 						recentURLs.splice(ike, 1);
 						ike--;
 					}
@@ -445,6 +461,7 @@ package {
 				itemsByLabel = newItemsByLabel;
 			}
 			
+			// Nobody likes an empty submenu!
 			if (recentURLs.length > 0) {
 				recentMenu.addItemAt(recentSep, recentMenu.getItemIndex(clearRecentMI));
 				clearRecentMI.enabled = true;
@@ -453,6 +470,7 @@ package {
 			}
 		}
 		
+		// Synchronizes the menu states with the internal app states.
 		private function updateGUI():void {
 			brainFilename = state.brainFilename;
 			
@@ -491,6 +509,7 @@ package {
 			prefs.flush();
 		}
 		
+		// The Edit menu is only used to edit text. I'm kind of fond of this method.
 		private function handleFocusChange(event:FocusEvent = null):void {
 			mainMIs.edit.enabled = (stage.focus && stage.focus.hasOwnProperty("text"));
 		}
