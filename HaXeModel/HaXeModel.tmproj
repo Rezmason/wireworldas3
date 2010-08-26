@@ -2,114 +2,38 @@
 <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
 <plist version="1.0">
 <dict>
-	<key>currentDocument</key>
-	<string>src/net/rezmason/wireworld/brains/MemoryHaXeModel.hx</string>
 	<key>documents</key>
 	<array>
 		<dict>
-			<key>filename</key>
-			<string>build.hxml</string>
-			<key>lastUsed</key>
-			<date>2010-08-15T16:09:38Z</date>
-		</dict>
-		<dict>
 			<key>expanded</key>
 			<true/>
 			<key>name</key>
-			<string>deploy</string>
+			<string>HaXeModel</string>
 			<key>regexFolderFilter</key>
-			<string>!.*/(\.[^/]*|CVS|_darcs|_MTN|\{arch\}|blib|.*~\.nib|.*\.(framework|app|pbproj|pbxproj|bundle))$</string>
+			<string>!.*/(\.[^/]*|CVS|_darcs|_MTN|\{arch\}|blib|.*~\.nib|.*\.(framework|app|pbproj|pbxproj|xcode(proj)?|bundle))$</string>
 			<key>sourceDirectory</key>
-			<string>deploy</string>
-		</dict>
-		<dict>
-			<key>expanded</key>
-			<true/>
-			<key>name</key>
-			<string>src</string>
-			<key>regexFolderFilter</key>
-			<string>!.*/(\.[^/]*|CVS|_darcs|_MTN|\{arch\}|blib|.*~\.nib|.*\.(framework|app|pbproj|pbxproj|bundle))$</string>
-			<key>sourceDirectory</key>
-			<string>src</string>
+			<string></string>
 		</dict>
 	</array>
 	<key>fileHierarchyDrawerWidth</key>
-	<integer>288</integer>
+	<integer>200</integer>
 	<key>metaData</key>
-	<dict>
-		<key>src/net/rezmason/wireworld/brains/MemoryHaXeModel.hx</key>
-		<dict>
-			<key>caret</key>
-			<dict>
-				<key>column</key>
-				<integer>17</integer>
-				<key>line</key>
-				<integer>422</integer>
-			</dict>
-			<key>firstVisibleColumn</key>
-			<integer>0</integer>
-			<key>firstVisibleLine</key>
-			<integer>393</integer>
-		</dict>
-	</dict>
-	<key>openDocuments</key>
-	<array>
-		<string>src/net/rezmason/wireworld/brains/MemoryHaXeModel.hx</string>
-	</array>
+	<dict/>
 	<key>showFileHierarchyDrawer</key>
 	<false/>
 	<key>showFileHierarchyPanel</key>
 	<true/>
 	<key>treeState</key>
 	<dict>
-		<key>deploy</key>
+		<key>HaXeModel</key>
 		<dict>
 			<key>isExpanded</key>
 			<true/>
 			<key>subItems</key>
 			<dict/>
 		</dict>
-		<key>src</key>
-		<dict>
-			<key>isExpanded</key>
-			<true/>
-			<key>subItems</key>
-			<dict>
-				<key>net</key>
-				<dict>
-					<key>isExpanded</key>
-					<true/>
-					<key>subItems</key>
-					<dict>
-						<key>rezmason</key>
-						<dict>
-							<key>isExpanded</key>
-							<true/>
-							<key>subItems</key>
-							<dict>
-								<key>wireworld</key>
-								<dict>
-									<key>isExpanded</key>
-									<true/>
-									<key>subItems</key>
-									<dict>
-										<key>brains</key>
-										<dict>
-											<key>isExpanded</key>
-											<true/>
-											<key>subItems</key>
-											<dict/>
-										</dict>
-									</dict>
-								</dict>
-							</dict>
-						</dict>
-					</dict>
-				</dict>
-			</dict>
-		</dict>
 	</dict>
 	<key>windowFrame</key>
-	<string>{{0, 4}, {1280, 774}}</string>
+	<string>{{10, 4}, {1067, 774}}</string>
 </dict>
 </plist>
