@@ -28,6 +28,7 @@ package {
 	import flash.net.URLRequest;
 	import flash.system.Capabilities;
 	import flash.system.System;
+	import flash.utils.setTimeout;
 	
 	// This class is an AIR wrapper. It's designed to load multiple wireworld SWFs 
 	// and the assets SWF into the same application domain, which is very efficient.
@@ -75,7 +76,13 @@ package {
 		// CONSTRUCTOR
 		//---------------------------------------
 		public function WireworldAIR():void {
-			
+			// I'm not sure why, but this short delay 
+			// is necessary to prevent ADL from freezing.
+			// I've ruled out the usual suspects.
+			setTimeout(begin, 100); 
+		}
+		
+		private function begin():void {
 			prefs = SharedObject.getLocal("wireworldAIR");
 			if (prefs.data.recentURLs) recentURLs = prefs.data.recentURLs;
 			if (prefs.data.state) state = prefs.data.state;
@@ -103,7 +110,7 @@ package {
 			
 			// The loader is responsible for loading and unloading the wireworld SWFs.
 			loader = new Loader();
-			loader.contentLoaderInfo.addEventListener(Event.INIT, initInstance);
+			loader.contentLoaderInfo.addEventListener(Event.INIT, initBrain);
 			request = new URLRequest();
 			
 			stage.addEventListener(NativeDragEvent.NATIVE_DRAG_ENTER, validateDrag);
@@ -162,7 +169,7 @@ package {
 			loader.load(request);
 		}
 		
-		private function initInstance(event:Event):void {
+		private function initBrain(event:Event):void {
 			currentBrain = loader.content;
 			bridge = currentBrain.bridge;
 			bridge.state = state;
@@ -173,6 +180,8 @@ package {
 			}
 			addRecentURL(bridge.file || "");
 			updateGUI();
+			
+			if (!window.visible) window.activate();
 		}
 		
 		// If a file is dragged onto the app window, this function decides whether to accept it 
