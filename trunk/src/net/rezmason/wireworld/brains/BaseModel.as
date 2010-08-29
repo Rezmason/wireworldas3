@@ -115,6 +115,8 @@ package net.rezmason.wireworld.brains {
 		public function eraseRect(rect:Rectangle):void {}
 		
 		public function refresh(flags:int):void {
+			if (!_headData) return;
+			
 			if (flags & WWRefreshFlag.HEAT) {
 				refreshHeat((flags & WWRefreshFlag.FULL));
 			} else {

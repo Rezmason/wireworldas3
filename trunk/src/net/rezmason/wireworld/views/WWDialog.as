@@ -52,18 +52,19 @@ package net.rezmason.wireworld.views {
 		private var _pole:BarberPole;
 		private var _content:Array = [];
 		private var _speechX:Number = 0, _speechY:Number = 0;
-		private var _margin:Number;
+		private var _margin:Number, _cornerRadius:Number;
 		private var touchedStage:Boolean = false;
 			
 		//---------------------------------------
 		// CONSTRUCTOR
 		//---------------------------------------
 		public function WWDialog(__width:Number = NaN, __title:String = null, __subtitle:String = null, 
-				__speechX:Number = NaN, __speechY:Number = NaN, __margin:Number = 20):void {
+				__speechX:Number = NaN, __speechY:Number = NaN, __margin:Number = 20, __cornerRadius:Number = 15):void {
 			
 			super();
 			
-			_margin = isNaN(__margin) ? 320 : __margin;
+			_margin = isNaN(__margin) ? 20 : __margin;
+			_cornerRadius = isNaN(_cornerRadius) ? 15 : _cornerRadius;
 			_width = isNaN(__width) ? 320 : __width;
 			title = __title;
 			subtitle = __subtitle;
@@ -290,7 +291,7 @@ package net.rezmason.wireworld.views {
 			
 			backing.graphics.clear();
 			backing.graphics.beginFill(WWGUIPalette.DIALOG_BACK);
-			backing.graphics.drawRoundRect(bounds.x, bounds.y, bounds.width, bounds.height, _margin * 2, _margin * 2);
+			backing.graphics.drawRoundRect(bounds.x, bounds.y, bounds.width, bounds.height, _cornerRadius * 2, _cornerRadius * 2);
 			backing.graphics.endFill();
 		}
 		
