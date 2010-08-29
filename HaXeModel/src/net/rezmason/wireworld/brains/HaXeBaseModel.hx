@@ -124,6 +124,7 @@ class HaXeBaseModel extends flash.events.EventDispatcher, implements net.rezmaso
 	public function init(txt:String, isMCell:Bool):Void { importer.parse(txt, isMCell); }
 	
 	public function refresh(flags:Int):Void {
+		if (_headData == null) return;
 		if (flags & WWRefreshFlag.HEAT != 0) {
 			refreshHeat((flags & WWRefreshFlag.FULL));
 		} else {
