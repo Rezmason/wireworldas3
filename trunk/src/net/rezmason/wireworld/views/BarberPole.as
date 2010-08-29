@@ -72,7 +72,7 @@ package net.rezmason.wireworld.views {
 		}
 		
 		private function update(event:Event = null):void {
-			if (event) mat.tx += 5;
+			if (event) mat.tx += 15;
 			
 			graphics.clear();
 			graphics.beginBitmapFill(stripe, mat, true);
