@@ -40,5 +40,9 @@ package net.rezmason.wireworld.views {
 		internal static const DIALOG_BACK_CT:ColorTransform = new ColorTransform(0, 0, 0, 1, 0xFF, 0xFF, 0xFF);
 		
 		internal static const HINT_BACK:int = 0xFFFFAA;
+		
+		internal static const GRID_LIGHT:uint = 0xFF555555;
+		internal static const GRID_DARK:uint = 0xFF333333;
+		
 	}
 }

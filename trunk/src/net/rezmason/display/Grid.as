@@ -30,13 +30,13 @@ package net.rezmason.display {
 		
 		// Draws a grid of a certain square size. For now its colors are hard coded in.
 		
-		public function Grid(squareSize:int, __width:Number, __height:Number):void {
+		public function Grid(squareSize:int, __width:Number = 0, __height:Number = 0, color1:uint = 0xFFFFFFFF, color2:uint = 0xFF000000):void {
 			
-			gridData = new BitmapData(squareSize, squareSize, true, 0xFF555555);
+			gridData = new BitmapData(squareSize, squareSize, true, color1);
 			smallRect = new Rectangle(0, 0, gridData.width / 2, gridData.height / 2);
-			gridData.fillRect(smallRect, 0xFF333333);
+			gridData.fillRect(smallRect, color2);
 			smallRect.x = smallRect.y = smallRect.width;
-			gridData.fillRect(smallRect, 0xFF333333);
+			gridData.fillRect(smallRect, color2);
 			
 			width = __width;
 			height = __height;
