@@ -1,11 +1,18 @@
+Test AIR app thoroughly
+	Mac and Windows
+
+Slow drag bug
+	After zoom-scrolling in, dragging the paper around can be a real chore
+	Zooming back out, then zooming in again can fix the problem
+
 TDSI bytecode
 
 Improve build somehow
 	fcshctl?
 
-Test AIR app on Windows
 Put AIR app online; make it available for download
-	Might Adobe be willing to pay for the cert?
+	Publish on Adobe Marketplace
+		http://www.adobe.com/products/air/assets/popup/thawte_popup.html
 
 Mobile (Android) targets
 	Figure out two-finger "scrolling" and positioning
@@ -39,32 +46,27 @@ Wireworld Builder
 	Infinite canvas
 	Open, save, new
 	Select all, undo, redo
-	Wipe
-	Tools
-		(Tools only work in selected region, if it exists)
+	Tools (* == limited to selected region, if it exists)
 		Hand
-		Electron Eraser
-		Wire Eraser
-		Wire Line
-		Dotted Wire Line
+		Electron Eraser*
+		Eraser*
+		Wire Line*
+		Electron Line*
 			Electrons are drawn from start to end
 			Specify micron
-		Marquees
+		Marquee tool
 			Shift and alt put marquee in add/subtract mode
-		Flip and rotate
-		Run tool
-		Wipe electrons tool
-		Wipe tool
-		Pencil tool
-		Tube tool
-			Drags out a rectangle tube
+		Flip and rotate*
+		Step*
+		Wipe electrons*
+		Wipe*
+		Pencil*
+		Fuse*
+			Drags out a rectangle fuse
 			Spews length out in numbox
-		Move selection tool
-		Library
-			Sits on right side
-			Stores "snippets"
-			Drag them out to create an instance
-			Manipulate and apply 
-	
-	Accessibility in AIR
-		Research this topic
+		Move*
+	Library
+		Sits on right side
+		Stores "snippets"
+		Drag them out to create an instance
+		Manipulate and apply 

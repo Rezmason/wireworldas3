@@ -415,7 +415,7 @@ class MemoryHaXeModel extends HaXeBaseModel {
 		while (iNode < totalBytes) {
 			x_ = Memory.getUI16(iNode + X__);
 			y_ = Memory.getUI16(iNode + Y__);
-			allow = fully > 0 || (x_ >= leftBound && x_ <= rightBound && y_ >= topBound && y_ <= bottomBound);
+			allow = fully > 0 || (x_ >= leftBound && x_ < rightBound && y_ >= topBound && y_ < bottomBound);
 			if (allow) { 
 				x_ -= rectLeft;
 				y_ -= rectTop;
@@ -460,7 +460,7 @@ class MemoryHaXeModel extends HaXeBaseModel {
 			while (iNode != NULL) {
 				x_ = Memory.getUI16(iNode + X__);
 				y_ = Memory.getUI16(iNode + Y__);
-				allow = (fully > 0) || (x_ >= leftBound && x_ <= rightBound && y_ >= topBound && y_ <= bottomBound);
+				allow = (fully > 0) || (x_ >= leftBound && x_ < rightBound && y_ >= topBound && y_ < bottomBound);
 				if (allow) { 
 					x_ -= rectLeft;
 					y_ -= rectTop;
@@ -491,7 +491,7 @@ class MemoryHaXeModel extends HaXeBaseModel {
 		while (iNode != NULL) {
 			x_ = Memory.getUI16(iNode + X__);
 			y_ = Memory.getUI16(iNode + Y__);
-			allow = (fully > 0) || (x_ >= leftBound && x_ <= rightBound && y_ >= topBound && y_ <= bottomBound);
+			allow = (fully > 0) || (x_ >= leftBound && x_ < rightBound && y_ >= topBound && y_ < bottomBound);
 			if (allow) { 
 				x_ -= rectLeft;
 				y_ -= rectTop;

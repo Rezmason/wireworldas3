@@ -81,7 +81,6 @@ function wwBuild {
 #wwBuild HAXE DESKTOP wwdebug true false false
 #wwBuild TREE DESKTOP wwdebug false false true
 
-wwBuild HAXE DESKTOP wwdebug true
-
+wwBuild STANDARD DESKTOP wwdebug true
 
 popd

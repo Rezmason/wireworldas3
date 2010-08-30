@@ -351,8 +351,8 @@ package net.rezmason.wireworld.brains {
 				}
 				bytes.length = IntMath.max(NODE_SIZE * importer.totalNodes, MIN_BYTEARRAY_SIZE);
 				trace("Byte array size :", bytes.length);
-				trace("Buffer size :", INT_SIZE * _width * _height);
-				bytes.length += INT_SIZE * _width * _height;
+				trace("Buffer size :", INT_SIZE * (_width + 1) * (_height + 1));
+				bytes.length += INT_SIZE * (_width + 1) * (_height + 1);
 				Memory.select(bytes);
 				totalNodes = 0;
 				totalBytes = 0;
@@ -584,7 +584,7 @@ package net.rezmason.wireworld.brains {
 				while (iNode != NULL) {
 					x_ = Memory.readUnsignedShort(iNode + X__);
 					y_ = Memory.readUnsignedShort(iNode + Y__);
-					allow = fully || (x_ >= leftBound && x_ <= rightBound && y_ >= topBound && y_ <= bottomBound);
+					allow = fully || (x_ >= leftBound && x_ < rightBound && y_ >= topBound && y_ < bottomBound);
 					if (allow) { 
 						x_ -= rectLeft;
 						y_ -= rectTop;
@@ -615,7 +615,7 @@ package net.rezmason.wireworld.brains {
 			while (iNode != NULL) {
 				x_ = Memory.readUnsignedShort(iNode + X__);
 				y_ = Memory.readUnsignedShort(iNode + Y__);
-				allow = fully || (x_ >= leftBound && x_ <= rightBound && y_ >= topBound && y_ <= bottomBound);
+				allow = fully || (x_ >= leftBound && x_ < rightBound && y_ >= topBound && y_ < bottomBound);
 				if (allow) { 
 					x_ -= rectLeft;
 					y_ -= rectTop;

@@ -81,8 +81,16 @@ package net.rezmason.wireworld.brains {
 				mclHeight = 0;
 				char = "";
 				
-				// grabs the credit from the MCL file
+				// grabs the credit and board dimensions from the MCL file
 				var neck:int = txtFile.indexOf("#L");
+				var boardStrings:Array = txtFile.substr(0, neck).match(/#BOARD [^\n\r]+/g);
+				if (boardStrings.length) {
+					var dimensions:Array = String(boardStrings[0]).substr("#BOARD ".length).split(/[xX]/g);
+					if (dimensions.length == 2) {
+						mclWidth = parseInt(dimensions[0]);
+						mclHeight = parseInt(dimensions[1]);
+					}
+				}
 				_credit = "\n" + txtFile.substring(txtFile.indexOf("#D"), neck);
 				_credit = _credit.replace(/[\n\r]#D [\n\r]#D /g,"!!").replace(/[\n\r]#D /g, "•");
 				_credit = _credit.replace(/!!/g, "\n\n").replace(/•/g, "").replace(/#D/g, "");
