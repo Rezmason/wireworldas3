@@ -4,6 +4,8 @@ Test AIR app thoroughly
 Slow drag bug
 	After zoom-scrolling in, dragging the paper around can be a real chore
 	Zooming back out, then zooming in again can fix the problem
+	Only seems to be a problem when the Paper bitmaps are onscreen
+	Could be a drawing issue, could be an event issue
 
 TDSI bytecode
 
