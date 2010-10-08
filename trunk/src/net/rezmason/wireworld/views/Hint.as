@@ -11,9 +11,6 @@ package net.rezmason.wireworld.views {
 	//---------------------------------------
 	// IMPORT STATEMENTS
 	//---------------------------------------
-	import com.greensock.TweenLite;
-	import com.greensock.easing.Quad;
-	
 	import flash.display.DisplayObject;
 	import flash.display.DisplayObjectContainer;
 	import flash.display.Sprite;
@@ -22,6 +19,10 @@ package net.rezmason.wireworld.views {
 	import flash.events.TimerEvent;
 	import flash.filters.DropShadowFilter;
 	import flash.utils.Timer;
+	
+	import net.kawa.tween.KTJob;
+	import net.kawa.tween.KTween;
+	import net.kawa.tween.easing.Quad;
 	
 	// Every self-respecting piece of software has
 	// a contextual annotation system, like hint boxes,
@@ -36,7 +37,8 @@ package net.rezmason.wireworld.views {
 		private var hideTimer:Timer = new Timer(5000, 1);
 		private var field:Sprite;
 		private var target:DisplayObject;
-		private var alphaTween:Object = {alpha:0, ease:Quad.easeOut, visible:false};
+		private var alphaTween:Object = {alpha:0, visible:false};
+		private var alphaJob:KTJob;
 		
 		//---------------------------------------
 		// CONSTRUCTOR
@@ -86,7 +88,7 @@ package net.rezmason.wireworld.views {
 			if (field) removeChild(field);
 			field = TextFactory.generateInBox(target["label"], "_typewriter", 12, true, 3, -1, WWGUIPalette.HINT_BACK, 0.8);
 			addChild(field);
-			TweenLite.killTweensOf(this, true);
+			if (alphaJob) alphaJob.complete();
 			alpha = 1;
 			visible = true;
 			
@@ -112,8 +114,8 @@ package net.rezmason.wireworld.views {
 		internal function hide(event:Event = null):void {
 			showTimer.stop();
 			hideTimer.stop();
-			TweenLite.killTweensOf(this, true);
-			TweenLite.to(this, 0.25, alphaTween);
+			if (alphaJob) alphaJob.complete();
+			alphaJob = KTween.to(this, 0.25, alphaTween, Quad.easeOut);
 			if (target) {
 				target.removeEventListener(MouseEvent.ROLL_OUT, hide);
 				target = null;
