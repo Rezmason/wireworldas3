@@ -13,33 +13,40 @@
 			the application. Optional.
 -->
 
-	<!-- The application identifier string, unique to this application. Required. -->
-	<id>WireworldAndroid</id>
+	<!-- A universally unique application identifier. Must be unique across all AIR applications.
+	Using a reverse DNS-style name as the id is recommended. (Eg. com.example.ExampleApplication.) Required. -->
+	<id>WireworldPlaybook</id>
 
 	<!-- Used as the filename for the application. Required. -->
-	<filename>Wireworld</filename>
+	<filename>WireworldPlaybook</filename>
 
 	<!-- The name that is displayed in the AIR application installer. 
-	     May have multiple values for each language. See samples or xsd schema file. Optional. -->
-	<name>Wireworld</name>
+	May have multiple values for each language. See samples or xsd schema file. Optional. -->
+	<name>WireworldPlaybook</name>
 	
 	<!-- A string value of the format <0-999>.<0-999>.<0-999> that represents application version which can be used to check for application upgrade. 
 	Values can also be 1-part or 2-part. It is not necessary to have a 3-part value.
 	An updated version of application must have a versionNumber value higher than the previous version. Required for namespace >= 2.5 . -->
 	<versionNumber>1.0.0</versionNumber>
-	
+		         
+	<!-- A string value (such as "v1", "2.5", or "Alpha 1") that represents the version of the application, as it should be shown to users. Optional. -->
+	<!-- <versionLabel></versionLabel> -->
+
 	<!-- Description, displayed in the AIR application installer.
-	     May have multiple values for each language. See samples or xsd schema file. Optional. -->
+	May have multiple values for each language. See samples or xsd schema file. Optional. -->
 	<!-- <description></description> -->
 
 	<!-- Copyright information. Optional -->
 	<!-- <copyright></copyright> -->
 
+	<!-- Publisher ID. Used if you're updating an application created prior to 1.5.3 -->
+	<!-- <publisherID></publisherID> -->
+
 	<!-- Settings for the application's initial window. Required. -->
 	<initialWindow>
 		<!-- The main SWF or HTML file of the application. Required. -->
 		<!-- Note: In Flash Builder, the SWF reference is set automatically. -->
-		<content>WireworldAIR.swf</content>
+		<content>[This value will be overwritten by Flash Builder in the output app.xml]</content>
 		
 		<!-- The title of the main window. Optional. -->
 		<!-- <title></title> -->
@@ -51,35 +58,42 @@
 		<!-- <transparent></transparent> -->
 
 		<!-- Whether the window is initially visible. Optional. Default false. -->
-		<visible>false</visible>
+		<!-- <visible></visible> -->
 
 		<!-- Whether the user can minimize the window. Optional. Default true. -->
-		<minimizable>true</minimizable>
+		<!-- <minimizable></minimizable> -->
 
 		<!-- Whether the user can maximize the window. Optional. Default true. -->
-		<maximizable>true</maximizable>
+		<!-- <maximizable></maximizable> -->
 
 		<!-- Whether the user can resize the window. Optional. Default true. -->
-		<resizable>true</resizable>
+		<!-- <resizable></resizable> -->
 
-		<!-- The window's initial width. Optional. -->
-		<width>800</width>
+		<!-- The window's initial width in pixels. Optional. -->
+		<!-- <width></width> -->
 
-		<!-- The window's initial height. Optional. -->
-		<height>648</height>
+		<!-- The window's initial height in pixels. Optional. -->
+		<!-- <height></height> -->
 
 		<!-- The window's initial x position. Optional. -->
-		<x>100</x>
+		<!-- <x></x> -->
 
 		<!-- The window's initial y position. Optional. -->
-		<y>100</y>
+		<!-- <y></y> -->
 
-		<!-- The window's minimum size, specified as a width/height pair, such as "400 200". Optional. -->
-		<minSize>320 240</minSize>
+		<!-- The window's minimum size, specified as a width/height pair in pixels, such as "400 200". Optional. -->
+		<!-- <minSize></minSize> -->
 
-		<!-- The window's initial maximum size, specified as a width/height pair, such as "1600 1200". Optional. -->
+		<!-- The window's initial maximum size, specified as a width/height pair in pixels, such as "1600 1200". Optional. -->
 		<!-- <maxSize></maxSize> -->
 	</initialWindow>
+
+	<!-- We recommend omitting the supportedProfiles element, -->
+	<!-- which in turn permits your application to be deployed to all -->
+	<!-- devices supported by AIR. If you wish to restrict deployment -->
+	<!-- (i.e., to only mobile devices) then add this element and list -->
+	<!-- only the profiles which your application does support. -->
+	<!-- <supportedProfiles>desktop extendedDesktop mobileDevice extendedMobileDevice</supportedProfiles> -->
 
 	<!-- The subpath of the standard default installation location to use. Optional. -->
 	<!-- <installFolder></installFolder> -->
@@ -88,11 +102,13 @@
 	<!-- <programMenuFolder></programMenuFolder> -->
 
 	<!-- The icon the system uses for the application. For at least one resolution,
-		 specify the path to a PNG file included in the AIR package. Optional. -->
+	specify the path to a PNG file included in the AIR package. Optional. -->
 	<!-- <icon>
 		<image16x16></image16x16>
 		<image32x32></image32x32>
+		<image36x36></image36x36>
 		<image48x48></image48x48>
+		<image72x72></image72x72>
 		<image128x128></image128x128>
 	</icon> -->
 
@@ -133,4 +149,30 @@
 			
 		<!-- </fileType> -->
 	<!-- </fileTypes> -->
+
+	<!-- Specify Android specific tags that get passed to AndroidManifest.xml file. -->
+	<!--<android> 
+		<manifestAdditions>
+		<![CDATA[
+			<manifest android:installLocation="auto">
+				<uses-permission android:name="android.permission.INTERNET"/>
+				<uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
+				<uses-permission android:name="android.permission.ACCESS_FINE_LOCATION"/>
+				<uses-configuration android:reqFiveWayNav="true"/>
+				<supports-screens android:normalScreens="true"/>
+				<uses-feature android:required="true" android:name="android.hardware.touchscreen.multitouch"/>
+				<application android:enabled="true">
+					<activity android:excludeFromRecents="false">
+						<intent-filter>
+							<action android:name="android.intent.action.MAIN"/>
+							<category android:name="android.intent.category.LAUNCHER"/>
+						</intent-filter>
+					</activity>
+				</application>
+			</manifest>
+		]]>
+		</manifestAdditions> 
+	</android> -->
+	<!-- End of the schema for adding the android specific tags in AndroidManifest.xml file -->
+
 </application>

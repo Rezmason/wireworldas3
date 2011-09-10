@@ -3,7 +3,7 @@
 #Here's the address to mxmlc. Modify it if yours isn't here.
 mxmlc="/SDKs/flex/flex_sdk_4.1.0.16248/bin/mxmlc"
 
-#find the folder "wireworld" in this executable's parent directory
+#find grab the parent directory
 abspath="$(cd "${0%/*}" 2>/dev/null; echo "$PWD"/"${0##*/}")"
 mydir=`dirname "$abspath"`
 
@@ -77,10 +77,6 @@ function wwBuild {
 	echo
 }
 
-wwBuild STANDARD DESKTOP wwdebug false false true
-#wwBuild HAXE DESKTOP wwdebug true false false
-#wwBuild TREE DESKTOP wwdebug false false true
-
-#wwBuild STANDARD DESKTOP wwdebug true
+wwBuild STANDARD DESKTOP wireworld true
 
 popd

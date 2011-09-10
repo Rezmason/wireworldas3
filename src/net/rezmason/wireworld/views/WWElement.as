@@ -19,6 +19,7 @@ package net.rezmason.wireworld.views {
 	import flash.display.Sprite;
 	import flash.events.Event;
 	import flash.events.MouseEvent;
+	import flash.events.TouchEvent;
 	import flash.geom.ColorTransform;
 	import flash.geom.Matrix;
 	import flash.geom.Rectangle;
@@ -54,6 +55,10 @@ package net.rezmason.wireworld.views {
 		
 		protected var startX:Number, endX:Number;
 		
+		public static var multitouch:Boolean = false;
+		public static var keyboardPrompt:Function;
+		private var touchIndex:int = -1;
+		
 		//---------------------------------------
 		// CONSTRUCTOR
 		//---------------------------------------
@@ -72,8 +77,13 @@ package net.rezmason.wireworld.views {
 			if (__capStyle.indexOf("-") != -1) backing.visible = false;
 			redraw();
 			
-			addEventListener(MouseEvent.MOUSE_DOWN, subscribe);
-			addEventListener(MouseEvent.MOUSE_UP, unsubscribe);
+			if (multitouch) {
+				addEventListener(TouchEvent.TOUCH_BEGIN, evaluateTouch);
+				addEventListener(TouchEvent.TOUCH_END, evaluateTouch);
+			} else {
+				addEventListener(MouseEvent.MOUSE_DOWN, subscribe);
+				addEventListener(MouseEvent.MOUSE_UP, unsubscribe);
+			}
 			addEventListener(Event.REMOVED, unsubscribe);
 		}
 		
@@ -109,7 +119,16 @@ package net.rezmason.wireworld.views {
 		// that the user has released the mouse, someplace else, typically nullifying
 		// whatever change in state would have occurred.
 		public static function releaseInstances(event:Event = null):void {
-			while (INSTANCES.length) INSTANCES.pop().release();
+			var index:int = -1;
+			if (event is TouchEvent) index = (event as TouchEvent).touchPointID;
+			for (var i:int = 0; i < INSTANCES.length; i++) {
+				var element:WWElement = INSTANCES[i];
+				if (element.touchIndex == index) {
+					INSTANCES.splice(i, 1);
+					i--;
+					element.release();
+				}
+			}
 		}
 		
 		//---------------------------------------
@@ -187,6 +206,20 @@ package net.rezmason.wireworld.views {
 		private function release():void {
 			subscribed = false;
 			dispatchEvent(RELEASE_EVENT);
+		}
+		
+		private function evaluateTouch(event:TouchEvent):void {
+			if (event.type == TouchEvent.TOUCH_BEGIN) {
+				if (touchIndex == -1) {
+					touchIndex = event.touchPointID;
+					subscribe(event);
+				}
+			} else {
+				if (touchIndex == event.touchPointID) {
+					touchIndex = -1;
+					unsubscribe(event);
+				}
+			}
 		}
 	}
 }

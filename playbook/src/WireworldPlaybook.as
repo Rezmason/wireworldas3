@@ -16,13 +16,10 @@ package {
 	import flash.desktop.NativeDragManager;
 	import flash.display.InteractiveObject;
 	import flash.display.Loader;
-	import flash.display.NativeMenu;
-	import flash.display.NativeMenuItem;
 	import flash.display.NativeWindow;
 	import flash.display.Sprite;
 	import flash.events.Event;
 	import flash.events.FocusEvent;
-	import flash.events.NativeDragEvent;
 	import flash.filesystem.File;
 	import flash.net.SharedObject;
 	import flash.net.URLRequest;
@@ -30,13 +27,21 @@ package {
 	import flash.system.System;
 	import flash.utils.setTimeout;
 	
-	// This class is an AIR wrapper. It's designed to load multiple wireworld SWFs 
+	import net.rim.blackberry.events.BBIDEvent;
+	
+	import qnx.dialog.PromptDialog;
+	import qnx.display.DisplayMode;
+	import qnx.events.OpenWindowEvent;
+	import qnx.events.QNXApplicationEvent;
+	import qnx.media.QNXStageWebView;
+	import qnx.system.Device;
+	import qnx.system.QNXApplication;
+	
+	// This class is an AIR wrapper for the Blackberry Playbook. It's designed to load one SWF 
 	// and the assets SWF into the same application domain, which is very efficient.
-	// Moreover, it keeps track of the application's state, so that it is preserved 
-	// when switching from one brain to another.
 	
 	[SWF(width='800', height='648', backgroundColor='#000000', frameRate='30')]
-	public final class WireworldAIR extends Sprite {
+	public final class WireworldPlaybook extends Sprite {
 		
 		//---------------------------------------
 		// CLASS CONSTANTS
@@ -48,7 +53,9 @@ package {
 		private static const DEFAULT_FILE_URL:String = File.applicationDirectory.resolvePath(DEFAULT_FILE_REL_PATH).url;
 		private static const BRAIN_PATH:String = "./bin/";
 		private static const ASSETS_PATH:String = "./lib/assets.swf";
-		private static const FOLLOW_MAC_CONVENTIONS:Boolean = Capabilities.os.toLowerCase().indexOf("mac") != -1;
+		//private static const FOLLOW_MAC_CONVENTIONS:Boolean = Capabilities.os.toLowerCase().indexOf("mac") != -1;
+		
+		private static const UI_SCALE_MAG:Number = 1.5;
 		
 		//---------------------------------------
 		// PRIVATE VARIABLES
@@ -60,22 +67,22 @@ package {
 		private var assetLoader:Loader;
 		private var scene:Sprite;
 		private var request:URLRequest;
-		private var menu:NativeMenu, mainMIs:Object, aboutMI:NativeMenuItem, quitMI:NativeMenuItem;
+		//private var menu:NativeMenu, mainMIs:Object, aboutMI:NativeMenuItem, quitMI:NativeMenuItem;
 		private var window:NativeWindow;
 		private var brainFilename:String;
 		private var lastURL:String, recentURLs:Array = [];
-		private var recentMenu:NativeMenu, clearRecentMI:NativeMenuItem, recentSep:NativeMenuItem;
-		private var increaseSpeedMI:NativeMenuItem, decreaseSpeedMI:NativeMenuItem, lastBrainMI:NativeMenuItem;
-		private var increaseZoomMI:NativeMenuItem, decreaseZoomMI:NativeMenuItem;
-		private var overdriveMI:NativeMenuItem, heatMI:NativeMenuItem, toolMI:NativeMenuItem;
-		private var togglePlayPauseMI:NativeMenuItem;
-		private var validFileExtensions:String;
+		//private var recentMenu:NativeMenu, clearRecentMI:NativeMenuItem, recentSep:NativeMenuItem;
+		//private var increaseSpeedMI:NativeMenuItem, decreaseSpeedMI:NativeMenuItem, lastBrainMI:NativeMenuItem;
+		//private var increaseZoomMI:NativeMenuItem, decreaseZoomMI:NativeMenuItem;
+		//private var overdriveMI:NativeMenuItem, heatMI:NativeMenuItem, toolMI:NativeMenuItem;
+		//private var togglePlayPauseMI:NativeMenuItem;
+		//private var validFileExtensions:String;
 		private var prefs:SharedObject;
 		
 		//---------------------------------------
 		// CONSTRUCTOR
 		//---------------------------------------
-		public function WireworldAIR():void {
+		public function WireworldPlaybook():void {
 			// I'm not sure why, but this short delay 
 			// is necessary to prevent ADL from freezing.
 			// I've ruled out the usual suspects.
@@ -83,7 +90,7 @@ package {
 		}
 		
 		private function begin():void {
-			prefs = SharedObject.getLocal("wireworldAIR");
+			prefs = SharedObject.getLocal("wireworldPlaybook");
 			if (prefs.data.recentURLs) recentURLs = prefs.data.recentURLs;
 			if (prefs.data.state) state = prefs.data.state;
 			
@@ -105,17 +112,17 @@ package {
 			window = stage.nativeWindow;
 			NativeApplication.nativeApplication.addEventListener(Event.EXITING, saveState);
 			
-			buildMenu();
-			updateGUI();
+			//buildMenu();
+			//updateGUI();
 			
 			// The loader is responsible for loading and unloading the wireworld SWFs.
 			loader = new Loader();
 			loader.contentLoaderInfo.addEventListener(Event.INIT, initBrain);
 			request = new URLRequest();
 			
-			stage.addEventListener(NativeDragEvent.NATIVE_DRAG_ENTER, validateDrag);
-			stage.addEventListener(NativeDragEvent.NATIVE_DRAG_DROP, loadDroppedFile);
-			stage.addEventListener(FocusEvent.FOCUS_IN, handleFocusChange);
+			//stage.addEventListener(NativeDragEvent.NATIVE_DRAG_ENTER, validateDrag);
+			//stage.addEventListener(NativeDragEvent.NATIVE_DRAG_DROP, loadDroppedFile);
+			//stage.addEventListener(FocusEvent.FOCUS_IN, handleFocusChange);
 			
 			// The assetLoader only loads the assets SWF, and only does it once.
 			assetLoader = new Loader();
@@ -173,17 +180,20 @@ package {
 			currentBrain = loader.content;
 			bridge = currentBrain.bridge;
 			bridge.state = state;
+			bridge.keyboardPrompt = keyboardPrompt;
+			bridge.uiScaleMag = UI_SCALE_MAG;
 			bridge.assets = assets;
 			currentBrain.init(scene);
 			for (var prop:String in bridge.eventTypes) {
 				bridge.addEventListener(bridge.eventTypes[prop], bridgeEventResponder, false, 0, true);
 			}
-			addRecentURL(bridge.file || "");
-			updateGUI();
+			//addRecentURL(bridge.file || "");
+			//updateGUI();
 			
 			if (!window.visible) window.activate();
 		}
 		
+		/*
 		// If a file is dragged onto the app window, this function decides whether to accept it 
 		private function validateDrag(event:NativeDragEvent):void {
 			var draggedFile:File = event.clipboard.getData(ClipboardFormats.FILE_LIST_FORMAT)[0];
@@ -302,7 +312,7 @@ package {
 		}
 		
 		private function setupMI(targetMenu:NativeMenu, label:String = "", keyEq:String = "", 
-				data:Object = null, addSepFirst:Boolean = false, modifiers:Array = null, addedModifiers:Array = null):NativeMenuItem {
+								 data:Object = null, addSepFirst:Boolean = false, modifiers:Array = null, addedModifiers:Array = null):NativeMenuItem {
 			var item:NativeMenuItem = new NativeMenuItem();
 			item.name = item.label = label;
 			item.data = data;
@@ -313,6 +323,7 @@ package {
 			if (addedModifiers) item.keyEquivalentModifiers = item.keyEquivalentModifiers.concat(addedModifiers); // WRONG ORDER
 			return item;
 		}
+		*/
 		
 		// All calls made across the bridge should go through this validation function.
 		private function tryAPICall(functionName:String, params:Array = null):* {
@@ -327,7 +338,7 @@ package {
 		private function bridgeEventResponder(event:Event):void {
 			switch (event.type) {
 				case bridge.eventTypes.FILE_LOADED:
-					addRecentURL(bridge.file);
+					//addRecentURL(bridge.file);
 					if (state.revisit != true) {
 						state.revisit = true;
 						tryAPICall("showHelp");	
@@ -335,7 +346,7 @@ package {
 					System.gc(); // Why not.
 					break;
 				case bridge.eventTypes.CHANGE_STATE:
-					updateGUI();
+					//updateGUI();
 					break;
 			}
 		}
@@ -351,6 +362,7 @@ package {
 				case "exit": 
 					NativeApplication.nativeApplication.exit(); 
 					break;
+				/*
 				case "showAbout":
 					event.preventDefault();
 					tryAPICall(targetData.command);
@@ -375,8 +387,9 @@ package {
 					} else {
 						tryAPICall("changeState", [targetData.key, targetData.value]);
 					}
-					updateGUI();
+					//updateGUI();
 					break;
+				*/
 				case "relayToFocus":
 					if (stage.focus) stage.focus.dispatchEvent(new Event(targetData.event));
 					break;
@@ -386,6 +399,7 @@ package {
 			if (noMatch && targetData.command) tryAPICall(targetData.command, targetData.params);
 		}
 		
+		/*
 		private function addRecentURL(url:String):void {
 			if (url.length && url != DEFAULT_FILE_URL) {
 				var index:int = recentURLs.indexOf(url);
@@ -476,9 +490,11 @@ package {
 				clearRecentMI.enabled = false;
 			}
 		}
-		
+		*/
 		// Synchronizes the menu states with the internal app states.
+		/*
 		private function updateGUI():void {
+			
 			brainFilename = state.brainFilename;
 			
 			var fileMenu:NativeMenu = mainMIs.file.submenu;
@@ -509,6 +525,7 @@ package {
 			}
 			togglePlayPauseMI.label = state.running ? "Pause" : "Play";
 		}
+		*/
 		
 		private function saveState(event:Event):void {
 			prefs.data.state = state;
@@ -516,9 +533,15 @@ package {
 			prefs.flush();
 		}
 		
+		/*
 		// The Edit menu is only used to edit text. I'm kind of fond of this method.
 		private function handleFocusChange(event:FocusEvent = null):void {
 			mainMIs.edit.enabled = (stage.focus && stage.focus.hasOwnProperty("text"));
+		}
+		*/
+		
+		private function keyboardPrompt():void {
+			
 		}
 	}
 }
