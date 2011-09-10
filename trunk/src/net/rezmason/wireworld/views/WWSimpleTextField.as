@@ -1,11 +1,11 @@
 /**
-* Wireworld Player by Jeremy Sachs. August 21, 2010
-*
-* Feel free to distribute the source, just try not to hand it off to some douchebag.
-* Keep this header here.
-*
-* Please contact jeremysachs@rezmason.net prior to distributing modified versions of this class.
-*/
+ * Wireworld Player by Jeremy Sachs. August 21, 2010
+ *
+ * Feel free to distribute the source, just try not to hand it off to some douchebag.
+ * Keep this header here.
+ *
+ * Please contact jeremysachs@rezmason.net prior to distributing modified versions of this class.
+ */
 package net.rezmason.wireworld.views {
 	
 	//---------------------------------------
@@ -15,68 +15,66 @@ package net.rezmason.wireworld.views {
 	import flash.display.Sprite;
 	import flash.events.Event;
 	import flash.events.MouseEvent;
+	import flash.geom.ColorTransform;
+	import flash.text.TextField;
+	import flash.text.TextFieldType;
+	import flash.text.TextFormat;
 	import flash.text.TextFormatAlign;
-	import flash.text.engine.ElementFormat;
-	import flash.text.engine.FontDescription;
-	import flash.text.engine.FontWeight;
-	
-	import net.rezmason.text.Tyro;
 	
 	// WWTextField is a WWElement that contains
-	// a dynamic text box, based on Tyro. Not to be
+	// a dynamic text box, based on TextField. Not to be
 	// confused with WWTextButton.
 	
-	internal final class WWTextField extends WWElement {
+	internal final class WWSimpleTextField extends WWElement {
 		
 		//---------------------------------------
 		// PRIVATE VARIABLES
 		//---------------------------------------
-		private static const FONT_DESCRIPTION:FontDescription = new FontDescription("_typewriter");
+		private static const FONT:String = "_typewriter";
 		
 		private var _text:String = "", _labelText:String;
-		private var field:Tyro, format:ElementFormat;
+		private var field:TextField, format:TextFormat;
 		private var editing:Boolean = false;
+		
+		public static var keyboardPrompt:Function;
 		
 		//---------------------------------------
 		// CONSTRUCTOR
 		//---------------------------------------
-		public function WWTextField(__label:String, __width:Number = 100, __height:Number = 10, __maxChars:int = -1, __capStyle:String = null, 
-				__acceptsInput:Boolean = false, __labelText:String = ""):void {
+		public function WWSimpleTextField(__label:String, __width:Number = 100, __height:Number = 10, __maxChars:int = -1, __capStyle:String = null, 
+									__acceptsInput:Boolean = false, __labelText:String = ""):void {
 			
-			var fontDesc:FontDescription = FONT_DESCRIPTION.clone();
-			field = new Tyro();
+			field = new TextField();
 			field.background = false;
-			field.border = NaN;
-			field.delayedRefresh = true;
-			format = new ElementFormat();
+			field.border = false;
+			format = field.defaultTextFormat;
+			format.font = FONT;
 			
 			super(__label, null, __width, __height, __capStyle);
 			
 			if (__maxChars != -1) field.maxChars = __maxChars;
 			_labelText = __labelText;
 			if (field.maxChars && _labelText.length > field.maxChars) _labelText = _labelText.substr(0, field.maxChars - 3) + "...";
-			field.defaultText = _labelText;
 			
 			// The WWElement leftCap and rightCap properties are used to determine text alignment
 			
 			if (leftCap) {
-				field.align = rightCap ? TextFormatAlign.CENTER : TextFormatAlign.RIGHT;
+				format.align = rightCap ? TextFormatAlign.CENTER : TextFormatAlign.RIGHT;
 			} else {
-				field.align = TextFormatAlign.LEFT;
+				format.align = TextFormatAlign.LEFT;
 			}
 			
 			// WWTextFields can be input text boxes, which look different from plain dynamic ones.
 			
 			if (__acceptsInput) {
 				backing.transform.colorTransform = WWGUIPalette.INPUT_TEXT_BACK_CT;
-				field.editable = true;
-				field.defaultColor = WWGUIPalette.DEFAULT_TEXT;
+				field.type = TextFieldType.INPUT;
 				field.addEventListener(Event.CHANGE, changeResponder);
 			} else {
 				backing.transform.colorTransform = WWGUIPalette.PLAIN_TEXT_BACK_CT;
 				field.selectable = false;
 				field.mouseEnabled = false;
-				fontDesc.fontWeight = FontWeight.BOLD;
+				format.bold = true;
 				if (backing.visible) {
 					format.color = WWGUIPalette.NAKED_TEXT;
 				} else {
@@ -85,13 +83,11 @@ package net.rezmason.wireworld.views {
 				
 			}
 			
-			format.fontDescription = fontDesc;
-			format.fontSize = _height * 0.65;
+			format.size = _height * 0.65;
 			
-			field.format = format;
-			field.verticalMargin = 0;
-			field.selectionColor = 0x0;
-			field.delayedRefresh = false;
+			field.defaultTextFormat = format;
+			
+			field.addEventListener(MouseEvent.CLICK, grabFocus);
 		}
 		
 		//---------------------------------------
@@ -109,7 +105,7 @@ package net.rezmason.wireworld.views {
 				field.text = _labelText;
 			}
 			
-			field.format = format;
+			field.defaultTextFormat = format;
 		}
 		
 		//---------------------------------------
@@ -117,9 +113,9 @@ package net.rezmason.wireworld.views {
 		//---------------------------------------
 		
 		// Dialogs that contain text boxes should give focus to the top textbox.
-		public function grabFocus():void {
+		public function grabFocus(event:Event = null):void {
 			if (stage) stage.focus = field;
-			if (WWElement.keyboardPrompt != null) WWElement.keyboardPrompt();
+			if (keyboardPrompt != null) keyboardPrompt();
 		}
 		
 		//---------------------------------------
@@ -133,6 +129,7 @@ package net.rezmason.wireworld.views {
 			field.y = -_height * 0.5;
 			field.x = startX + MARGIN;
 			field.width = endX - startX - MARGIN;
+			field.height = _height;
 		}
 		
 		private function changeResponder(event:Event):void {

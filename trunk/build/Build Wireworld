@@ -63,7 +63,7 @@ function wwBuild {
 	
 	viewDefs="$viewDefs ${viewDef}VIEW_TYPE,\"$2\""
 	
-	"$mxmlc" src/Wireworld.as $brainDefs $viewDefs -sp src -o deploy/bin/$3.swf -l $apparatSWC $haxemodelSWC $flexSWC $ktweenSWC -static-link-runtime-shared-libraries=true -optimize=$optimize -debug=$debug && 
+	"$mxmlc" src/Wireworld.as $brainDefs $viewDefs -sp src -o deploy/bin/$3.swf -l $apparatSWC $haxemodelSWC $flexSWC $ktweenSWC -static-link-runtime-shared-libraries=true -optimize=$optimize -debug=$debug -target-player=10.1 && 
 	
 	if [ $# -ge 4 ] && $4; then
 		"$scala" -cp $apparatDir/\* apparat.tools.tdsi.TurboDieselSportInjection -i deploy/bin/$3.swf
