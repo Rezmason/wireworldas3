@@ -1,7 +1,7 @@
 #!/bin/bash
 
 #Here's the address to mxmlc. Modify it if yours isn't here.
-mxmlc="/SDKs/flex/flex_sdk_4.1.0.16248/bin/mxmlc"
+mxmlc=~/bin/flex/bin/mxmlc
 
 #find the folder "wireworld" in this executable's parent directory
 abspath="$(cd "${0%/*}" 2>/dev/null; echo "$PWD"/"${0##*/}")"
@@ -9,21 +9,17 @@ mydir=`dirname "$abspath"`
 
 pushd $mydir/../
 
-apparatDir="../../../apparat-1.0.RC7"
-scala="/SDKs/scala-2.8.0.final/bin/scala"
-apparatSWC="../../../apparat-1.0.RC7/apparat-ersatz-1.0.RC7.swc"
-flexSWC="/SDKs/flex/flex_sdk_4.1.0.16248/frameworks/libs"
-haxemodelSWC="HaXeModel/deploy/haxemodel.swc"
+flexSWC=~/bin/flex/frameworks/libs
 ktweenSWC="./lib/ktween.swc"
 
 function wwBuild {
-	
+
 	if [ $# -lt 3 ]
 	then
 	  echo "Too few arguments."
 	  exit 1
 	fi
-	
+
 	debug=false
 	optimize=false
 	if [ $# -ge 6 ] && $6; then
@@ -32,48 +28,11 @@ function wwBuild {
 		debug=false
 		optimize=true
 	fi
-	
+
 	echo "$1 $2, $3, debug = $debug"
-	
-	brainDef="-define+=BRAIN::"
-	brainDefs=""
-	for word in CONVOLUTION_FILTER LINKED_LIST PIXEL_BENDER STANDARD TREE TREE_TDSI TDSI VECTOR HAXE STUPID BYTES ALL
-	do
-		if test $word == $1; then
-			value=true
-		else
-			value=false
-		fi
-		brainDefs="$brainDefs ${brainDef}${word},${value}"
-	done
-	
-	brainDefs="$brainDefs ${brainDef}MODEL_TYPE,\"$1\""
-	
-	viewDef="-define+=VIEW::"
-	viewDefs=""
-	for word in DESKTOP MOBILE
-	do
-		if test $word == $2; then
-			value=true
-		else
-			value=false
-		fi
-		viewDefs="$viewDefs ${viewDef}${word},${value}"
-	done
-	
-	viewDefs="$viewDefs ${viewDef}VIEW_TYPE,\"$2\""
-	
-	"$mxmlc" src/Wireworld.as $brainDefs $viewDefs -sp src -o deploy/bin/$3.swf -l $apparatSWC $haxemodelSWC $flexSWC $ktweenSWC -static-link-runtime-shared-libraries=true -optimize=$optimize -debug=$debug -target-player=10.1 && 
-	
-	if [ $# -ge 4 ] && $4; then
-		"$scala" -cp $apparatDir/\* apparat.tools.tdsi.TurboDieselSportInjection -i deploy/bin/$3.swf
-		#"$scala" -cp $apparatDir/\* apparat.tools.reducer.Reducer -i deploy/bin/$3.swf -l true
-	fi
-	
-	if [ $# -ge 5 ] && $5; then
-		open deploy/bin/$3.swf -a Flash\ Player.app
-	fi
-	
+
+	"$mxmlc" src/Wireworld.as -sp src -o deploy/bin/$3.swf -l $flexSWC $ktweenSWC -static-link-runtime-shared-libraries=true -optimize=$optimize -debug=$debug -target-player=10.1 &&
+
 	echo
 }
 

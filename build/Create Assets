@@ -1,7 +1,7 @@
 #!/bin/bash
 
 #Here's the address to mxmlc. Modify it if yours isn't here.
-mxmlc="/SDKs/flex/flex_sdk_4.0.0.14159/bin/mxmlc"
+mxmlc=~/bin/flex/bin/mxmlc
 
 #find the folder "wireworld" in this executable's parent directory
 abspath="$(cd "${0%/*}" 2>/dev/null; echo "$PWD"/"${0##*/}")"
@@ -9,8 +9,8 @@ mydir=`dirname "$abspath"`
 
 pushd $mydir/../
 
-flexSWC="/SDKs/flex/4.0.0.4904/frameworks/libs"
+flexSWC=~/bin/flex/frameworks/libs
 
-"$mxmlc" src/net/rezmason/wireworld/Assets.as -sp src -o lib/assets.swf -l $flexSWC -static-link-runtime-shared-libraries=true -optimize=true
+"$mxmlc" src/net/rezmason/wireworld/Assets.as -sp src -o lib/assets.swf -l $flexSWC -static-link-runtime-shared-libraries=true
 
 popd

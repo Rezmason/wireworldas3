@@ -11,9 +11,9 @@ package net.rezmason.wireworld.brains {
 	//---------------------------------------
 	// IMPORT STATEMENTS
 	//---------------------------------------
-	
-	import apparat.math.IntMath;
-	
+
+	//import apparat.math.IntMath;
+
 	import flash.display.BitmapData;
 	import flash.display.Graphics;
 	import flash.events.ErrorEvent;
@@ -22,33 +22,33 @@ package net.rezmason.wireworld.brains {
 	import flash.geom.Matrix;
 	import flash.geom.Point;
 	import flash.geom.Rectangle;
-	
+
 	import net.rezmason.utils.GraphicsUtils;
-	
+
 	import net.rezmason.wireworld.IModel;
 	import net.rezmason.wireworld.WWEvent;
 	import net.rezmason.wireworld.WWRefreshFlag;
-	
-	// While models don't necessarily have to 
+
+	// While models don't necessarily have to
 	// subclass BaseModel, it's a good starting point.
-	
+
 	public class BaseModel extends EventDispatcher implements IModel {
-		
+
 		//---------------------------------------
 		// CLASS CONSTANTS
 		//---------------------------------------
-		
+
 		protected static const ORIGIN:Point = new Point();
-		
+
 		protected static const BUSY_EVENT:WWEvent = new WWEvent(WWEvent.MODEL_BUSY);
 		protected static const IDLE_EVENT:WWEvent = new WWEvent(WWEvent.MODEL_IDLE);
-		
+
 		protected static const STEP:int = 6000;
 		protected static const CLEAR:uint = 0x00000000, BLACK:uint = 0xFF000000, WHITE:uint = 0xFFFFFFFF;
 		protected static const COMPLETE_EVENT:Event = new Event(Event.COMPLETE);
 		protected static const INVALID_SIZE_ERROR:String = "Invalid dimensions.";
 		protected static const INVALID_SIZE_ERROR_EVENT:ErrorEvent = new ErrorEvent(ErrorEvent.ERROR, false, false, INVALID_SIZE_ERROR);
-		
+
 		//---------------------------------------
 		// PRIVATE & PROTECTED VARIABLES
 		//---------------------------------------
@@ -67,13 +67,13 @@ package net.rezmason.wireworld.brains {
 		protected var leftBound:int = 0, rightBound:int = int.MAX_VALUE;
 		protected var topBound:int = 0, bottomBound:int = int.MAX_VALUE;
 		protected var activeRect:Rectangle = new Rectangle(), activeCorner:Point = new Point();
-		
-		// These are useful for certain kinds of drawing. 
+
+		// These are useful for certain kinds of drawing.
 		// They're color gradient lookup tables.
 		protected var heatSpectrum:HeatSpectrum = new HeatSpectrum;
 		protected var spectrum:Spectrum = new Spectrum;
-		
-		
+
+
 		//---------------------------------------
 		// CONSTRUCTOR
 		//---------------------------------------
@@ -82,7 +82,7 @@ package net.rezmason.wireworld.brains {
 			importer.addEventListener(WWEvent.DATA_PARSED, finishParse);
 			importer.addEventListener(WWEvent.DATA_EXTRACTED, finishExtraction);
 		}
-		
+
 		//---------------------------------------
 		// GETTER / SETTERS
 		//---------------------------------------
@@ -98,38 +98,38 @@ package net.rezmason.wireworld.brains {
 		public function headGraphics():Graphics { return GraphicsUtils.makeGraphics(_headGraphics); }
 		public function tailGraphics():Graphics { return GraphicsUtils.makeGraphics(_tailGraphics); }
 		public function heatGraphics():Graphics { return GraphicsUtils.makeGraphics(_heatGraphics); }
-		
+
 		public function implementsOverdrive():Boolean { return false; }
 		public function overdriveActive():Boolean { return false; }
 		public function set_overdriveActive(value:Boolean):void {}
-		
+
 		//---------------------------------------
 		// PUBLIC METHODS
 		//---------------------------------------
-		
+
 		// Most of the implemented methods of IModel are empty here.
 		public function init(txt:String, isMCell:Boolean):void { importer.parse(txt, isMCell); }
 		public function update():void {}
 		public function getState(__x:int, __y:int):uint { return 0; }
 		public function reset():void {}
 		public function eraseRect(rect:Rectangle):void {}
-		
+
 		public function refresh(flags:int):void {
 			if (!_headData) return;
-			
+
 			if (flags & WWRefreshFlag.HEAT) {
 				refreshHeat((flags & WWRefreshFlag.FULL));
 			} else {
 				refreshImage(flags & WWRefreshFlag.FULL, flags & WWRefreshFlag.TAIL);
 			}
 		}
-		
+
 		public function setBounds(top:int, left:int, bottom:int, right:int):void {
-			topBound = IntMath.max(0, top - activeCorner.y);
-			leftBound = IntMath.max(0, left - activeCorner.x);
-			bottomBound = IntMath.min(activeRect.height, bottom - activeCorner.y);
-			rightBound = IntMath.min(activeRect.width, right - activeCorner.x);
-			
+			topBound = Math.max(0, top - activeCorner.y);
+			leftBound = Math.max(0, left - activeCorner.x);
+			bottomBound = Math.min(activeRect.height, bottom - activeCorner.y);
+			rightBound = Math.min(activeRect.width, right - activeCorner.x);
+
 			bound.x = leftBound;
 			bound.y = topBound;
 			bound.width = rightBound - leftBound;
@@ -139,7 +139,7 @@ package net.rezmason.wireworld.brains {
 		//---------------------------------------
 		// PRIVATE & PROTECTED METHODS
 		//---------------------------------------
-		
+
 		// More of an example than an actual implementation.
 		// Performs dimension validation.
 		protected function finishParse(event:Event):void {
@@ -149,21 +149,21 @@ package net.rezmason.wireworld.brains {
 				_width = importer.width;
 				_height = importer.height;
 				_credit = importer.credit;
-				
+
 				totalNodes = 0;
 				importer.extract(addNode);
 			}
 		}
-		
+
 		protected function finishExtraction(event:Event):void {
 			trace(totalNodes, "total nodes");
 			dispatchEvent(COMPLETE_EVENT);
 		}
-		
+
 		protected function refreshImage(fully:int, freshTails:int):void {}
-		
+
 		protected function refreshHeat(fully:int):void {}
-		
+
 		// Draws the passed BitmapData into a Graphics object.
 		protected function drawData(graphicsObject:Graphics, rect:Rectangle, data:BitmapData):void {
 			graphicsObject.clear();
@@ -171,7 +171,7 @@ package net.rezmason.wireworld.brains {
 			graphicsObject.drawRect(rect.x, rect.y, rect.width, rect.height);
 			graphicsObject.endFill();
 		}
-		
+
 		// Draws the passed BitmapData into a Graphics object.
 		protected function drawBackground(graphicsObject:Graphics, w:Number, h:Number, color:int):void {
 			graphicsObject.clear();
@@ -179,7 +179,7 @@ package net.rezmason.wireworld.brains {
 			graphicsObject.drawRect(0, 0, w, h);
 			graphicsObject.endFill();
 		}
-		
+
 		protected function addNode(__x:int, __y:int, __state:int):void {
 			totalNodes++;
 		}

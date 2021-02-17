@@ -8,12 +8,12 @@
 */
 
 package net.rezmason.wireworld.views {
-	
+
 	//---------------------------------------
 	// IMPORT STATEMENTS
 	//---------------------------------------
-	import apparat.math.FastMath;
-	
+	//import apparat.math.FastMath;
+
 	import flash.display.DisplayObject;
 	import flash.display.Shape;
 	import flash.display.Sprite;
@@ -24,50 +24,50 @@ package net.rezmason.wireworld.views {
 	import flash.geom.Matrix;
 	import flash.geom.Rectangle;
 	import flash.text.engine.TextLine;
-	
+
 	// WWElements are interactive objects with oblong
 	// background shapes that indicate their nature
-	// to the user. They can be bound to functions, 
+	// to the user. They can be bound to functions,
 	// so that when they change state, they can trigger
 	// an action.
-	
+
 	internal class WWElement extends Sprite {
-		
+
 		//---------------------------------------
 		// PRIVATE VARIABLES
 		//---------------------------------------
 		protected var _label:String;
-		
+
 		protected static const MARGIN:Number = 2;
-		
+
 		protected var _trigger:Function, _params:Array, _addParams:Boolean;
-		
+
 		protected var _width:Number, _specifiedWidth:Number, _height:Number;
 		protected var leftCap:Boolean, rightCap:Boolean;
 		protected var _content:*;
-		
+
 		protected var backing:Shape = new Shape();
-		
+
 		private static const RELEASE_EVENT:MouseEvent = new MouseEvent(MouseEvent.MOUSE_UP, false);
-		
+
 		private var subscribed:Boolean = false;
 		private static const INSTANCES:Array = [];
-		
+
 		protected var startX:Number, endX:Number;
-		
+
 		public static var multitouch:Boolean = false;
 		public static var keyboardPrompt:Function;
 		private var touchIndex:int = -1;
-		
+
 		//---------------------------------------
 		// CONSTRUCTOR
 		//---------------------------------------
 		public function WWElement(__label:String, __content:DisplayObject = null, __width:Number = NaN, __height:Number = NaN, __capStyle:String = null):void {
 			super();
 			if (__label) _label = __label;
-			
+
 			cacheAsBitmap = true;
-			
+
 			_content = __content;
 			_height = __height;
 			_specifiedWidth = __width;
@@ -76,7 +76,7 @@ package net.rezmason.wireworld.views {
 			rightCap = __capStyle.charAt(1) == ")";
 			if (__capStyle.indexOf("-") != -1) backing.visible = false;
 			redraw();
-			
+
 			if (multitouch) {
 				addEventListener(TouchEvent.TOUCH_BEGIN, evaluateTouch);
 				addEventListener(TouchEvent.TOUCH_END, evaluateTouch);
@@ -86,35 +86,35 @@ package net.rezmason.wireworld.views {
 			}
 			addEventListener(Event.REMOVED, unsubscribe);
 		}
-		
+
 		//---------------------------------------
 		// GETTERS & SETTERS
 		//---------------------------------------
-		
+
 		public function get label():String {
 			return _label;
 		}
-		
+
 		override public function set width(value:Number):void {
-			_specifiedWidth = FastMath.max(0, value);
+			_specifiedWidth = Math.max(0, value);
 			redraw();
 		}
-		
+
 		override public function set height(value:Number):void {
-			_height = FastMath.max(0, value);
+			_height = Math.max(0, value);
 			redraw();
 		}
-		
+
 		//---------------------------------------
 		// PUBLIC METHODS
 		//---------------------------------------
-		
+
 		public function bind(func:Function = null, addParams:Boolean = false, ...params):void {
 			_trigger = func;
 			_params = params;
 			_addParams = addParams;
 		}
-		
+
 		// This is used to tell ALL WWElements that have recently received down events
 		// that the user has released the mouse, someplace else, typically nullifying
 		// whatever change in state would have occurred.
@@ -130,16 +130,16 @@ package net.rezmason.wireworld.views {
 				}
 			}
 		}
-		
+
 		//---------------------------------------
 		// PRIVATE METHODS
 		//---------------------------------------
-		
+
 		protected function redraw():void {
 			while (numChildren) removeChildAt(0);
-			
+
 			var bounds:Rectangle;
-			
+
 			if (_content) {
 				_content.transform.matrix = new Matrix();
 				//_content.scaleX = _content.scaleY = 0.35;
@@ -151,11 +151,11 @@ package net.rezmason.wireworld.views {
 			} else {
 				_width = _specifiedWidth;
 			}
-			
+
 			backing.graphics.clear();
 			startX = 0;
 			endX = _width;
-			
+
 			if (leftCap) {
 				backing.graphics.beginFill(0x0);
 				backing.graphics.drawCircle(startX + _height * 0.5, 0, _height * 0.5);
@@ -163,7 +163,7 @@ package net.rezmason.wireworld.views {
 				startX += _height * 0.5;
 				if (!rightCap) endX += _height * 0.25; // making it wider
 			}
-			
+
 			if (rightCap) {
 				if (!leftCap) endX += _height * 0.25; // making it wider
 				backing.graphics.beginFill(0x0);
@@ -171,43 +171,43 @@ package net.rezmason.wireworld.views {
 				backing.graphics.endFill();
 				endX -= _height * 0.5;
 			}
-			
+
 			backing.graphics.beginFill(0x0);
 			backing.graphics.drawRect(startX, -_height * 0.5, endX - startX, _height);
 			backing.graphics.endFill();
-			
+
 			if (_content) {
 				_content.x = (startX + endX  - bounds.left - bounds.right ) * 0.5;
 				if (leftCap && !rightCap) _content.x -= _height * 0.25;
 				else if (rightCap && !leftCap) _content.x += _height * 0.25;
 				_content.y = -(bounds.top + bounds.bottom) * 0.5;
 			}
-			
+
 			addChildAt(backing, 0);
 		}
-		
-		// These functions are how WWElements respond 
+
+		// These functions are how WWElements respond
 		// to a mouse up event elsewhere in the GUI.
-		
+
 		private function subscribe(event:Event):void {
 			if (!subscribed) {
 				subscribed = true;
 				INSTANCES.push(this);
 			}
 		}
-		
+
 		private function unsubscribe(event:Event):void {
 			if (subscribed) {
 				subscribed = false;
 				INSTANCES.splice(INSTANCES.indexOf(this), 1);
 			}
 		}
-		
+
 		private function release():void {
 			subscribed = false;
 			dispatchEvent(RELEASE_EVENT);
 		}
-		
+
 		private function evaluateTouch(event:TouchEvent):void {
 			if (event.type == TouchEvent.TOUCH_BEGIN) {
 				if (touchIndex == -1) {

@@ -7,12 +7,12 @@
 * Please contact jeremysachs@rezmason.net prior to distributing modified versions of this class.
 */
 package net.rezmason.wireworld.views {
-	
+
 	//---------------------------------------
 	// IMPORT STATEMENTS
 	//---------------------------------------
-	import apparat.math.IntMath;
-	
+	//import apparat.math.IntMath;
+
 	import flash.display.BitmapData;
 	import flash.display.Sprite;
 	import flash.geom.Point;
@@ -22,23 +22,23 @@ package net.rezmason.wireworld.views {
 	import flash.text.engine.TextBlock;
 	import flash.text.engine.TextElement;
 	import flash.text.engine.TextLine;
-	
-	// CreditBox staples a text blob to the side of an image, using a pixel font. 
-	
+
+	// CreditBox staples a text blob to the side of an image, using a pixel font.
+
 	internal final class CreditBox extends Sprite {
-		
+
 		//---------------------------------------
 		// PRIVATE VARIABLES
 		//---------------------------------------
 		private static const MARGIN:Number = 8;
-		
+
 		private var drawPoint:Point = new Point;
 		private var fontDescription:FontDescription;
         private var format:ElementFormat;
         private var textBlock:TextBlock = new TextBlock();
         private var _credit:String;
         private var textColor:uint, backgroundColor:uint;
-		
+
 		//---------------------------------------
 		// CONSTRUCTOR
 		//---------------------------------------
@@ -53,19 +53,19 @@ package net.rezmason.wireworld.views {
             backgroundColor = 0xFF000000 | palette.dead;
             textBlock = new TextBlock();
 		}
-		
+
 		//---------------------------------------
 		// INTERNAL METHODS
 		//---------------------------------------
-		
+
 		internal function appendCredit(image:BitmapData, credit:String = null):BitmapData {
-			
+
 			if (credit && credit.length && credit != _credit) {
 				_credit = credit;
 				while (numChildren) removeChildAt(0);
 	            textBlock.content = new TextElement(_credit, format);
 	            var linePosition:Number = MARGIN;
-	            	            
+
 	        	var textLine:TextLine;
 	            while (textLine = textBlock.createTextLine(textLine, 300)) {
 	                addChild(textLine);
@@ -74,10 +74,10 @@ package net.rezmason.wireworld.views {
 	                linePosition += 8;
 	            }
    			}
-   			
+
             var _width:int = width + MARGIN, _height:int = height + 2 * MARGIN;
             var iWidth:int = image.width + 2 * MARGIN, iHeight:int = image.height + 2 * MARGIN;
-			var returnVal:BitmapData = new BitmapData(iWidth + _width, IntMath.max(iHeight, _height), true, backgroundColor);
+			var returnVal:BitmapData = new BitmapData(iWidth + _width, Math.max(iHeight, _height), true, backgroundColor);
 			if (credit) {
 				returnVal.draw(this);
 				returnVal.threshold(returnVal, returnVal.rect, returnVal.rect.topLeft, "!=", backgroundColor, textColor, 0xFFFFFFFF, true);

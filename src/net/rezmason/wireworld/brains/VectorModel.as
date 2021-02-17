@@ -11,22 +11,22 @@ package net.rezmason.wireworld.brains {
 	//---------------------------------------
 	// IMPORT STATEMENTS
 	//---------------------------------------
-	
-	import apparat.math.IntMath;
-	
+
+	//import apparat.math.IntMath;
+
 	import flash.display.BitmapData;
 	import flash.events.Event;
 	import flash.geom.ColorTransform;
 	import flash.geom.Rectangle;
-	
+
 	import net.rezmason.utils.GreenThread;
 	import net.rezmason.wireworld.WWRefreshFlag;
-	
-	// Adapted from LinkedListModel. 
+
+	// Adapted from LinkedListModel.
 	// Originally stored WireNode instances in Vectors,
 	// but that's just stupid. Instead, it now has a Vector
 	// for every WireNode property.
-	
+
 	public final class VectorModel extends BaseModel {
 
 		//---------------------------------------
@@ -38,21 +38,21 @@ package net.rezmason.wireworld.brains {
 		// PRIVATE VARIABLES
 		//---------------------------------------
 		private var neighborLookupTable:Array = []; // sparse array of all nodes, listed by index
-		
+
 		private var staticSurvey:Vector.<int>;
 		private var neighborThread:GreenThread = new GreenThread;
-		
+
 		// Vectors that store nodes (by their address as ints)
 		private var headVec:Vector.<int> = new <int>[];
 		private var tailVec:Vector.<int> = new <int>[];
 		private var newHeadVec:Vector.<int> = new <int>[];
 		private var candidateVec:Vector.<int> = new <int>[];
-		
+
 		//private var v1:Vector.<int> = headVec, v2:Vector.<int> = tailVec, v3:Vector.<int> = newHeadVec, v4:Vector.<int> = candidateVec;
-		
+
 		private var tempVec:Vector.<int>;
 		private var totalHeads:int, totalTails:int, totalNewHeads:int, totalCandidates:int;
-		
+
 		// Property vectors
 		private var isWireVec:Vector.<Boolean> = new <Boolean>[];
 		private var xVec:Vector.<int> = new <int>[];
@@ -62,9 +62,9 @@ package net.rezmason.wireworld.brains {
 		private var neighborsVec:Vector.<Vector.<int>> = new <Vector.<int>>[];
 		private var timesLitVec:Vector.<int> = new <int>[];
 		private var tapsVec:Vector.<int> = new <int>[];
-		
+
 		private var pItr:int;
-		
+
 
 		//---------------------------------------
 		// CONSTRUCTOR
@@ -75,29 +75,29 @@ package net.rezmason.wireworld.brains {
 			neighborThread.prologue = beginFindNeighbors;
 			neighborThread.epilogue = finishFindNeighbors;
 		}
-		
+
 		//---------------------------------------
 		// PUBLIC METHODS
 		//---------------------------------------
-		
+
 		// update
 		override public function update():void {
 			var ike:int;
 			var jen:int;
 			var iNode:int;
 			var jNode:int;
-			
+
 			var scratch:int;
-			
+
 			// find new heads in current head neighbors (and list them)
 			totalCandidates = 0;
 			totalNewHeads = 0;
-			
+
 			//		first, list all wires that are adjacent to heads ("candidates")
 			ike = 0;
 			while (ike < totalHeads) {
 				iNode = headVec[ike];
-				
+
 				scratch = neighborCountVec[iNode];
 				for (jen = 0; jen < scratch; jen += 1) {
 					jNode = neighborsVec[iNode][jen];
@@ -111,7 +111,7 @@ package net.rezmason.wireworld.brains {
 				}
 				ike++;
 			}
-			
+
 			//		then, transfer all the candidates with less than 3 neighbors to the new heads list
 			ike = 0;
 			while (ike < totalCandidates) {
@@ -125,37 +125,37 @@ package net.rezmason.wireworld.brains {
 				tapsVec[iNode] = 0;
 				ike++;
 			}
-			
+
 			// change states
-			
+
 			ike = 0;
 			while (ike < totalTails) {
 				isWireVec[tailVec[ike]] = true;
 				ike++;
 			}
-			
+
 			// swap the vectors
 			tempVec = tailVec;
 			tailVec = headVec;
 			headVec = newHeadVec;
 			newHeadVec = tempVec;
-			
+
 			totalTails = totalHeads;
 			totalHeads = totalNewHeads;
-			
+
 			_generation++;
-			
+
 			//trace(v1.length, v2.length, v3.length, v4.length)
 		}
-		
+
 		override public function eraseRect(rect:Rectangle):void {
 			var ike:int;
 			var iNode:int;
-			
+
 			// correct the offset
 			rect.x -= activeRect.x + 0.5;
 			rect.y -= activeRect.y + 0.5;
-			
+
 			// clear heads whose centers are within eraseRect
 			totalCandidates = 0;
 			ike = 0;
@@ -170,12 +170,12 @@ package net.rezmason.wireworld.brains {
 				}
 				ike++;
 			}
-			
+
 			tempVec = headVec;
 			headVec = candidateVec;
 			candidateVec = tempVec;
 			totalHeads = totalCandidates;
-			
+
 			// clear tails whose centers are within eraseRect
 			totalCandidates = 0;
 			ike = 0;
@@ -190,13 +190,13 @@ package net.rezmason.wireworld.brains {
 				}
 				ike++;
 			}
-			
+
 			tempVec = tailVec;
 			tailVec = candidateVec;
 			candidateVec = tempVec;
 			totalTails = totalCandidates;
 		}
-		
+
 		override public function getState(__x:int, __y:int):uint {
 			__x -= activeRect.x;
 			__y -= activeRect.y;
@@ -205,20 +205,20 @@ package net.rezmason.wireworld.brains {
 
 		override public function reset():void {
 			var iNode:int;
-			
+
 			// empty lists
 			headVec.splice(0, headVec.length);
 			tailVec.splice(0, tailVec.length);
 			newHeadVec.splice(0, newHeadVec.length);
 			candidateVec.splice(0, candidateVec.length);
-			
+
 			totalHeads = totalTails = totalNewHeads = totalCandidates = 0;
-			
+
 			// repopulate
 			iNode = 0;
 			while (iNode < totalNodes) {
 				timesLitVec[iNode] = 0;
-				
+
 				switch (firstStateVec[iNode]) {
 					case WWFormat.HEAD:
 						isWireVec[iNode] = false;
@@ -234,20 +234,20 @@ package net.rezmason.wireworld.brains {
 					case WWFormat.WIRE:
 						isWireVec[iNode] = true;
 				}
-				
+
 				iNode++;
 			}
-			
+
 			_heatData.fillRect(_heatData.rect, CLEAR);
 			refresh(WWRefreshFlag.FULL | WWRefreshFlag.TAIL);
-			
+
 			_generation = 1;
 		}
 
 		//---------------------------------------
 		// PRIVATE METHODS
 		//---------------------------------------
-		
+
 		override protected function finishParse(event:Event):void {
 			if (importer.width  > WWFormat.MAX_SIZE || importer.height  > WWFormat.MAX_SIZE || importer.width * importer.height < 1) {
 				dispatchEvent(INVALID_SIZE_ERROR_EVENT);
@@ -255,7 +255,7 @@ package net.rezmason.wireworld.brains {
 				_width = importer.width;
 				_height = importer.height;
 				_credit = importer.credit;
-				
+
 				isWireVec.splice(0, isWireVec.length);
 				xVec.splice(0, xVec.length);
 				yVec.splice(0, yVec.length);
@@ -264,55 +264,55 @@ package net.rezmason.wireworld.brains {
 				neighborsVec.splice(0, neighborsVec.length);
 				timesLitVec.splice(0, timesLitVec.length);
 				tapsVec.splice(0, tapsVec.length);
-				
+
 				totalNodes = 0;
 				neighborLookupTable.length = 0;
-					
+
 				importer.extract(addNode);
 			}
 		}
-		
+
 		override protected function finishExtraction(event:Event):void {
 			importer.dump();
 			neighborThread.start();
 		}
-		
+
 		private function beginFindNeighbors():void {
 			staticSurvey = SURVEY_TEMPLATE.slice();
 			pItr = 0;
 		}
-		
+
 		private function checkFindNeighbors():Boolean {
 			return (pItr < totalNodes);
 		}
-		
+
 		private function partialFindNeighbors():void {
 			var ike:int;
 			var scratch:int;
 			var row:int;
 			var node:*;
 			var count:int = 0;
-			
+
 			for (ike = 0; ike < STEP && pItr < totalNodes; ike += 1) {
 				tempVec = neighborsVec[pItr];
 				row = yVec[pItr];
 				scratch = xVec[pItr] + row * _width;
 				count = 0;
-				
+
 				scratch -= _width; row--;
 				node = neighborLookupTable[scratch - 1];	if (node != undefined && yVec[int(node)] == row) tempVec[count++] = int(node);
 				node = neighborLookupTable[scratch];		if (node != undefined && yVec[int(node)] == row) tempVec[count++] = int(node);
 				node = neighborLookupTable[scratch + 1];	if (node != undefined && yVec[int(node)] == row) tempVec[count++] = int(node);
-				
+
 				scratch += _width; row++;
 				node = neighborLookupTable[scratch - 1];	if (node != undefined && yVec[int(node)] == row) tempVec[count++] = int(node);
 				node = neighborLookupTable[scratch + 1];	if (node != undefined && yVec[int(node)] == row) tempVec[count++] = int(node);
-				
+
 				scratch += _width; row++;
 				node = neighborLookupTable[scratch - 1];	if (node != undefined && yVec[int(node)] == row) tempVec[count++] = int(node);
 				node = neighborLookupTable[scratch];		if (node != undefined && yVec[int(node)] == row) tempVec[count++] = int(node);
 				node = neighborLookupTable[scratch + 1];	if (node != undefined && yVec[int(node)] == row) tempVec[count++] = int(node);
-				
+
 				tempVec.length = count;
 				tempVec.fixed = true;
 				neighborCountVec[pItr] = count;
@@ -320,21 +320,21 @@ package net.rezmason.wireworld.brains {
 				pItr++;
 			}
 		}
-		
+
 		private function finishFindNeighbors():void {
 			neighborLookupTable.length = 0;
-			
+
 			initDrawData(); // This sounds like it should belong in the View, but it really doesn't.
-			
+
 			trace(totalNodes, "total nodes")
 			trace("staticSurvey:", staticSurvey);
 			trace("1-2:", staticSurvey[1] + staticSurvey[2]);
 			trace("3-4:", staticSurvey[3] + staticSurvey[4]);
 			trace("5-7:", staticSurvey[5] + staticSurvey[6] + staticSurvey[7]);
-			
+
 			dispatchEvent(COMPLETE_EVENT);
 		}
-		
+
 		private function initDrawData():void {
 			var iNode:int;
 			activeRect.setEmpty();
@@ -346,35 +346,35 @@ package net.rezmason.wireworld.brains {
 					activeRect.width = 1;
 					activeRect.height = 1;
 				} else {
-					activeRect.left = IntMath.min(activeRect.left, xVec[iNode]);
-					activeRect.top = IntMath.min(activeRect.top, yVec[iNode]);
-					activeRect.right = IntMath.max(activeRect.right, xVec[iNode] + 1);
-					activeRect.bottom = IntMath.max(activeRect.bottom, yVec[iNode] + 1);
+					activeRect.left = Math.min(activeRect.left, xVec[iNode]);
+					activeRect.top = Math.min(activeRect.top, yVec[iNode]);
+					activeRect.right = Math.max(activeRect.right, xVec[iNode] + 1);
+					activeRect.bottom = Math.max(activeRect.bottom, yVec[iNode] + 1);
 				}
-				
+
 				activeCorner.x = activeRect.left;
 				activeCorner.y = activeRect.top;
-				
+
 				iNode++;
 			}
-			
+
 			if (_wireData) _wireData.dispose();
 			if (_headData) _wireData.dispose();
 			if (_tailData) _wireData.dispose();
 			if (_heatData) _wireData.dispose();
-			
+
 			// The BitmapData objects only need to be as large as the active rectangle
 			_wireData = new BitmapData(activeRect.width, activeRect.height, true, CLEAR);
 			_headData = new BitmapData(activeRect.width, activeRect.height, true, CLEAR);
 			_tailData = new BitmapData(activeRect.width, activeRect.height, true, CLEAR);
 			_heatData = new BitmapData(activeRect.width, activeRect.height, true, CLEAR);
-			
+
 			drawBackground(_baseGraphics, _width, _height, BLACK);
 			drawData(_wireGraphics, activeRect, _wireData);
 			drawData(_headGraphics, activeRect, _headData);
 			drawData(_tailGraphics, activeRect, _tailData);
 			drawData(_heatGraphics, activeRect, _heatData);
-			
+
 			iNode = 0;
 			while (iNode < totalNodes) {
 				xVec[iNode] -= activeRect.x;
@@ -385,9 +385,9 @@ package net.rezmason.wireworld.brains {
 		}
 
 		override protected function addNode(__x:int, __y:int, __state:int):void {
-			
-			// Each property of the node is pushed onto the corresponding Vector. 
-			
+
+			// Each property of the node is pushed onto the corresponding Vector.
+
 			isWireVec[totalNodes] = false;
 			xVec[totalNodes] = __x;
 			yVec[totalNodes] = __y;
@@ -396,11 +396,11 @@ package net.rezmason.wireworld.brains {
 			neighborCountVec[totalNodes] = 0;
 			timesLitVec[totalNodes] = 0;
 			tapsVec[totalNodes] = 0;
-			
+
 			neighborLookupTable[__x + _width * __y] = totalNodes;
 			totalNodes++;
 		}
-		
+
 		override protected function refreshHeat(fully:int):void {
 			var iNode:int;
 			var allow:Boolean;
@@ -425,13 +425,13 @@ package net.rezmason.wireworld.brains {
 			var allow:Boolean;
 			var x_:int;
 			var y_:int;
-			
+
 			_tailData.lock();
 			_headData.lock();
 			if (freshTails) {
-				
+
 				_tailData.fillRect(fully ? _tailData.rect : bound, CLEAR);
-				
+
 				ike = 0;
 				while (ike < totalTails) {
 					iNode = tailVec[ike];
@@ -441,13 +441,13 @@ package net.rezmason.wireworld.brains {
 					if (allow) _tailData.setPixel32(x_, y_, BLACK);
 					ike++;
 				}
-				
+
 			} else {
 				_tailData.copyPixels(_headData, fully ? _tailData.rect : bound, fully ? ORIGIN : bound.topLeft);
 			}
-			
+
 			_headData.fillRect(fully ? _headData.rect : bound, CLEAR);
-			
+
 			ike = 0;
 			while (ike < totalHeads) {
 				iNode = headVec[ike];
